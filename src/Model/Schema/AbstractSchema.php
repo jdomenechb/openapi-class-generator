@@ -13,5 +13,5 @@ namespace Jdomenechb\OpenApiClassGenerator\Model\Schema;
 
 abstract class AbstractSchema
 {
-
+    abstract public function getPhpType() :string;
 }

@@ -8,16 +8,16 @@ declare(strict_types=1);
  * (c) Jordi Domènech Bonilla
  */
 
-namespace Jdomenechb\OpenApiClassGenerator\Model\Schema\String;
+namespace Jdomenechb\OpenApiClassGenerator\Model\Schema\Number;
 
 
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 
-class StringSchema extends AbstractSchema
+class NumberSchema extends AbstractSchema
 {
     public function getPhpType(): string
     {
-        return 'string';
+        return 'int';
     }
 
 }

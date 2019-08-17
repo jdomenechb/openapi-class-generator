@@ -76,8 +76,6 @@ class CebeOpenapiApiBuilder implements ApiBuilder
             }
         }
 
-        print_r($apiService);
-
         return $apiService;
     }
 

@@ -54,4 +54,10 @@ class ObjectSchema extends AbstractSchema
         return $this->properties;
     }
 
+    public function getPhpType(): string
+    {
+        return 'object';
+    }
+
+
 }

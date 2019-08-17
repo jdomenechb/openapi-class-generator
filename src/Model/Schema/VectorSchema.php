@@ -10,10 +10,7 @@ declare(strict_types=1);
 
 namespace Jdomenechb\OpenApiClassGenerator\Model\Schema;
 
-
-use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
-
-class VectorSchema extends \Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema
+class VectorSchema extends AbstractSchema
 {
     private $wrapped;
 
@@ -22,9 +19,14 @@ class VectorSchema extends \Jdomenechb\OpenApiClassGenerator\Model\Schema\Abstra
      *
      * @param $wrapped
      */
-    public function __construct($wrapped)
+    public function __construct(AbstractSchema $wrapped)
     {
         $this->wrapped = $wrapped;
+    }
+
+    public function getPhpType(): string
+    {
+        return $this->wrapped->getPhpType() . '[]';
     }
 
 }

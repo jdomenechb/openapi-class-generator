@@ -12,6 +12,8 @@ namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 
 use cebe\openapi\spec\Schema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\Number\FloatSchema;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\Number\NumberSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchemaProperty;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
@@ -48,7 +50,9 @@ class CebeOpenApiTypeFactory
                             break;
 
                         default:
+                            //FIXME: Provisional
                             throw new RuntimeException(sprintf('String schema format "%s" not recognized', $schema->format));
+                            return new StringSchema();
                     }
                 } else {
                     $obj = new StringSchema();
@@ -56,8 +60,29 @@ class CebeOpenApiTypeFactory
 
                 return $obj;
 
+            case 'number':
+                if ($schema->format) {
+                    switch ($schema->format) {
+                        case 'float':
+                        case 'double':
+                            $obj = new FloatSchema();
+                            break;
+
+                        default:
+                            //FIXME: Provisional
+                            throw new RuntimeException(sprintf('Number schema format "%s" not recognized', $schema->format));
+                            return new NumberSchema();
+                    }
+                } else {
+                    $obj = new NumberSchema();
+                }
+
+                return $obj;
+
             default:
                 throw new RuntimeException(sprintf('Schema type "%s" not recognized', $schema->type));
+                //FIXME: Provisional
+                return new StringSchema();
         }
     }
 }

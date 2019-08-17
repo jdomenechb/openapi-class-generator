@@ -19,6 +19,19 @@ use function count;
 
 class NetteApiCodeGenerator implements ApiCodeGenerator
 {
+    /** @var NetteSchemaCodeGenerator */
+    private $schemaCodeGenerator;
+
+    /**
+     * NetteApiCodeGenerator constructor.
+     *
+     * @param NetteSchemaCodeGenerator $schemaCodeGenerator
+     */
+    public function __construct(NetteSchemaCodeGenerator $schemaCodeGenerator)
+    {
+        $this->schemaCodeGenerator = $schemaCodeGenerator;
+    }
+
     public function generate(Api $apiService) :void
     {
         $namespace = new PhpNamespace($apiService->namespace() . '\\ApiService');
@@ -41,8 +54,14 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
                 }
 
                 $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $methodName));
+
+                $requestRef = $this->schemaCodeGenerator->generate($format->schema(), $namespace, $methodName);
+
                 $classRep->addMethod($methodName)
-                    ->setVisibility('public');
+                    ->setVisibility('public')
+                    ->addParameter('request')
+                    ->setTypeHint($namespace->getName() . '\\' . $requestRef->getName());
+
             }
         }
 
