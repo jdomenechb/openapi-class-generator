@@ -1,0 +1,24 @@
+{
+  "name": "jdomenechb/openapi-class-generator",
+  "description": "Generate PHP classes from given OpenAPI contracts.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jordi Domènech",
+      "email": "jdomenechbborges@gmail.com"
+    }
+  ],
+  "bin": [
+    "bin/ocg"
+  ],
+  "autoload": {
+    "psr-4": {
+      "Jdomenechb\\OpenApiClassGenerator\\" : "src/"
+    }
+  },
+  "require": {
+    "symfony/console": "^4.3",
+    "cebe/php-openapi": "^1.2"
+  }
+}
