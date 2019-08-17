@@ -20,15 +20,21 @@ class CebeOpenapiApiBuilder implements ApiBuilder
 {
     /** @var CebeOpenapiFileReader */
     private $fileReader;
+    /**
+     * @var CebeOpenApiTypeFactory
+     */
+    private $typeFactory;
 
     /**
      * CebeOpenapiApiParser constructor.
      *
      * @param CebeOpenapiFileReader $fileReader
+     * @param CebeOpenApiTypeFactory $typeFactory
      */
-    public function __construct(CebeOpenapiFileReader $fileReader)
+    public function __construct(CebeOpenapiFileReader $fileReader, CebeOpenApiTypeFactory $typeFactory)
     {
         $this->fileReader = $fileReader;
+        $this->typeFactory = $typeFactory;
     }
 
     /**
@@ -43,15 +49,14 @@ class CebeOpenapiApiBuilder implements ApiBuilder
     {
         $contract = $this->fileReader->read($filename);
 
-        // Create Service
         $apiService = new Api($contract->info->title, $namespacePrefix);
 
         // Parse paths
         foreach ($contract->paths as $path => $pathInfo) {
             foreach ($pathInfo->getOperations() as $method => $contractOperation) {
-                if ($contractOperation->requestBody) {
-                    $operation = new ApiOperation($method, $path);
+                $operation = new ApiOperation($method, $path);
 
+                if ($contractOperation->requestBody) {
                     foreach ($contractOperation->requestBody->content as $mediaType => $content) {
                         switch ($mediaType) {
                             case 'application/json':
@@ -62,17 +67,18 @@ class CebeOpenapiApiBuilder implements ApiBuilder
                                 throw new \RuntimeException('Unrecognized requestBody format: ' . $mediaType);
                         }
 
-                        $operationFormat = new ApiOperationFormat($format);
+                        $operationFormat = new ApiOperationFormat($format, $this->typeFactory->build($content->schema, 'request'));
                         $operation->addFormat($operationFormat);
                     }
-
-                    $apiService->addOperation($operation);
                 }
+
+                $apiService->addOperation($operation);
             }
         }
 
+        print_r($apiService);
+
         return $apiService;
     }
-
 
 }

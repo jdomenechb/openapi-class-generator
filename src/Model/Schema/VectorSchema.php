@@ -8,12 +8,12 @@ declare(strict_types=1);
  * (c) Jordi Domènech Bonilla
  */
 
-namespace Jdomenechb\OpenApiClassGenerator\Model\PrimitiveType;
+namespace Jdomenechb\OpenApiClassGenerator\Model\Schema;
 
 
-use Jdomenechb\OpenApiClassGenerator\Model\AbstractType;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 
-class Vector extends AbstractType
+class VectorSchema extends \Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema
 {
     private $wrapped;
 

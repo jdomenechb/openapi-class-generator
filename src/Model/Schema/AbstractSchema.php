@@ -8,10 +8,10 @@ declare(strict_types=1);
  * (c) Jordi Domènech Bonilla
  */
 
-namespace Jdomenechb\OpenApiClassGenerator\Model;
+namespace Jdomenechb\OpenApiClassGenerator\Model\Schema;
 
 
-abstract class AbstractType
+abstract class AbstractSchema
 {
 
 }

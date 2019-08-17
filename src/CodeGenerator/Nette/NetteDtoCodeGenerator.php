@@ -11,13 +11,13 @@ declare(strict_types=1);
 namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\DtoCodeGenerator;
-use Jdomenechb\OpenApiClassGenerator\Model\Dto;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
 
 class NetteDtoCodeGenerator implements DtoCodeGenerator
 {
-    public function generate(Dto $dto)
+    public function generate(ObjectSchema $dto)
     {
         $namaspace = new PhpNamespace($dto->namespace());
 
