@@ -43,17 +43,8 @@ class CebeOpenapiApiBuilder implements ApiBuilder
     {
         $contract = $this->fileReader->read($filename);
 
-        // Determine namespace
-        if ($namespacePrefix) {
-            $namespace = rtrim($namespacePrefix, '\\') . '\\';
-        } else {
-            $namespace = 'Ocg\\';
-        }
-
-        $namespace .= 'ApiService';
-
         // Create Service
-        $apiService = new Api($contract->info->title, $namespace);
+        $apiService = new Api($contract->info->title, $namespacePrefix);
 
         // Parse paths
         foreach ($contract->paths as $path => $pathInfo) {
