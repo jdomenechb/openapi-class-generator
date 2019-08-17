@@ -1,7 +1,7 @@
 <?php
 
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiFileReader;
-use Jdomenechb\OpenApiClassGenerator\ApiParser\CebeOpenapiApiParser;
+use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiApiParser;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteApiServiceCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\Command\GenerateCommand;
 use Symfony\Component\Console\Application;

@@ -6,12 +6,12 @@
  * (c) Jordi Domènech Bonilla
  */
 
-namespace Jdomenechb\OpenApiClassGenerator\ApiParser;
+namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 
 
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
-use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiFileReader;
+use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiParser;
 use Jdomenechb\OpenApiClassGenerator\Model\ApiService;
 
 class CebeOpenapiApiParser implements ApiParser
