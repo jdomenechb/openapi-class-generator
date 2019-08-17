@@ -11,13 +11,13 @@ declare(strict_types=1);
 namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
 use Doctrine\Common\Inflector\Inflector;
-use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ApiServiceCodeGenerator;
+use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ApiCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
 use function count;
 
-class NetteApiServiceCodeGenerator implements ApiServiceCodeGenerator
+class NetteApiCodeGenerator implements ApiCodeGenerator
 {
     public function generate(Api $apiService) :void
     {

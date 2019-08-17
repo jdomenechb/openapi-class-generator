@@ -11,7 +11,7 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator;
 
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
 
-interface ApiServiceCodeGenerator
+interface ApiCodeGenerator
 {
     public function generate(Api $apiService) :void;
 }
