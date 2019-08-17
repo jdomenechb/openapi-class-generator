@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Jdomenechb\OpenApiClassGenerator\Command;
 
-use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiParser;
+use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ApiServiceCodeGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\Finder\Finder;
 
 class GenerateCommand extends Command
 {
-    /** @var ApiParser */
+    /** @var ApiBuilder */
     private $apiParser;
 
     /** @var ApiServiceCodeGenerator */
@@ -28,9 +28,9 @@ class GenerateCommand extends Command
     /**
      * GenerateCommand constructor.
      *
-     * @param ApiParser $apiParser
+     * @param ApiBuilder $apiParser
      */
-    public function __construct(ApiParser $apiParser, ApiServiceCodeGenerator $codeGenerator)
+    public function __construct(ApiBuilder $apiParser, ApiServiceCodeGenerator $codeGenerator)
     {
         parent::__construct();
 
@@ -55,7 +55,7 @@ class GenerateCommand extends Command
         $finder->files()->in('contracts')->name(['*.yaml', '*.yml', '*.json']);
 
         foreach ($finder as $file) {
-            $apiService = $this->apiParser->parse($file->getRealPath());
+            $apiService = $this->apiParser->fromFile($file->getRealPath());
 
             $this->codeGenerator->generate($apiService);
         }

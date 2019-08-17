@@ -12,26 +12,26 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
 use Doctrine\Common\Inflector\Inflector;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ApiServiceCodeGenerator;
-use Jdomenechb\OpenApiClassGenerator\Model\ApiService;
+use Jdomenechb\OpenApiClassGenerator\Model\Api;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
+use function count;
 
 class NetteApiServiceCodeGenerator implements ApiServiceCodeGenerator
 {
-    public function generate(ApiService $apiService) :void
+    public function generate(Api $apiService) :void
     {
         $namespace = new PhpNamespace($apiService->namespace());
 
         $classRep = new ClassType($apiService->name());
-        $classRep
-            ->setFinal();
+        $classRep->setFinal();
 
         $namespace->add($classRep);
 
         foreach ($apiService->operations() as $operation) {
             $referenceMethodName = $operation->method() . $operation->path();
             $formats = $operation->formats();
-            $nFormats = \count($formats);
+            $nFormats = count($formats);
 
             foreach ($formats as $format) {
                 $methodName = $referenceMethodName;

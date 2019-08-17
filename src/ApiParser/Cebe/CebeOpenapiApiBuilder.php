@@ -11,12 +11,12 @@ namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
-use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiParser;
+use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\Model\ApiOperation;
 use Jdomenechb\OpenApiClassGenerator\Model\ApiOperationFormat;
-use Jdomenechb\OpenApiClassGenerator\Model\ApiService;
+use Jdomenechb\OpenApiClassGenerator\Model\Api;
 
-class CebeOpenapiApiParser implements ApiParser
+class CebeOpenapiApiBuilder implements ApiBuilder
 {
     /** @var CebeOpenapiFileReader */
     private $fileReader;
@@ -35,11 +35,11 @@ class CebeOpenapiApiParser implements ApiParser
      * @param string $filename
      * @param string $namespacePrefix
      *
-     * @return ApiService
+     * @return Api
      * @throws TypeErrorException
      * @throws UnresolvableReferenceException
      */
-    public function parse(string $filename, string $namespacePrefix = '') :ApiService
+    public function fromFile(string $filename, string $namespacePrefix = '') :Api
     {
         $contract = $this->fileReader->read($filename);
 
@@ -53,7 +53,7 @@ class CebeOpenapiApiParser implements ApiParser
         $namespace .= 'ApiService';
 
         // Create Service
-        $apiService = new ApiService($contract->info->title, $namespace);
+        $apiService = new Api($contract->info->title, $namespace);
 
         // Parse paths
         foreach ($contract->paths as $path => $pathInfo) {

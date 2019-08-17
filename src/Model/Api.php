@@ -12,7 +12,7 @@ namespace Jdomenechb\OpenApiClassGenerator\Model;
 
 use Doctrine\Common\Inflector\Inflector;
 
-class ApiService
+class Api
 {
     /** @var string */
     private $name;
