@@ -17,6 +17,8 @@ use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchemaProperty;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\PasswordSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\StringSchema;
+use RuntimeException;
+use function in_array;
 
 class CebeOpenApiTypeFactory
 {
@@ -27,7 +29,7 @@ class CebeOpenApiTypeFactory
                 $obj = new ObjectSchema($name);
 
                 foreach ($schema->properties as $propertyName => $property) {
-                    $dtoProperty = new ObjectSchemaProperty($propertyName, \in_array($propertyName, $schema->required, true), $this->build($property, $propertyName));
+                    $dtoProperty = new ObjectSchemaProperty($propertyName, in_array($propertyName, $schema->required, true), $this->build($property, $propertyName));
 
                     $obj->addProperty($dtoProperty);
                 }
@@ -46,7 +48,7 @@ class CebeOpenApiTypeFactory
                             break;
 
                         default:
-                            throw new \RuntimeException(sprintf('String schema format "%s" not recognized', $schema->format));
+                            throw new RuntimeException(sprintf('String schema format "%s" not recognized', $schema->format));
                     }
                 } else {
                     $obj = new StringSchema();
@@ -55,7 +57,7 @@ class CebeOpenApiTypeFactory
                 return $obj;
 
             default:
-                throw new \RuntimeException(sprintf('Schema type "%s" not recognized', $schema->type));
+                throw new RuntimeException(sprintf('Schema type "%s" not recognized', $schema->type));
         }
     }
 }
