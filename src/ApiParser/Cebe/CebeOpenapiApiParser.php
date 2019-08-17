@@ -12,6 +12,8 @@ namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiParser;
+use Jdomenechb\OpenApiClassGenerator\Model\ApiOperation;
+use Jdomenechb\OpenApiClassGenerator\Model\ApiOperationFormat;
 use Jdomenechb\OpenApiClassGenerator\Model\ApiService;
 
 class CebeOpenapiApiParser implements ApiParser
@@ -56,7 +58,25 @@ class CebeOpenapiApiParser implements ApiParser
         // Parse paths
         foreach ($contract->paths as $path => $pathInfo) {
             foreach ($pathInfo->getOperations() as $method => $contractOperation) {
-                $apiService->addOperation($method, $path);
+                if ($contractOperation->requestBody) {
+                    $operation = new ApiOperation($method, $path);
+
+                    foreach ($contractOperation->requestBody->content as $mediaType => $content) {
+                        switch ($mediaType) {
+                            case 'application/json':
+                                $format = 'json';
+                                break;
+
+                            default:
+                                throw new \RuntimeException('Unrecognized requestBody format: ' . $mediaType);
+                        }
+
+                        $operationFormat = new ApiOperationFormat($format);
+                        $operation->addFormat($operationFormat);
+                    }
+
+                    $apiService->addOperation($operation);
+                }
             }
         }
 

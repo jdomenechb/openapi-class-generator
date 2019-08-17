@@ -19,6 +19,9 @@ class ApiOperation
     /** @var string */
     private $path;
 
+    /** @var ApiOperationFormat[] */
+    private $formats;
+
     /**
      * ApiOperation constructor.
      *
@@ -29,6 +32,7 @@ class ApiOperation
     {
         $this->method = $method;
         $this->path = $path;
+        $this->formats = [];
     }
 
     /**
@@ -45,5 +49,18 @@ class ApiOperation
     public function path(): string
     {
         return $this->path;
+    }
+
+    public function addFormat(ApiOperationFormat $format): void
+    {
+        $this->formats[] = $format;
+    }
+
+    /**
+     * @return ApiOperationFormat[]
+     */
+    public function formats(): array
+    {
+        return $this->formats;
     }
 }

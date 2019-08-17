@@ -29,14 +29,24 @@ class NetteApiServiceCodeGenerator implements ApiServiceCodeGenerator
         $namespace->add($classRep);
 
         foreach ($apiService->operations() as $operation) {
-            $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $operation->method() . $operation->path()));
-            $classRep->addMethod($methodName)
-                ->setVisibility('public');
+            $referenceMethodName = $operation->method() . $operation->path();
+            $formats = $operation->formats();
+            $nFormats = \count($formats);
+
+            foreach ($formats as $format) {
+                $methodName = $referenceMethodName;
+
+                if ($nFormats > 1) {
+                    $methodName .= ' ' . $format->format();
+                }
+
+                $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $methodName));
+                $classRep->addMethod($methodName)
+                    ->setVisibility('public');
+            }
         }
 
         echo $namespace;
-
-
     }
 
 }

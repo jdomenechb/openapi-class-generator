@@ -69,9 +69,9 @@ class ApiService
         $this->namespace = trim($namespace, '\\');
     }
 
-    public function addOperation(string $method, string $path): void
+    public function addOperation(ApiOperation $operation): void
     {
-        $this->operations[] = new ApiOperation($method, $path);
+        $this->operations[] = $operation;
     }
 
     /**
