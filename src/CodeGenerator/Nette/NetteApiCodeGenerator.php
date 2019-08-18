@@ -53,6 +53,14 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
 
         $classRep->addComment('@version ' . $apiService->version());
 
+        if ($apiService->author() && $apiService->authorEmail()) {
+            $classRep->addComment('@author ' . $apiService->author() . ' <' . $apiService->authorEmail() . '>');
+        } elseif ($apiService->author()) {
+            $classRep->addComment('@author ' . $apiService->author());
+        } elseif ($apiService->authorEmail()) {
+            $classRep->addComment('@author ' . $apiService->authorEmail());
+        }
+
         $classRep->setFinal();
 
         $classRep->addProperty('client')

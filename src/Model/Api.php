@@ -30,6 +30,14 @@ class Api
      * @var string
      */
     private $version;
+    /**
+     * @var string|null
+     */
+    private $author;
+    /**
+     * @var string|null
+     */
+    private $authorEmail;
 
     /**
      * ApiService constructor.
@@ -39,7 +47,7 @@ class Api
      * @param string $namespace
      * @param string|null $description
      */
-    public function __construct(string $name, string $version, string $namespace = '', ?string $description = null)
+    public function __construct(string $name, string $version, string $namespace = '', ?string $description = null, ?string $author = null, ?string $authorEmail = null)
     {
         $this->setName($name);
         $this->setNamespace($namespace);
@@ -47,6 +55,8 @@ class Api
         $this->version = $version;
         $this->description = $description;
         $this->operations = [];
+        $this->author = $author;
+        $this->authorEmail = $authorEmail;
     }
 
     /**
@@ -112,5 +122,21 @@ class Api
     public function version(): string
     {
         return $this->version;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function author(): ?string
+    {
+        return $this->author;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function authorEmail(): ?string
+    {
+        return $this->authorEmail;
     }
 }
