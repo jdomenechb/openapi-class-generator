@@ -15,7 +15,6 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ApiCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
-use JMS\Serializer\SerializerInterface;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
 use Psr\Http\Message\ResponseInterface;
@@ -51,6 +50,7 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
         }
 
         $classRep->addComment('@version ' . $apiService->version());
+        $classRep->addComment('@api');
 
         if ($apiService->author() && $apiService->authorEmail()) {
             $classRep->addComment('@author ' . $apiService->author() . ' <' . $apiService->authorEmail() . '>');
