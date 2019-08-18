@@ -23,15 +23,15 @@ use function count;
 
 class NetteApiCodeGenerator implements ApiCodeGenerator
 {
-    /** @var NetteSchemaCodeGenerator */
+    /** @var NetteObjectSchemaCodeGenerator */
     private $schemaCodeGenerator;
 
     /**
      * NetteApiCodeGenerator constructor.
      *
-     * @param NetteSchemaCodeGenerator $schemaCodeGenerator
+     * @param NetteObjectSchemaCodeGenerator $schemaCodeGenerator
      */
-    public function __construct(NetteSchemaCodeGenerator $schemaCodeGenerator)
+    public function __construct(NetteObjectSchemaCodeGenerator $schemaCodeGenerator)
     {
         $this->schemaCodeGenerator = $schemaCodeGenerator;
     }
