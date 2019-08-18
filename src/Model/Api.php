@@ -27,17 +27,24 @@ class Api
     private $operations;
 
     /**
+     * @var string
+     */
+    private $version;
+
+    /**
      * ApiService constructor.
      *
      * @param string $name
+     * @param string $version
      * @param string $namespace
      * @param string|null $description
      */
-    public function __construct(string $name, string $namespace = '', ?string $description = null)
+    public function __construct(string $name, string $version, string $namespace = '', ?string $description = null)
     {
         $this->setName($name);
         $this->setNamespace($namespace);
 
+        $this->version = $version;
         $this->description = $description;
         $this->operations = [];
     }
@@ -97,5 +104,13 @@ class Api
     public function description(): ?string
     {
         return $this->description;
+    }
+
+    /**
+     * @return string
+     */
+    public function version(): string
+    {
+        return $this->version;
     }
 }

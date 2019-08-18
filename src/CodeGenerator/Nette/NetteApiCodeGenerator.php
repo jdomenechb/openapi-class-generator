@@ -51,6 +51,8 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
             $classRep->addComment($apiService->description());
         }
 
+        $classRep->addComment('@version ' . $apiService->version());
+
         $classRep->setFinal();
 
         $classRep->addProperty('client')
