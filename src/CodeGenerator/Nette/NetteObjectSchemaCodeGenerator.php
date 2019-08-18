@@ -11,16 +11,22 @@ declare(strict_types=1);
 namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
 use Doctrine\Common\Inflector\Inflector;
+use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\DateTimeSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
 use Nette\PhpGenerator\ClassType;
-use Nette\PhpGenerator\PhpNamespace;
+use Nette\PhpGenerator\PhpFile;
 
 class NetteObjectSchemaCodeGenerator
 {
-    public function generate(ObjectSchema $schema, PhpNamespace $namespace, string $format, string $namePrefix = ''): ClassType
-    {
+    public function generate(
+        ObjectSchema $schema,
+        ClassFileWriter $fileWriter,
+        string $namespaceName,
+        string $format,
+        string $namePrefix = ''
+    ): ClassType {
         $name = Inflector::classify($namePrefix . '-' . $schema->name());
 
         $classRef = new ClassType($name);
@@ -34,7 +40,7 @@ class NetteObjectSchemaCodeGenerator
             // Property
             $classRef->addProperty($propertyName)
                 ->setVisibility('private')
-                ->setComment('@var ' . $property->schema()->getPhpType() . (!$property->required()? '|null' : ''));
+                ->setComment('@var ' . $property->schema()->getPhpType() . (!$property->required() ? '|null' : ''));
 
             // Getter
             $classRef->addMethod($propertyName)
@@ -51,7 +57,9 @@ class NetteObjectSchemaCodeGenerator
             switch (get_class($property->schema())) {
                 case EmailSchema::class:
                     $construct->addBody(sprintf('if (!filter_var($%s, FILTER_VALIDATE_EMAIL)) {', $propertyName));
-                    $construct->addBody(sprintf('    throw new \InvalidArgumentException(\'Invalid %s\');', $propertyName));
+                    $construct->addBody(
+                        sprintf('    throw new \InvalidArgumentException(\'Invalid %s\');', $propertyName)
+                    );
                     $construct->addBody('}');
                     break;
             }
@@ -64,8 +72,7 @@ class NetteObjectSchemaCodeGenerator
 
             $serializeMethod = $classRef->addMethod('jsonSerialize')
                 ->setReturnType('array')
-                ->addBody('return [')
-                ;
+                ->addBody('return [');
 
             foreach ($schema->properties() as $property) {
                 $serializedValue = "\$this->{$property->name()}";
@@ -80,7 +87,11 @@ class NetteObjectSchemaCodeGenerator
             $serializeMethod->addBody('];');
         }
 
+        $file = new PhpFile();
+        $namespace = $file->addNamespace($namespaceName . '\\Dto');
         $namespace->add($classRef);
+
+        $fileWriter->write((string)$file, $classRef->getName(), $namespace->getName());
 
         return $classRef;
     }

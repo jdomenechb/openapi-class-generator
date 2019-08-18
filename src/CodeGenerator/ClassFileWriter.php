@@ -14,12 +14,27 @@ use RuntimeException;
 
 class ClassFileWriter
 {
-    public function write(string $content, string $fileName, string $outputPath, string $namespace): void
-    {
-        $namespacePath = $outputPath . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
+    /** @var string */
+    private $outputPath;
 
-        if (!mkdir($namespacePath, 0755, true) && !is_dir($namespacePath)) {
-            throw new RuntimeException(sprintf('Directory "%s" was not created', $namespacePath));
+    /**
+     * ClassFileWriter constructor.
+     *
+     * @param string $outputPath
+     */
+    public function __construct(string $outputPath)
+    {
+        $this->outputPath = $outputPath;
+    }
+
+    public function write(string $content, string $fileName, string $namespace): void
+    {
+        $namespacePath = $this->outputPath . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
+
+        if (!is_dir($namespacePath)) {
+            if (!mkdir($namespacePath, 0755, true) && !is_dir($namespacePath)) {
+                throw new RuntimeException(sprintf('Directory "%s" was not created', $namespacePath));
+            }
         }
 
         file_put_contents($namespacePath . DIRECTORY_SEPARATOR . $fileName . '.php', $content);

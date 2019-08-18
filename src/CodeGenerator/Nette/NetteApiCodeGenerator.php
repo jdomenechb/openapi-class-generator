@@ -42,7 +42,7 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
         $this->fileWriter = $fileWriter;
     }
 
-    public function generate(Api $apiService, string $outputPath) :void
+    public function generate(Api $apiService, string $outputPath): void
     {
         $file = new PhpFile();
         $file->setStrictTypes();
@@ -94,8 +94,7 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
                     ->setVisibility('public')
                     ->addBody('return $this->client->request(?, ?);', [$operation->method(), $operation->path()])
                     ->setReturnType(ResponseInterface::class)
-                    ->addComment('@throws GuzzleException')
-                    ;
+                    ->addComment('@throws GuzzleException');
             }
 
             foreach ($formats as $format) {
@@ -107,7 +106,13 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
 
                 $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $methodName));
 
-                $requestRef = $this->schemaCodeGenerator->generate($format->schema(), $namespace, $format->format(), $methodName);
+                $requestRef = $this->schemaCodeGenerator->generate(
+                    $format->schema(),
+                    $this->fileWriter,
+                    $namespace->getName(),
+                    $format->format(),
+                    $methodName
+                );
 
                 $method = $classRep->addMethod($methodName)
                     ->setVisibility('public')
@@ -118,27 +123,26 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
 
                 $method
                     ->addParameter('requestBody')
-                    ->setTypeHint($namespace->getName() . '\\' . $requestRef->getName())
-                    ;
+                    ->setTypeHint($namespace->getName() . '\\' . $requestRef->getName());
 
                 if ($format->format() === 'json') {
                     $method
                         ->addBody('$serializedRequestBody = \json_encode($requestBody);')
-                        ->addBody('$response = $this->client->request(?, ?, [\'body\' => $serializedRequestBody, \'headers\' => [\'Content-Type\' => \'application/json\']]);', [$operation->method(), $operation->path()])
-                        ;
+                        ->addBody(
+                            '$response = $this->client->request(?, ?, [\'body\' => $serializedRequestBody, \'headers\' => [\'Content-Type\' => \'application/json\']]);',
+                            [$operation->method(), $operation->path()]
+                        );
                 } else {
                     throw new RuntimeException('Unrecognized format ' . $format->format());
                 }
 
                 $method
-                    ->addBody('return $response;')
-                    ;
+                    ->addBody('return $response;');
 
             }
         }
 
-        $this->fileWriter->write((string) $file, $classRep->getName(), $outputPath, $namespace->getName());
-
+        $this->fileWriter->write((string)$file, $classRep->getName(), $namespace->getName());
     }
 
 }
