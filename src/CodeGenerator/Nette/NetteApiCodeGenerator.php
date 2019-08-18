@@ -12,6 +12,7 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
 use Doctrine\Common\Inflector\Inflector;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ApiCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
 use JMS\Serializer\SerializerInterface;
@@ -41,6 +42,7 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
         $namespace->addUse(ClientInterface::class);
         $namespace->addUse(SerializerInterface::class);
         $namespace->addUse(ResponseInterface::class);
+        $namespace->addUse(GuzzleException::class);
 
         $classRep = new ClassType($apiService->name());
         $namespace->add($classRep);
@@ -92,6 +94,9 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
                     ->addBody('$response = $this->client->request(?, ?, [\'body\' => $serializedRequestBody, \'headers\' => [\'Content-Type\' => \'application/json\']]);', [$operation->method(), $operation->path()])
                     ->addBody('return $response;')
                     ->setReturnType(ResponseInterface::class)
+                    ->addComment('@var \\' . $namespace->getName() . '\\' . $requestRef->getName() . ' $requestBody')
+                    ->addComment('@return ResponseInterface')
+                    ->addComment('@throws GuzzleException')
                     ->addParameter('requestBody')
                     ->setTypeHint($namespace->getName() . '\\' . $requestRef->getName())
                     ;
