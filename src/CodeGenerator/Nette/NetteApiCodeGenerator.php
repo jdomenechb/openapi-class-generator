@@ -26,19 +26,24 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
     /** @var NetteObjectSchemaCodeGenerator */
     private $schemaCodeGenerator;
 
+    /** @var NettePhpFileWriter */
+    private $fileWriter;
+
     /**
      * NetteApiCodeGenerator constructor.
      *
      * @param NetteObjectSchemaCodeGenerator $schemaCodeGenerator
      */
-    public function __construct(NetteObjectSchemaCodeGenerator $schemaCodeGenerator)
+    public function __construct(NetteObjectSchemaCodeGenerator $schemaCodeGenerator, NettePhpFileWriter $fileWriter)
     {
         $this->schemaCodeGenerator = $schemaCodeGenerator;
+        $this->fileWriter = $fileWriter;
     }
 
     public function generate(Api $apiService, string $outputPath) :void
     {
         $file = new PhpFile();
+        $file->setStrictTypes();
 
         $namespace = $file->addNamespace($apiService->namespace() . '\\' . $apiService->name());
         $namespace->addUse(ClientInterface::class);
@@ -130,13 +135,8 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
             }
         }
 
-        $namespacePath = $outputPath . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $namespace->getName());
+        $this->fileWriter->write($file, $classRep->getName(), $outputPath, $namespace->getName());
 
-        if (!mkdir($namespacePath, 0755, true) && !is_dir($namespacePath)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $namespacePath));
-        }
-
-        file_put_contents($namespacePath . DIRECTORY_SEPARATOR . $classRep->getName() . '.php', $file);
     }
 
 }
