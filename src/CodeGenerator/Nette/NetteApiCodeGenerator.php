@@ -37,12 +37,12 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
 
     public function generate(Api $apiService) :void
     {
-        $namespace = new PhpNamespace($apiService->namespace() . '\\Api');
+        $namespace = new PhpNamespace($apiService->namespace() . '\\' . $apiService->name());
         $namespace->addUse(ClientInterface::class);
         $namespace->addUse(ResponseInterface::class);
         $namespace->addUse(GuzzleException::class);
 
-        $classRep = new ClassType($apiService->name());
+        $classRep = new ClassType($apiService->name() . 'Service');
         $namespace->add($classRep);
 
         if ($apiService->description()) {
