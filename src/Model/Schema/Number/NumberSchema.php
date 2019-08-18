@@ -17,7 +17,7 @@ class NumberSchema extends AbstractSchema
 {
     public function getPhpType(): string
     {
-        return 'int';
+        return 'float';
     }
 
 }
