@@ -36,26 +36,27 @@ class NetteObjectSchemaCodeGenerator
 
         foreach ($schema->properties() as $property) {
             $propertyName = $property->name();
+            $propertySchema = $property->schema();
 
             // Property
             $classRef->addProperty($propertyName)
                 ->setVisibility('private')
-                ->setComment('@var ' . $property->schema()->getPhpType() . (!$property->required() ? '|null' : ''));
+                ->setComment('@var ' . $propertySchema->getPhpType() . (!$property->required() ? '|null' : ''));
 
             // Getter
             $classRef->addMethod($propertyName)
                 ->setVisibility('public')
                 ->setBody(sprintf('return $this->%s;', $propertyName))
-                ->setReturnType($property->schema()->getPhpType())
+                ->setReturnType($propertySchema->getPhpType())
                 ->setReturnNullable(!$property->required());
 
             // Constructor
             $construct->addParameter($propertyName)
-                ->setTypeHint($property->schema()->getPhpType())
+                ->setTypeHint($propertySchema->getPhpType())
                 ->setNullable(!$property->required());
 
-            if ($property->schema() instanceof SchemaValueValidation) {
-                $construct->addBody($property->schema()->getPhpValidation('$' . $propertyName) . "\n");
+            if ($propertySchema instanceof SchemaValueValidation) {
+                $construct->addBody($propertySchema->getPhpValidation('$' . $propertyName) . "\n");
             }
 
             $construct->addBody(sprintf('$this->%s = $%s;', $propertyName, $propertyName));
