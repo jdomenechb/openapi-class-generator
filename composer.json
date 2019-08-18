@@ -18,6 +18,7 @@
     }
   },
   "require": {
+    "ext-json": "*",
     "symfony/console": "^4.3",
     "cebe/php-openapi": "^1.2",
     "nette/php-generator": "^3.2",

@@ -18,7 +18,7 @@ use Nette\PhpGenerator\PhpNamespace;
 
 class NetteObjectSchemaCodeGenerator
 {
-    public function generate(ObjectSchema $schema, PhpNamespace $namespace, string $namePrefix = ''): ClassType
+    public function generate(ObjectSchema $schema, PhpNamespace $namespace, string $format, string $namePrefix = ''): ClassType
     {
         $name = Inflector::classify($namePrefix . '-' . $schema->name());
 
@@ -56,6 +56,21 @@ class NetteObjectSchemaCodeGenerator
             }
 
             $construct->addBody(sprintf('$this->%s = $%s;', $propertyName, $propertyName));
+        }
+
+        if ($format === 'json') {
+            $classRef->addImplement(\JsonSerializable::class);
+
+            $serializeMethod = $classRef->addMethod('jsonSerialize')
+                ->setReturnType('array')
+                ->addBody('return [')
+                ;
+
+            foreach ($schema->properties() as $property) {
+                $serializeMethod->addBody("    '{$property->name()}' => \$this->{$property->name()},");
+            }
+
+            $serializeMethod->addBody('];');
         }
 
         $namespace->add($classRef);

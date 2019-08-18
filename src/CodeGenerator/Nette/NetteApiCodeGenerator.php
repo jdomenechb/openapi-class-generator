@@ -40,7 +40,6 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
     {
         $namespace = new PhpNamespace($apiService->namespace() . '\\Api');
         $namespace->addUse(ClientInterface::class);
-        $namespace->addUse(SerializerInterface::class);
         $namespace->addUse(ResponseInterface::class);
         $namespace->addUse(GuzzleException::class);
 
@@ -67,20 +66,11 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
             ->setVisibility('private')
             ->addComment('@var ClientInterface');
 
-        $classRep->addProperty('serializer')
-            ->setVisibility('private')
-            ->addComment('@var SerializerInterface');
+        $construct = $classRep->addMethod('__construct')
+            ->addBody('$this->client = $client;');
 
-        $constuct = $classRep->addMethod('__construct')
-            ->addBody('$this->client = $client;')
-            ->addBody('$this->serializer = $serializer;');
-
-        $constuct->addParameter('client')
+        $construct->addParameter('client')
             ->setTypeHint(ClientInterface::class);
-
-        $constuct->addParameter('serializer')
-            ->setTypeHint(SerializerInterface::class);
-
 
         foreach ($apiService->operations() as $operation) {
             $referenceMethodName = $operation->method() . $operation->path();
@@ -107,19 +97,31 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
 
                 $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $methodName));
 
-                $requestRef = $this->schemaCodeGenerator->generate($format->schema(), $namespace, $methodName);
+                $requestRef = $this->schemaCodeGenerator->generate($format->schema(), $namespace, $format->format(), $methodName);
 
-                $classRep->addMethod($methodName)
+                $method = $classRep->addMethod($methodName)
                     ->setVisibility('public')
-                    ->addBody('$serializedRequestBody = $this->serializer->serialize($requestBody, ?);', [$format->format()])
-                    ->addBody('$response = $this->client->request(?, ?, [\'body\' => $serializedRequestBody, \'headers\' => [\'Content-Type\' => \'application/json\']]);', [$operation->method(), $operation->path()])
-                    ->addBody('return $response;')
                     ->setReturnType(ResponseInterface::class)
                     ->addComment('@var \\' . $namespace->getName() . '\\' . $requestRef->getName() . ' $requestBody')
                     ->addComment('@return ResponseInterface')
-                    ->addComment('@throws GuzzleException')
+                    ->addComment('@throws GuzzleException');
+
+                $method
                     ->addParameter('requestBody')
                     ->setTypeHint($namespace->getName() . '\\' . $requestRef->getName())
+                    ;
+
+                if ($format->format() === 'json') {
+                    $method
+                        ->addBody('$serializedRequestBody = \json_encode($requestBody);')
+                        ->addBody('$response = $this->client->request(?, ?, [\'body\' => $serializedRequestBody, \'headers\' => [\'Content-Type\' => \'application/json\']]);', [$operation->method(), $operation->path()])
+                        ;
+                } else {
+                    throw new \RuntimeException('Unrecognized format ' . $format->format());
+                }
+
+                $method
+                    ->addBody('return $response;')
                     ;
 
             }
