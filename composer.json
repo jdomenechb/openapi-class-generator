@@ -3,6 +3,7 @@
   "description": "Generate PHP classes from given OpenAPI contracts.",
   "type": "library",
   "license": "MIT",
+  "version": "0.1.0-alpha",
   "authors": [
     {
       "name": "Jordi Domènech",

@@ -12,6 +12,7 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
 use Doctrine\Common\Inflector\Inflector;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\DateTimeSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
@@ -67,7 +68,13 @@ class NetteObjectSchemaCodeGenerator
                 ;
 
             foreach ($schema->properties() as $property) {
-                $serializeMethod->addBody("    '{$property->name()}' => \$this->{$property->name()},");
+                $serializedValue = "\$this->{$property->name()}";
+
+                if ($property->schema() instanceof DateTimeSchema) {
+                    $serializedValue .= "->format('c')";
+                }
+
+                $serializeMethod->addBody("    '{$property->name()}' => $serializedValue,");
             }
 
             $serializeMethod->addBody('];');
