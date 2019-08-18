@@ -13,6 +13,7 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 use Doctrine\Common\Inflector\Inflector;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
 use RuntimeException;
@@ -33,19 +34,30 @@ class NetteSchemaCodeGenerator
             foreach ($schema->properties() as $property) {
                 $propertyName = $property->name();
 
+                // Property
                 $classRef->addProperty($propertyName)
                     ->setVisibility('private')
                     ->setComment('@var ' . $property->schema()->getPhpType() . (!$property->required()? '|null' : ''));
 
+                // Getter
                 $classRef->addMethod($propertyName)
                     ->setVisibility('public')
                     ->setBody(sprintf('return $this->%s;', $propertyName))
                     ->setReturnType($property->schema()->getPhpType())
                     ->setReturnNullable(!$property->required());
 
+                // Constructor
                 $construct->addParameter($propertyName)
                     ->setTypeHint($property->schema()->getPhpType())
                     ->setNullable(!$property->required());
+
+                switch (get_class($property->schema())) {
+                    case EmailSchema::class:
+                        $construct->addBody(sprintf('if (!filter_var($%s, FILTER_VALIDATE_EMAIL)) {', $propertyName));
+                        $construct->addBody(sprintf('throw new \InvalidArgumentException(\'Invalid %s\');', $propertyName));
+                        $construct->addBody('}');
+                        break;
+                }
 
                 $construct->addBody(sprintf('$this->%s = $%s;', $propertyName, $propertyName));
             }
