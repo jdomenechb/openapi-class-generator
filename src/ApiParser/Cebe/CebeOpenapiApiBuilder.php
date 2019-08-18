@@ -49,7 +49,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
     {
         $contract = $this->fileReader->read($filename);
 
-        $apiService = new Api($contract->info->title, $namespacePrefix);
+        $apiService = new Api($contract->info->title, $namespacePrefix, $contract->info->description);
 
         // Parse paths
         foreach ($contract->paths as $path => $pathInfo) {

@@ -51,8 +51,8 @@ class CebeOpenApiTypeFactory
 
                         default:
                             //FIXME: Provisional
-                            throw new RuntimeException(sprintf('String schema format "%s" not recognized', $schema->format));
                             return new StringSchema();
+                            throw new RuntimeException(sprintf('String schema format "%s" not recognized', $schema->format));
                     }
                 } else {
                     $obj = new StringSchema();
@@ -80,8 +80,8 @@ class CebeOpenApiTypeFactory
                 return $obj;
 
             default:
-                throw new RuntimeException(sprintf('Schema type "%s" not recognized', $schema->type));
                 //FIXME: Provisional
+                throw new RuntimeException(sprintf('Schema type "%s" not recognized', $schema->type));
                 return new StringSchema();
         }
     }

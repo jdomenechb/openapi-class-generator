@@ -39,6 +39,10 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
         $classRep = new ClassType($apiService->name());
         $classRep->setFinal();
 
+        if ($apiService->description()) {
+            $classRep->addComment($apiService->description());
+        }
+
         $namespace->add($classRep);
 
         foreach ($apiService->operations() as $operation) {

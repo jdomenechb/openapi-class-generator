@@ -12,6 +12,7 @@ namespace Jdomenechb\OpenApiClassGenerator\Command;
 
 use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ApiCodeGenerator;
+use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -51,6 +52,8 @@ class GenerateCommand extends Command
     {
         $finder = new Finder();
         $finder->files()->in('contracts')->name(['*.yaml', '*.yml', '*.json']);
+
+        $phpFile = new PhpFile();
 
         foreach ($finder as $file) {
             $apiService = $this->apiBuilder->fromFile($file->getRealPath());

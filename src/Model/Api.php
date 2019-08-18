@@ -20,6 +20,9 @@ class Api
     /** @var string */
     private $namespace;
 
+    /** @var string|null */
+    private $description;
+
     /** @var ApiOperation[] */
     private $operations;
 
@@ -29,11 +32,12 @@ class Api
      * @param string $name
      * @param string $namespace
      */
-    public function __construct(string $name, string $namespace = '')
+    public function __construct(string $name, string $namespace = '', ?string $description = null)
     {
         $this->setName($name);
         $this->setNamespace($namespace);
 
+        $this->description = $description;
         $this->operations = [];
     }
 
@@ -86,5 +90,11 @@ class Api
         return $this->operations;
     }
 
-
+    /**
+     * @return string|null
+     */
+    public function description(): ?string
+    {
+        return $this->description;
+    }
 }
