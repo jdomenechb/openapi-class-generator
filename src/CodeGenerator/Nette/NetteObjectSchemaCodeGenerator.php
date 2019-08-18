@@ -26,7 +26,7 @@ class NetteObjectSchemaCodeGenerator
         string $namespaceName,
         string $format,
         string $namePrefix = ''
-    ): ClassType {
+    ): string {
         $name = Inflector::classify($namePrefix . '-' . $schema->name());
 
         $classRef = new ClassType($name);
@@ -83,7 +83,7 @@ class NetteObjectSchemaCodeGenerator
 
         $fileWriter->write((string)$file, $classRef->getName(), $namespace->getName());
 
-        return $classRef;
+        return '\\' . $namespace->getName() . '\\' . $classRef->getName();
     }
 
 }

@@ -106,7 +106,7 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
 
                 $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $methodName));
 
-                $requestRef = $this->schemaCodeGenerator->generate(
+                $requestClassName = $this->schemaCodeGenerator->generate(
                     $format->schema(),
                     $this->fileWriter,
                     $namespace->getName(),
@@ -117,13 +117,13 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
                 $method = $classRep->addMethod($methodName)
                     ->setVisibility('public')
                     ->setReturnType(ResponseInterface::class)
-                    ->addComment('@var \\' . $namespace->getName() . '\\' . $requestRef->getName() . ' $requestBody')
+                    ->addComment('@var ' . $requestClassName . ' $requestBody')
                     ->addComment('@return ResponseInterface')
                     ->addComment('@throws GuzzleException');
 
                 $method
                     ->addParameter('requestBody')
-                    ->setTypeHint($namespace->getName() . '\\' . $requestRef->getName());
+                    ->setTypeHint($requestClassName);
 
                 if ($format->format() === 'json') {
                     $method
