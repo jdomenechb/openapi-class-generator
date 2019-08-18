@@ -8,15 +8,13 @@ declare(strict_types=1);
  * (c) Jordi Domènech Bonilla
  */
 
-namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
+namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator;
 
-
-use Nette\PhpGenerator\PhpFile;
 use RuntimeException;
 
-class NettePhpFileWriter
+class ClassFileWriter
 {
-    public function write(PhpFile $file, string $fileName, string $outputPath, string $namespace): void
+    public function write(string $content, string $fileName, string $outputPath, string $namespace): void
     {
         $namespacePath = $outputPath . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
 
@@ -24,6 +22,6 @@ class NettePhpFileWriter
             throw new RuntimeException(sprintf('Directory "%s" was not created', $namespacePath));
         }
 
-        file_put_contents($namespacePath . DIRECTORY_SEPARATOR . $fileName . '.php', $file);
+        file_put_contents($namespacePath . DIRECTORY_SEPARATOR . $fileName . '.php', $content);
     }
 }

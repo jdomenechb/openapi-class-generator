@@ -14,11 +14,12 @@ use Doctrine\Common\Inflector\Inflector;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ApiCodeGenerator;
+use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
-use Nette\PhpGenerator\PhpNamespace;
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 use function count;
 
 class NetteApiCodeGenerator implements ApiCodeGenerator
@@ -26,15 +27,16 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
     /** @var NetteObjectSchemaCodeGenerator */
     private $schemaCodeGenerator;
 
-    /** @var NettePhpFileWriter */
+    /** @var ClassFileWriter */
     private $fileWriter;
 
     /**
      * NetteApiCodeGenerator constructor.
      *
      * @param NetteObjectSchemaCodeGenerator $schemaCodeGenerator
+     * @param ClassFileWriter $fileWriter
      */
-    public function __construct(NetteObjectSchemaCodeGenerator $schemaCodeGenerator, NettePhpFileWriter $fileWriter)
+    public function __construct(NetteObjectSchemaCodeGenerator $schemaCodeGenerator, ClassFileWriter $fileWriter)
     {
         $this->schemaCodeGenerator = $schemaCodeGenerator;
         $this->fileWriter = $fileWriter;
@@ -125,7 +127,7 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
                         ->addBody('$response = $this->client->request(?, ?, [\'body\' => $serializedRequestBody, \'headers\' => [\'Content-Type\' => \'application/json\']]);', [$operation->method(), $operation->path()])
                         ;
                 } else {
-                    throw new \RuntimeException('Unrecognized format ' . $format->format());
+                    throw new RuntimeException('Unrecognized format ' . $format->format());
                 }
 
                 $method
@@ -135,7 +137,7 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
             }
         }
 
-        $this->fileWriter->write($file, $classRep->getName(), $outputPath, $namespace->getName());
+        $this->fileWriter->write((string) $file, $classRep->getName(), $outputPath, $namespace->getName());
 
     }
 
