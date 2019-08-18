@@ -54,7 +54,7 @@ class NetteSchemaCodeGenerator
                 switch (get_class($property->schema())) {
                     case EmailSchema::class:
                         $construct->addBody(sprintf('if (!filter_var($%s, FILTER_VALIDATE_EMAIL)) {', $propertyName));
-                        $construct->addBody(sprintf('throw new \InvalidArgumentException(\'Invalid %s\');', $propertyName));
+                        $construct->addBody(sprintf('    throw new \InvalidArgumentException(\'Invalid %s\');', $propertyName));
                         $construct->addBody('}');
                         break;
                 }
