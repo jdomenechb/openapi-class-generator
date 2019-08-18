@@ -15,6 +15,7 @@ use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\DateTimeSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
+use JsonSerializable;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
 
@@ -68,7 +69,7 @@ class NetteObjectSchemaCodeGenerator
         }
 
         if ($format === 'json') {
-            $classRef->addImplement(\JsonSerializable::class);
+            $classRef->addImplement(JsonSerializable::class);
 
             $serializeMethod = $classRef->addMethod('jsonSerialize')
                 ->setReturnType('array')
