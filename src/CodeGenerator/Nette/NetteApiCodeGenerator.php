@@ -77,6 +77,17 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
             $formats = $operation->formats();
             $nFormats = count($formats);
 
+            if ($nFormats === 0) {
+                $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $referenceMethodName));
+
+                $classRep->addMethod($methodName)
+                    ->setVisibility('public')
+                    ->addBody('return $this->client->request(?, ?);', [$operation->method(), $operation->path()])
+                    ->setReturnType(ResponseInterface::class)
+                    ->addComment('@throws GuzzleException')
+                    ;
+            }
+
             foreach ($formats as $format) {
                 $methodName = $referenceMethodName;
 
