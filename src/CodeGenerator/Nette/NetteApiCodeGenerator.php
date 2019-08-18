@@ -16,6 +16,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ApiCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
 use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
 use Psr\Http\Message\ResponseInterface;
 use function count;
@@ -35,9 +36,11 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
         $this->schemaCodeGenerator = $schemaCodeGenerator;
     }
 
-    public function generate(Api $apiService) :void
+    public function generate(Api $apiService, string $outputPath) :void
     {
-        $namespace = new PhpNamespace($apiService->namespace() . '\\' . $apiService->name());
+        $file = new PhpFile();
+
+        $namespace = $file->addNamespace($apiService->namespace() . '\\' . $apiService->name());
         $namespace->addUse(ClientInterface::class);
         $namespace->addUse(ResponseInterface::class);
         $namespace->addUse(GuzzleException::class);
@@ -127,7 +130,13 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
             }
         }
 
-        file_put_contents('output.php', "<?php\n\n" . (string) $namespace);
+        $namespacePath = $outputPath . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $namespace->getName());
+
+        if (!mkdir($namespacePath, 0755, true) && !is_dir($namespacePath)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $namespacePath));
+        }
+
+        file_put_contents($namespacePath . DIRECTORY_SEPARATOR . $classRep->getName() . '.php', $file);
     }
 
 }

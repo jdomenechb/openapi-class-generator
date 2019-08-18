@@ -16,6 +16,7 @@ use Nette\PhpGenerator\PhpFile;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 class GenerateCommand extends Command
@@ -50,6 +51,13 @@ class GenerateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $outputPath = 'output';
+
+        // Clean output path
+        $filesystem = new Filesystem();
+        $filesystem->remove($outputPath);
+        $filesystem->mkdir($outputPath);
+
         $finder = new Finder();
         $finder->files()->in('contracts')->name(['*.yaml', '*.yml', '*.json']);
 
@@ -58,7 +66,7 @@ class GenerateCommand extends Command
         foreach ($finder as $file) {
             $apiService = $this->apiBuilder->fromFile($file->getRealPath());
 
-            $this->apiCodeGenerator->generate($apiService);
+            $this->apiCodeGenerator->generate($apiService, $outputPath);
         }
     }
 }
