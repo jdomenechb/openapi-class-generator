@@ -31,6 +31,7 @@ class Api
      *
      * @param string $name
      * @param string $namespace
+     * @param string|null $description
      */
     public function __construct(string $name, string $namespace = '', ?string $description = null)
     {
