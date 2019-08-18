@@ -16,6 +16,7 @@ use Jdomenechb\OpenApiClassGenerator\Model\Schema\Number\FloatSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\Number\NumberSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchemaProperty;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\DateTimeSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\PasswordSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\StringSchema;
@@ -49,10 +50,14 @@ class CebeOpenApiTypeFactory
                             $obj = new PasswordSchema();
                             break;
 
+                        case 'date-time':
+                            $obj = new DateTimeSchema();
+                            break;
+
                         default:
                             //FIXME: Provisional
-                            return new StringSchema();
                             throw new RuntimeException(sprintf('String schema format "%s" not recognized', $schema->format));
+                            return new StringSchema();
                     }
                 } else {
                     $obj = new StringSchema();
