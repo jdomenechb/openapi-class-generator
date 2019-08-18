@@ -11,7 +11,18 @@ declare(strict_types=1);
 namespace Jdomenechb\OpenApiClassGenerator\Model\Schema\String;
 
 
-class EmailSchema extends StringSchema
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\SchemaValueValidation;
+
+class EmailSchema extends StringSchema implements SchemaValueValidation
 {
+    public function getPhpValidation(string $propertyName): string
+    {
+        return <<<CODE
+if (!filter_var(\$$propertyName, FILTER_VALIDATE_EMAIL)) {
+    throw new \InvalidArgumentException('Invalid $propertyName');
+}
+CODE;
+
+    }
 
 }

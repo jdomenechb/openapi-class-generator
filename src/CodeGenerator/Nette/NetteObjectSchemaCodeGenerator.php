@@ -13,6 +13,7 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 use Doctrine\Common\Inflector\Inflector;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\SchemaValueValidation;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\DateTimeSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
 use JsonSerializable;
@@ -55,14 +56,8 @@ class NetteObjectSchemaCodeGenerator
                 ->setTypeHint($property->schema()->getPhpType())
                 ->setNullable(!$property->required());
 
-            switch (get_class($property->schema())) {
-                case EmailSchema::class:
-                    $construct->addBody(sprintf('if (!filter_var($%s, FILTER_VALIDATE_EMAIL)) {', $propertyName));
-                    $construct->addBody(
-                        sprintf('    throw new \InvalidArgumentException(\'Invalid %s\');', $propertyName)
-                    );
-                    $construct->addBody('}');
-                    break;
+            if ($property->schema() instanceof SchemaValueValidation) {
+                $construct->addBody($property->schema()->getPhpValidation($propertyName) . "\n");
             }
 
             $construct->addBody(sprintf('$this->%s = $%s;', $propertyName, $propertyName));
