@@ -14,8 +14,6 @@ use Doctrine\Common\Inflector\Inflector;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\SchemaValueValidation;
-use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\DateTimeSchema;
-use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
 use JsonSerializable;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
@@ -57,7 +55,7 @@ class NetteObjectSchemaCodeGenerator
                 ->setNullable(!$property->required());
 
             if ($property->schema() instanceof SchemaValueValidation) {
-                $construct->addBody($property->schema()->getPhpValidation($propertyName) . "\n");
+                $construct->addBody($property->schema()->getPhpValidation('$' . $propertyName) . "\n");
             }
 
             $construct->addBody(sprintf('$this->%s = $%s;', $propertyName, $propertyName));
@@ -71,12 +69,7 @@ class NetteObjectSchemaCodeGenerator
                 ->addBody('return [');
 
             foreach ($schema->properties() as $property) {
-                $serializedValue = "\$this->{$property->name()}";
-
-                if ($property->schema() instanceof DateTimeSchema) {
-                    $serializedValue .= "->format('c')";
-                }
-
+                $serializedValue = $property->schema()->getPhpSerializationValue("\$this->{$property->name()}");
                 $serializeMethod->addBody("    '{$property->name()}' => $serializedValue,");
             }
 

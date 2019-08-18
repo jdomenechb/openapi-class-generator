@@ -11,5 +11,5 @@ namespace Jdomenechb\OpenApiClassGenerator\Model\Schema;
 
 interface SchemaValueValidation
 {
-    public function getPhpValidation(string $propertyName) :string;
+    public function getPhpValidation(string $origin) :string;
 }

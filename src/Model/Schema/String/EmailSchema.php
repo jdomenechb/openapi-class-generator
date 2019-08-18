@@ -15,11 +15,11 @@ use Jdomenechb\OpenApiClassGenerator\Model\Schema\SchemaValueValidation;
 
 class EmailSchema extends StringSchema implements SchemaValueValidation
 {
-    public function getPhpValidation(string $propertyName): string
+    public function getPhpValidation(string $origin): string
     {
         return <<<CODE
-if (!filter_var(\$$propertyName, FILTER_VALIDATE_EMAIL)) {
-    throw new \InvalidArgumentException('Invalid $propertyName');
+if (!filter_var($origin, FILTER_VALIDATE_EMAIL)) {
+    throw new \InvalidArgumentException('Invalid $origin');
 }
 CODE;
 
