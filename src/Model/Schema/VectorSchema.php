@@ -29,4 +29,12 @@ class VectorSchema extends AbstractSchema
         return 'array';
     }
 
+    /**
+     * @return AbstractSchema
+     */
+    public function wrapped(): AbstractSchema
+    {
+        return $this->wrapped;
+    }
+
 }

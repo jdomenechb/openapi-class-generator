@@ -14,6 +14,7 @@ use Doctrine\Common\Inflector\Inflector;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\SchemaValueValidation;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\VectorSchema;
 use JsonSerializable;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
@@ -60,6 +61,14 @@ class NetteObjectSchemaCodeGenerator
             }
 
             $construct->addBody(sprintf('$this->%s = $%s;', $propertyName, $propertyName));
+
+            if ($propertySchema instanceof ObjectSchema) {
+                $this->generate($propertySchema, $fileWriter, $namespaceName, $format, $name);
+            }
+
+            if ($propertySchema instanceof VectorSchema && $propertySchema->wrapped() instanceof ObjectSchema) {
+                $this->generate($propertySchema->wrapped(), $fileWriter, $namespaceName, $format, $name);
+            }
         }
 
         if ($format === 'json') {
