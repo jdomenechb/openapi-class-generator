@@ -26,7 +26,7 @@ class VectorSchema extends AbstractSchema
 
     public function getPhpType(): string
     {
-        return $this->wrapped->getPhpType() . '[]';
+        return 'array';
     }
 
 }

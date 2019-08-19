@@ -12,6 +12,7 @@ namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 
 use cebe\openapi\spec\Schema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\BooleanSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\Number\FloatSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\Number\NumberSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
@@ -20,6 +21,8 @@ use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\DateTimeSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\PasswordSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\StringSchema;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\UriSchema;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\VectorSchema;
 use RuntimeException;
 use function in_array;
 
@@ -54,6 +57,10 @@ class CebeOpenApiTypeFactory
                             $obj = new DateTimeSchema();
                             break;
 
+                        case 'uri':
+                            $obj = new UriSchema();
+                            break;
+
                         default:
                             //FIXME: Provisional
                             throw new RuntimeException(sprintf('String schema format "%s" not recognized', $schema->format));
@@ -83,6 +90,12 @@ class CebeOpenApiTypeFactory
                 }
 
                 return $obj;
+
+            case 'array':
+                return new VectorSchema($this->build($schema->items, $name . 'Item'));
+
+            case 'boolean':
+                return new BooleanSchema();
 
             default:
                 //FIXME: Provisional

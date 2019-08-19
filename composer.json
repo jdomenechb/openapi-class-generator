@@ -19,6 +19,7 @@
     }
   },
   "require": {
+    "php": ">=7.1",
     "ext-json": "*",
     "symfony/console": "^4.3",
     "cebe/php-openapi": "^1.2",

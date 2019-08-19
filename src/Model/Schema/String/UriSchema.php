@@ -13,13 +13,13 @@ namespace Jdomenechb\OpenApiClassGenerator\Model\Schema\String;
 
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\SchemaValueValidation;
 
-class EmailSchema extends StringSchema implements SchemaValueValidation
+class UriSchema extends StringSchema implements SchemaValueValidation
 {
     public function getPhpValidation(string $origin): string
     {
         return <<<CODE
-if (!filter_var($origin, FILTER_VALIDATE_EMAIL)) {
-    throw new \InvalidArgumentException('Invalid email $origin');
+if (!filter_var($origin, FILTER_VALIDATE_URL)) {
+    throw new \InvalidArgumentException('Invalid url $origin');
 }
 CODE;
 
