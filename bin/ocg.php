@@ -19,7 +19,7 @@ $app = new Application();
 $app->add(
     new GenerateCommand(
         new CebeOpenapiApiBuilder(new CebeOpenapiFileReader(), new CebeOpenApiTypeFactory()),
-        new NetteApiCodeGenerator(new NetteApiOperationFormatGenerator(new NetteObjectSchemaCodeGenerator($fileWriter), $fileWriter), $fileWriter)
+        new NetteApiCodeGenerator(new NetteApiOperationFormatGenerator(new NetteObjectSchemaCodeGenerator($fileWriter)), $fileWriter)
     )
 );
 

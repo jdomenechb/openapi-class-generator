@@ -13,5 +13,5 @@ use Jdomenechb\OpenApiClassGenerator\Model\Api;
 
 interface ApiCodeGenerator
 {
-    public function generate(Api $apiService, string $outputPath) :void;
+    public function generate(Api $apiService) :void;
 }

@@ -46,7 +46,7 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
         $this->apiOperationFormatGenerator = $apiOperationFormatGenerator;
     }
 
-    public function generate(Api $apiService, string $outputPath): void
+    public function generate(Api $apiService): void
     {
         $file = new PhpFile();
         $file->setStrictTypes();

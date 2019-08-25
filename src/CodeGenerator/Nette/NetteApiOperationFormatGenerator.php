@@ -27,13 +27,9 @@ class NetteApiOperationFormatGenerator
      */
     private $schemaCodeGenerator;
 
-    /** @var ClassFileWriter */
-    private $fileWriter;
-
-    public function __construct(NetteObjectSchemaCodeGenerator $schemaCodeGenerator, ClassFileWriter $fileWriter)
+    public function __construct(NetteObjectSchemaCodeGenerator $schemaCodeGenerator)
     {
         $this->schemaCodeGenerator = $schemaCodeGenerator;
-        $this->fileWriter = $fileWriter;
     }
 
     public function generate(
