@@ -23,16 +23,29 @@ class ApiOperation
     private $formats;
 
     /**
+     * @var string|null
+     */
+    private $summary;
+    /**
+     * @var string|null
+     */
+    private $description;
+
+    /**
      * ApiOperation constructor.
      *
      * @param string $method
      * @param string $path
+     * @param string|null $summary
+     * @param string|null $description
      */
-    public function __construct(string $method, string $path)
+    public function __construct(string $method, string $path, ?string $summary, ?string $description)
     {
         $this->method = $method;
         $this->path = $path;
         $this->formats = [];
+        $this->summary = $summary;
+        $this->description = $description;
     }
 
     /**
@@ -63,4 +76,21 @@ class ApiOperation
     {
         return $this->formats;
     }
+
+    /**
+     * @return string|null
+     */
+    public function summary(): ?string
+    {
+        return $this->summary;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function description(): ?string
+    {
+        return $this->description;
+    }
+
 }

@@ -61,7 +61,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
         // Parse paths
         foreach ($contract->paths as $path => $pathInfo) {
             foreach ($pathInfo->getOperations() as $method => $contractOperation) {
-                $operation = new ApiOperation($method, $path);
+                $operation = new ApiOperation($method, $path, $contractOperation->summary, $contractOperation->description);
 
                 if ($contractOperation->requestBody) {
                     foreach ($contractOperation->requestBody->content as $mediaType => $content) {

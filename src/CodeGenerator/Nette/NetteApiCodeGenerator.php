@@ -90,10 +90,22 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
             if ($nFormats === 0) {
                 $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $referenceMethodName));
 
-                $classRep->addMethod($methodName)
+                $method = $classRep->addMethod($methodName)
                     ->setVisibility('public')
                     ->addBody('return $this->client->request(?, ?);', [$operation->method(), $operation->path()])
-                    ->setReturnType(ResponseInterface::class)
+                    ->setReturnType(ResponseInterface::class);
+
+                if ($operation->description()) {
+                    $method->addComment($operation->description());
+                    $method->addComment('');
+                }
+
+                if ($operation->summary()) {
+                    $method->addComment($operation->summary());
+                    $method->addComment('');
+                }
+
+                $method
                     ->addComment('Endpoint URL: ' . $operation->path())
                     ->addComment('Method: ' . strtoupper($operation->method()))
                     ->addComment('')
@@ -121,7 +133,19 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
 
                 $method = $classRep->addMethod($methodName)
                     ->setVisibility('public')
-                    ->setReturnType(ResponseInterface::class)
+                    ->setReturnType(ResponseInterface::class);
+
+                if ($operation->description()) {
+                    $method->addComment($operation->description());
+                    $method->addComment('');
+                }
+
+                if ($operation->summary()) {
+                    $method->addComment($operation->summary());
+                    $method->addComment('');
+                }
+
+                $method
                     ->addComment('Endpoint URL: ' . $operation->path())
                     ->addComment('Method: ' . strtoupper($operation->method()))
                     ->addComment('')
