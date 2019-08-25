@@ -21,9 +21,19 @@ use Nette\PhpGenerator\PhpFile;
 
 class NetteObjectSchemaCodeGenerator
 {
+    /**
+     * @var ClassFileWriter
+     */
+    private $fileWriter;
+
+    public function __construct(ClassFileWriter $fileWriter)
+    {
+
+        $this->fileWriter = $fileWriter;
+    }
+
     public function generate(
         ObjectSchema $schema,
-        ClassFileWriter $fileWriter,
         string $namespaceName,
         string $format,
         string $namePrefix = ''
@@ -63,11 +73,11 @@ class NetteObjectSchemaCodeGenerator
             $construct->addBody(sprintf('$this->%s = $%s;', $propertyName, $propertyName));
 
             if ($propertySchema instanceof ObjectSchema) {
-                $this->generate($propertySchema, $fileWriter, $namespaceName, $format, $name);
+                $this->generate($propertySchema, $namespaceName, $format, $name);
             }
 
             if ($propertySchema instanceof VectorSchema && $propertySchema->wrapped() instanceof ObjectSchema) {
-                $this->generate($propertySchema->wrapped(), $fileWriter, $namespaceName, $format, $name);
+                $this->generate($propertySchema->wrapped(), $namespaceName, $format, $name);
             }
         }
 
@@ -90,7 +100,7 @@ class NetteObjectSchemaCodeGenerator
         $namespace = $file->addNamespace($namespaceName . '\\Dto');
         $namespace->add($classRef);
 
-        $fileWriter->write((string)$file, $classRef->getName(), $namespace->getName());
+        $this->fileWriter->write((string)$file, $classRef->getName(), $namespace->getName());
 
         return '\\' . $namespace->getName() . '\\' . $classRef->getName();
     }

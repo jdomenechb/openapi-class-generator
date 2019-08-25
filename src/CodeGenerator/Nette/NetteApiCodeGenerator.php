@@ -24,22 +24,26 @@ use function count;
 
 class NetteApiCodeGenerator implements ApiCodeGenerator
 {
-    /** @var NetteObjectSchemaCodeGenerator */
-    private $schemaCodeGenerator;
-
     /** @var ClassFileWriter */
     private $fileWriter;
+    /**
+     * @var NetteApiOperationFormatGenerator
+     */
+    private $apiOperationFormatGenerator;
 
     /**
      * NetteApiCodeGenerator constructor.
      *
-     * @param NetteObjectSchemaCodeGenerator $schemaCodeGenerator
+     * @param NetteApiOperationFormatGenerator $apiOperationFormatGenerator
      * @param ClassFileWriter $fileWriter
      */
-    public function __construct(NetteObjectSchemaCodeGenerator $schemaCodeGenerator, ClassFileWriter $fileWriter)
+    public function __construct(
+        NetteApiOperationFormatGenerator $apiOperationFormatGenerator,
+        ClassFileWriter $fileWriter
+    )
     {
-        $this->schemaCodeGenerator = $schemaCodeGenerator;
         $this->fileWriter = $fileWriter;
+        $this->apiOperationFormatGenerator = $apiOperationFormatGenerator;
     }
 
     public function generate(Api $apiService, string $outputPath): void
@@ -88,90 +92,11 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
             $nFormats = count($formats);
 
             if ($nFormats === 0) {
-                $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $referenceMethodName));
-
-                $method = $classRep->addMethod($methodName)
-                    ->setVisibility('public')
-                    ->addBody('return $this->client->request(?, ?);', [$operation->method(), $operation->path()])
-                    ->setReturnType(ResponseInterface::class);
-
-                if ($operation->description()) {
-                    $method->addComment($operation->description());
-                    $method->addComment('');
-                }
-
-                if ($operation->summary()) {
-                    $method->addComment($operation->summary());
-                    $method->addComment('');
-                }
-
-                $method
-                    ->addComment('Endpoint URL: ' . $operation->path())
-                    ->addComment('Method: ' . strtoupper($operation->method()))
-                    ->addComment('')
-                    ->addComment('@return ResponseInterface')
-                    ->addComment('@throws GuzzleException')
-                    ;
+                $this->apiOperationFormatGenerator->generate($classRep, $namespace, $operation);
             }
 
             foreach ($formats as $format) {
-                $methodName = $referenceMethodName;
-
-                if ($nFormats > 1) {
-                    $methodName .= ' ' . $format->format();
-                }
-
-                $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $methodName));
-
-                $requestClassName = $this->schemaCodeGenerator->generate(
-                    $format->schema(),
-                    $this->fileWriter,
-                    $namespace->getName(),
-                    $format->format(),
-                    $methodName
-                );
-
-                $method = $classRep->addMethod($methodName)
-                    ->setVisibility('public')
-                    ->setReturnType(ResponseInterface::class);
-
-                if ($operation->description()) {
-                    $method->addComment($operation->description());
-                    $method->addComment('');
-                }
-
-                if ($operation->summary()) {
-                    $method->addComment($operation->summary());
-                    $method->addComment('');
-                }
-
-                $method
-                    ->addComment('Endpoint URL: ' . $operation->path())
-                    ->addComment('Method: ' . strtoupper($operation->method()))
-                    ->addComment('')
-                    ->addComment('@param ' . $requestClassName . ' $requestBody')
-                    ->addComment('@return ResponseInterface')
-                    ->addComment('')
-                    ->addComment('@throws GuzzleException');
-
-                $method
-                    ->addParameter('requestBody')
-                    ->setTypeHint($requestClassName);
-
-                if ($format->format() === 'json') {
-                    $method
-                        ->addBody('$serializedRequestBody = \json_encode($requestBody);')
-                        ->addBody(
-                            '$response = $this->client->request(?, ?, [\'body\' => $serializedRequestBody, \'headers\' => [\'Content-Type\' => \'application/json\']]);',
-                            [$operation->method(), $operation->path()]
-                        );
-                } else {
-                    throw new RuntimeException('Unrecognized format ' . $format->format());
-                }
-
-                $method
-                    ->addBody('return $response;');
-
+                $this->apiOperationFormatGenerator->generate($classRep, $namespace, $operation, $format, $nFormats > 1);
             }
         }
 
