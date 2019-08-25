@@ -94,8 +94,12 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
                     ->setVisibility('public')
                     ->addBody('return $this->client->request(?, ?);', [$operation->method(), $operation->path()])
                     ->setReturnType(ResponseInterface::class)
+                    ->addComment('Endpoint URL: ' . $operation->path())
+                    ->addComment('Method: ' . strtoupper($operation->method()))
+                    ->addComment('')
                     ->addComment('@return ResponseInterface')
-                    ->addComment('@throws GuzzleException');
+                    ->addComment('@throws GuzzleException')
+                    ;
             }
 
             foreach ($formats as $format) {
@@ -118,8 +122,12 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
                 $method = $classRep->addMethod($methodName)
                     ->setVisibility('public')
                     ->setReturnType(ResponseInterface::class)
-                    ->addComment('@var ' . $requestClassName . ' $requestBody')
+                    ->addComment('Endpoint URL: ' . $operation->path())
+                    ->addComment('Method: ' . strtoupper($operation->method()))
+                    ->addComment('')
+                    ->addComment('@param ' . $requestClassName . ' $requestBody')
                     ->addComment('@return ResponseInterface')
+                    ->addComment('')
                     ->addComment('@throws GuzzleException');
 
                 $method
