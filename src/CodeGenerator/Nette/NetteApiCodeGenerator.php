@@ -94,6 +94,7 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
                     ->setVisibility('public')
                     ->addBody('return $this->client->request(?, ?);', [$operation->method(), $operation->path()])
                     ->setReturnType(ResponseInterface::class)
+                    ->addComment('@return ResponseInterface')
                     ->addComment('@throws GuzzleException');
             }
 
