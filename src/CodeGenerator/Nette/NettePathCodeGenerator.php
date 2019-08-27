@@ -25,6 +25,8 @@ class NettePathCodeGenerator
 
     /**
      * NettePathCodeGenerator constructor.
+     *
+     * @param NetteRequestBodyFormatCodeGenerator $apiOperationFormatGenerator
      */
     public function __construct(NetteRequestBodyFormatCodeGenerator $apiOperationFormatGenerator)
     {
@@ -33,14 +35,14 @@ class NettePathCodeGenerator
 
 
     /**
-     * @param Path $path
      * @param ClassType $classRep
      * @param PhpNamespace $namespace
+     * @param Path $path
      */
     public function generate(
-        Path $path,
         ClassType $classRep,
-        PhpNamespace $namespace
+        PhpNamespace $namespace,
+        Path $path
     ): void {
         $referenceMethodName = $path->method() . $path->path();
 

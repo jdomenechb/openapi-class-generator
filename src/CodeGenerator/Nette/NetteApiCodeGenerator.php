@@ -82,7 +82,7 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
             ->setTypeHint(ClientInterface::class);
 
         foreach ($apiService->paths() as $path) {
-            $this->pathCodeGenerator->generate($path, $classRep, $namespace);
+            $this->pathCodeGenerator->generate($classRep, $namespace, $path);
         }
 
         $this->fileWriter->write((string)$file, $classRep->getName(), $namespace->getName());
