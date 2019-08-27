@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace Jdomenechb\OpenApiClassGenerator\Model;
 
 
-class ApiOperation
+class Path
 {
     /** @var string */
     private $method;
@@ -19,17 +19,20 @@ class ApiOperation
     /** @var string */
     private $path;
 
-    /** @var ApiOperationFormat[] */
-    private $formats;
-
     /**
      * @var string|null
      */
     private $summary;
+
     /**
      * @var string|null
      */
     private $description;
+
+    /**
+     * @var RequestBody|null
+     */
+    private $requestBody;
 
     /**
      * ApiOperation constructor.
@@ -38,14 +41,15 @@ class ApiOperation
      * @param string $path
      * @param string|null $summary
      * @param string|null $description
+     * @param RequestBody|null $requestBody
      */
-    public function __construct(string $method, string $path, ?string $summary, ?string $description)
+    public function __construct(string $method, string $path, ?string $summary, ?string $description, ?RequestBody $requestBody)
     {
         $this->method = $method;
         $this->path = $path;
-        $this->formats = [];
         $this->summary = $summary;
         $this->description = $description;
+        $this->requestBody = $requestBody;
     }
 
     /**
@@ -64,19 +68,6 @@ class ApiOperation
         return $this->path;
     }
 
-    public function addFormat(ApiOperationFormat $format): void
-    {
-        $this->formats[] = $format;
-    }
-
-    /**
-     * @return ApiOperationFormat[]
-     */
-    public function formats(): array
-    {
-        return $this->formats;
-    }
-
     /**
      * @return string|null
      */
@@ -93,4 +84,11 @@ class ApiOperation
         return $this->description;
     }
 
+    /**
+     * @return RequestBody|null
+     */
+    public function requestBody(): ?RequestBody
+    {
+        return $this->requestBody;
+    }
 }

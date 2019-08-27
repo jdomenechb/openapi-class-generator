@@ -23,7 +23,7 @@ class Api
     /** @var string|null */
     private $description;
 
-    /** @var ApiOperation[] */
+    /** @var Path[] */
     private $operations;
 
     /**
@@ -95,13 +95,13 @@ class Api
         $this->namespace = trim($namespace, '\\');
     }
 
-    public function addOperation(ApiOperation $operation): void
+    public function addOperation(Path $operation): void
     {
         $this->operations[] = $operation;
     }
 
     /**
-     * @return ApiOperation[]
+     * @return Path[]
      */
     public function operations(): array
     {

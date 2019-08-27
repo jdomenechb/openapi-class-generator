@@ -26,7 +26,7 @@ use Jdomenechb\OpenApiClassGenerator\Model\Schema\VectorSchema;
 use RuntimeException;
 use function in_array;
 
-class CebeOpenApiTypeFactory
+class CebeOpenapiSchemaFactory
 {
     public function build(Schema $schema, string $name) : AbstractSchema
     {

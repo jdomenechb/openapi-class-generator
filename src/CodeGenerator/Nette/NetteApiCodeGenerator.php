@@ -27,18 +27,18 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
     /** @var ClassFileWriter */
     private $fileWriter;
     /**
-     * @var NetteApiOperationFormatGenerator
+     * @var NetteRequestBodyFormatCodeGenerator
      */
     private $apiOperationFormatGenerator;
 
     /**
      * NetteApiCodeGenerator constructor.
      *
-     * @param NetteApiOperationFormatGenerator $apiOperationFormatGenerator
+     * @param NetteRequestBodyFormatCodeGenerator $apiOperationFormatGenerator
      * @param ClassFileWriter $fileWriter
      */
     public function __construct(
-        NetteApiOperationFormatGenerator $apiOperationFormatGenerator,
+        NetteRequestBodyFormatCodeGenerator $apiOperationFormatGenerator,
         ClassFileWriter $fileWriter
     )
     {
@@ -88,15 +88,23 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
 
         foreach ($apiService->operations() as $operation) {
             $referenceMethodName = $operation->method() . $operation->path();
-            $formats = $operation->formats();
-            $nFormats = count($formats);
+
+            $requestBody = $operation->requestBody();
+            $nFormats = $requestBody ? \count($requestBody->formats()) : 0;
 
             if ($nFormats === 0) {
                 $this->apiOperationFormatGenerator->generate($classRep, $namespace, $operation);
-            }
+            } else {
 
-            foreach ($formats as $format) {
-                $this->apiOperationFormatGenerator->generate($classRep, $namespace, $operation, $format, $nFormats > 1);
+                foreach ($requestBody->formats() as $format) {
+                    $this->apiOperationFormatGenerator->generate(
+                        $classRep,
+                        $namespace,
+                        $operation,
+                        $format,
+                        $nFormats > 1
+                    );
+                }
             }
         }
 

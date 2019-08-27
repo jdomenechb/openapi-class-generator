@@ -12,8 +12,9 @@ namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiBuilder;
-use Jdomenechb\OpenApiClassGenerator\Model\ApiOperation;
-use Jdomenechb\OpenApiClassGenerator\Model\ApiOperationFormat;
+use Jdomenechb\OpenApiClassGenerator\Model\Path;
+use Jdomenechb\OpenApiClassGenerator\Model\RequestBody;
+use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
 
 class CebeOpenapiApiBuilder implements ApiBuilder
@@ -21,7 +22,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
     /** @var CebeOpenapiFileReader */
     private $fileReader;
     /**
-     * @var CebeOpenApiTypeFactory
+     * @var CebeOpenapiSchemaFactory
      */
     private $typeFactory;
 
@@ -29,9 +30,9 @@ class CebeOpenapiApiBuilder implements ApiBuilder
      * CebeOpenapiApiParser constructor.
      *
      * @param CebeOpenapiFileReader $fileReader
-     * @param CebeOpenApiTypeFactory $typeFactory
+     * @param CebeOpenapiSchemaFactory $typeFactory
      */
-    public function __construct(CebeOpenapiFileReader $fileReader, CebeOpenApiTypeFactory $typeFactory)
+    public function __construct(CebeOpenapiFileReader $fileReader, CebeOpenapiSchemaFactory $typeFactory)
     {
         $this->fileReader = $fileReader;
         $this->typeFactory = $typeFactory;
@@ -61,9 +62,11 @@ class CebeOpenapiApiBuilder implements ApiBuilder
         // Parse paths
         foreach ($contract->paths as $path => $pathInfo) {
             foreach ($pathInfo->getOperations() as $method => $contractOperation) {
-                $operation = new ApiOperation($method, $path, $contractOperation->summary, $contractOperation->description);
+                $requestBody = null;
 
                 if ($contractOperation->requestBody) {
+                    $requestBody = new RequestBody();
+
                     foreach ($contractOperation->requestBody->content as $mediaType => $content) {
                         switch ($mediaType) {
                             case 'application/json':
@@ -74,10 +77,12 @@ class CebeOpenapiApiBuilder implements ApiBuilder
                                 throw new \RuntimeException('Unrecognized requestBody format: ' . $mediaType);
                         }
 
-                        $operationFormat = new ApiOperationFormat($format, $this->typeFactory->build($content->schema, 'request'));
-                        $operation->addFormat($operationFormat);
+                        $requestBodyFormat = new RequestBodyFormat($format, $this->typeFactory->build($content->schema, 'request'));
+                        $requestBody->addFormat($requestBodyFormat);
                     }
                 }
+
+                $operation = new Path($method, $path, $contractOperation->summary, $contractOperation->description, $requestBody);
 
                 $apiService->addOperation($operation);
             }

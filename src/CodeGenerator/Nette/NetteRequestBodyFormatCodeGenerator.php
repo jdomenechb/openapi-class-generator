@@ -13,14 +13,14 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
 use Doctrine\Common\Inflector\Inflector;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
-use Jdomenechb\OpenApiClassGenerator\Model\ApiOperation;
-use Jdomenechb\OpenApiClassGenerator\Model\ApiOperationFormat;
+use Jdomenechb\OpenApiClassGenerator\Model\Path;
+use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
-class NetteApiOperationFormatGenerator
+class NetteRequestBodyFormatCodeGenerator
 {
     /**
      * @var NetteObjectSchemaCodeGenerator
@@ -35,8 +35,8 @@ class NetteApiOperationFormatGenerator
     public function generate(
         ClassType $classRep,
         PhpNamespace $namespace,
-        ApiOperation $operation,
-        ?ApiOperationFormat $format = null,
+        Path $operation,
+        ?RequestBodyFormat $format = null,
         bool $formatSuffix = false
     ): void
     {

@@ -2,9 +2,9 @@
 
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiFileReader;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiApiBuilder;
-use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenApiTypeFactory;
+use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSchemaFactory;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteApiCodeGenerator;
-use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteApiOperationFormatGenerator;
+use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteRequestBodyFormatCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteObjectSchemaCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
 use Jdomenechb\OpenApiClassGenerator\Command\GenerateCommand;
@@ -18,8 +18,8 @@ $app = new Application();
 
 $app->add(
     new GenerateCommand(
-        new CebeOpenapiApiBuilder(new CebeOpenapiFileReader(), new CebeOpenApiTypeFactory()),
-        new NetteApiCodeGenerator(new NetteApiOperationFormatGenerator(new NetteObjectSchemaCodeGenerator($fileWriter)), $fileWriter)
+        new CebeOpenapiApiBuilder(new CebeOpenapiFileReader(), new CebeOpenapiSchemaFactory()),
+        new NetteApiCodeGenerator(new NetteRequestBodyFormatCodeGenerator(new NetteObjectSchemaCodeGenerator($fileWriter)), $fileWriter)
     )
 );
 

@@ -13,12 +13,12 @@ namespace Jdomenechb\OpenApiClassGenerator\Model;
 
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 
-class ApiOperationFormat
+class RequestBodyFormat
 {
     /** @var string */
     private $format;
     /**
-     * @var \Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema
+     * @var AbstractSchema
      */
     private $schema;
 
@@ -27,7 +27,7 @@ class ApiOperationFormat
      * ApiOperationFormat constructor.
      *
      * @param string $format
-     * @param \Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema $schema
+     * @param AbstractSchema $schema
      */
     public function __construct(string $format, AbstractSchema $schema)
     {
@@ -44,7 +44,7 @@ class ApiOperationFormat
     }
 
     /**
-     * @return \Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema
+     * @return AbstractSchema
      */
     public function schema(): AbstractSchema
     {
