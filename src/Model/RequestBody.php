@@ -16,9 +16,19 @@ class RequestBody
     /** @var RequestBodyFormat[] */
     private $formats;
 
-    public function __construct()
+    /** @var bool */
+    private $required;
+
+    /**
+     * @var string|null
+     */
+    private $description;
+
+    public function __construct(?string $description, bool $required)
     {
         $this->formats = [];
+        $this->description = $description;
+        $this->required = $required;
     }
 
     public function addFormat(RequestBodyFormat $format): void
@@ -32,5 +42,21 @@ class RequestBody
     public function formats(): array
     {
         return $this->formats;
+    }
+
+    /**
+     * @return bool
+     */
+    public function required(): bool
+    {
+        return $this->required;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function description(): ?string
+    {
+        return $this->description;
     }
 }

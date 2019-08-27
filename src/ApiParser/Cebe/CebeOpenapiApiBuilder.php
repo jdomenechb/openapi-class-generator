@@ -65,7 +65,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
                 $requestBody = null;
 
                 if ($contractOperation->requestBody) {
-                    $requestBody = new RequestBody();
+                    $requestBody = new RequestBody($contractOperation->requestBody->description, $contractOperation->requestBody->required);
 
                     foreach ($contractOperation->requestBody->content as $mediaType => $content) {
                         switch ($mediaType) {
