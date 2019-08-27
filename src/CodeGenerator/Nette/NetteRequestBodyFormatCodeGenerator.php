@@ -10,14 +10,10 @@ declare(strict_types=1);
 
 namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
-
-use Doctrine\Common\Inflector\Inflector;
-use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
-use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpNamespace;
-use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
 class NetteRequestBodyFormatCodeGenerator
@@ -33,74 +29,36 @@ class NetteRequestBodyFormatCodeGenerator
     }
 
     public function generate(
-        ClassType $classRep,
+        Method $method,
         PhpNamespace $namespace,
-        Path $operation,
-        ?RequestBodyFormat $format = null,
-        bool $formatSuffix = false
-    ): void
-    {
-        $methodName = $operation->method() . $operation->path();
-
-        if ($formatSuffix && $format) {
-            $methodName .= ' ' . $format->format();
-        }
-
-        $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $methodName));
-
-        $method = $classRep->addMethod($methodName)
-            ->setVisibility('public')
-            ->setReturnType(ResponseInterface::class);
-
-        if ($operation->description()) {
-            $method->addComment($operation->description());
-            $method->addComment('');
-        }
-
-        if ($operation->summary()) {
-            $method->addComment($operation->summary());
-            $method->addComment('');
-        }
+        Path $path,
+        RequestBodyFormat $format
+    ): void {
+        $requestClassName = $this->schemaCodeGenerator->generate(
+            $format->schema(),
+            $namespace->getName(),
+            $format->format(),
+            $method->getName()
+        );
 
         $method
-            ->addComment('Endpoint URL: ' . $operation->path())
-            ->addComment('Method: ' . strtoupper($operation->method()))
-            ->addComment('');
+            ->addComment('@param ' . $requestClassName . ' $requestBody')
+            ->addParameter('requestBody')
+            ->setTypeHint($requestClassName);
 
-        if ($format) {
-            $requestClassName = $this->schemaCodeGenerator->generate(
-                $format->schema(),
-                $namespace->getName(),
-                $format->format(),
-                $methodName
-            );
-
+        if ($format->format() === 'json') {
             $method
-                ->addComment('@param ' . $requestClassName . ' $requestBody')
-                ->addParameter('requestBody')
-                ->setTypeHint($requestClassName);
-
-            if ($format->format() === 'json') {
-                $method
-                    ->addBody('$serializedRequestBody = \json_encode($requestBody);')
-                    ->addBody(
-                        '$response = $this->client->request(?, ?, [\'body\' => $serializedRequestBody, \'headers\' => [\'Content-Type\' => \'application/json\']]);',
-                        [$operation->method(), $operation->path()]
-                    );
-            } else {
-                throw new RuntimeException('Unrecognized format ' . $format->format());
-            }
-
-            $method
-                ->addBody('return $response;');
-
+                ->addBody('$serializedRequestBody = \json_encode($requestBody);')
+                ->addBody(
+                    '$response = $this->client->request(?, ?, [\'body\' => $serializedRequestBody, \'headers\' => [\'Content-Type\' => \'application/json\']]);',
+                    [$path->method(), $path->path()]
+                );
         } else {
-            $method->addBody('return $this->client->request(?, ?);', [$operation->method(), $operation->path()]);
+            throw new RuntimeException('Unrecognized format ' . $format->format());
         }
 
         $method
-            ->addComment('@return ResponseInterface')
-            ->addComment('@throws GuzzleException')
-        ;
+            ->addBody('return $response;');
+
     }
 }

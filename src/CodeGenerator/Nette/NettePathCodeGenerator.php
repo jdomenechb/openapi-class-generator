@@ -11,9 +11,13 @@ declare(strict_types=1);
 namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
 
+use Doctrine\Common\Inflector\Inflector;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
+use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
 use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpNamespace;
+use Psr\Http\Message\ResponseInterface;
 use function count;
 
 class NettePathCodeGenerator
@@ -44,24 +48,79 @@ class NettePathCodeGenerator
         PhpNamespace $namespace,
         Path $path
     ): void {
-        $referenceMethodName = $path->method() . $path->path();
+        $referenceMethodName = 'REFERENCEMETHOD' . random_int(1000, 9999);
+
+        $referenceMethod = $classRep->addMethod($referenceMethodName)
+            ->setVisibility('public')
+            ->setReturnType(ResponseInterface::class);
+
+        if ($path->description()) {
+            $referenceMethod->addComment($path->description());
+            $referenceMethod->addComment('');
+        }
+
+        if ($path->summary()) {
+            $referenceMethod->addComment($path->summary());
+            $referenceMethod->addComment('');
+        }
+
+        $referenceMethod
+            ->addComment('Endpoint URL: ' . $path->path())
+            ->addComment('Method: ' . strtoupper($path->method()))
+            ->addComment('')
+            ->addComment('@return ResponseInterface')
+            ->addComment('@throws GuzzleException')
+        ;
 
         $requestBody = $path->requestBody();
-        $nFormats = $requestBody ? count($requestBody->formats()) : 0;
 
-        if ($nFormats === 0) {
-            $this->apiOperationFormatGenerator->generate($classRep, $namespace, $path);
+        if (!$requestBody) {
+            $this->generateWithNoFormats($classRep, $referenceMethod, $path);
         } else {
+            $nFormats = \count($requestBody->formats());
 
-            foreach ($requestBody->formats() as $format) {
-                $this->apiOperationFormatGenerator->generate(
-                    $classRep,
-                    $namespace,
-                    $path,
-                    $format,
-                    $nFormats > 1
-                );
+            if ($nFormats === 0) {
+                $this->generateWithNoFormats($classRep, $referenceMethod, $path);
+            } else {
+                foreach ($requestBody->formats() as $format) {
+                    $this->generateWithFormat($classRep, $referenceMethod, $namespace, $path, $format);
+                }
             }
         }
+
+        $classRep->removeMethod($referenceMethodName);
+    }
+
+    private function generateWithNoFormats(ClassType $classRep, Method $referenceMethod, Path $path): void
+    {
+        $methodName = $path->method() . $path->path();
+        $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $methodName));
+
+        $method = $referenceMethod->cloneWithName($methodName);
+        $classRep->setMethods($classRep->getMethods() + [$method]);
+
+        $method->addBody('return $this->client->request(?, ?);', [$path->method(), $path->path()]);
+    }
+
+    private function generateWithFormat(ClassType $classRep, Method $referenceMethod, PhpNamespace $namespace, Path $path, RequestBodyFormat $format): void
+    {
+        $methodName = $path->method() . $path->path();
+        $requestBody = $path->requestBody();
+
+        if ($requestBody && \count($requestBody->formats()) > 1) {
+            $methodName .= ' ' . $format->format();
+        }
+
+        $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $methodName));
+
+        $method = $referenceMethod->cloneWithName($methodName);
+        $classRep->setMethods($classRep->getMethods() + [$method]);
+
+        $this->apiOperationFormatGenerator->generate(
+            $method,
+            $namespace,
+            $path,
+            $format
+        );
     }
 }
