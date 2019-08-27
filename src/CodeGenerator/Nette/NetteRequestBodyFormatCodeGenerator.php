@@ -41,10 +41,23 @@ class NetteRequestBodyFormatCodeGenerator
             $method->getName()
         );
 
+        $requestBody = $path->requestBody();
+
+        if (!$requestBody) {
+            throw new \RuntimeException('Expected RequestBody');
+        }
+
+        $requestBodyRequired = $requestBody->required();
+        $requestBodyDescription = $requestBody->description();
+
         $method
-            ->addComment('@param ' . $requestClassName . ' $requestBody')
+            ->addComment(
+                '@param ' . $requestClassName . (!$requestBodyRequired ? '|null' : '') . ' $requestBody'
+                . ($requestBodyDescription ? ' ' . $requestBodyDescription : '')
+            )
             ->addParameter('requestBody')
-            ->setTypeHint($requestClassName);
+            ->setTypeHint($requestClassName)
+            ->setNullable(!$requestBodyRequired);
 
         if ($format->format() === 'json') {
             $method
