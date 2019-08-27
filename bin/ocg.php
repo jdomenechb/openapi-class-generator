@@ -4,6 +4,7 @@ use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiFileReader;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSchemaFactory;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteApiCodeGenerator;
+use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NettePathCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteRequestBodyFormatCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteObjectSchemaCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
@@ -19,7 +20,7 @@ $app = new Application();
 $app->add(
     new GenerateCommand(
         new CebeOpenapiApiBuilder(new CebeOpenapiFileReader(), new CebeOpenapiSchemaFactory()),
-        new NetteApiCodeGenerator(new NetteRequestBodyFormatCodeGenerator(new NetteObjectSchemaCodeGenerator($fileWriter)), $fileWriter)
+        new NetteApiCodeGenerator($fileWriter, new NettePathCodeGenerator(new NetteRequestBodyFormatCodeGenerator(new NetteObjectSchemaCodeGenerator($fileWriter))))
     )
 );
 

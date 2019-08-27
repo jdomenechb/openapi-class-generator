@@ -19,31 +19,26 @@ use Jdomenechb\OpenApiClassGenerator\Model\Api;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
 use Psr\Http\Message\ResponseInterface;
-use RuntimeException;
-use function count;
 
 class NetteApiCodeGenerator implements ApiCodeGenerator
 {
     /** @var ClassFileWriter */
     private $fileWriter;
     /**
-     * @var NetteRequestBodyFormatCodeGenerator
+     * @var NettePathCodeGenerator
      */
-    private $apiOperationFormatGenerator;
+    private $pathCodeGenerator;
 
     /**
      * NetteApiCodeGenerator constructor.
      *
-     * @param NetteRequestBodyFormatCodeGenerator $apiOperationFormatGenerator
      * @param ClassFileWriter $fileWriter
+     * @param NettePathCodeGenerator $pathCodeGenerator
      */
-    public function __construct(
-        NetteRequestBodyFormatCodeGenerator $apiOperationFormatGenerator,
-        ClassFileWriter $fileWriter
-    )
+    public function __construct(ClassFileWriter $fileWriter, NettePathCodeGenerator $pathCodeGenerator)
     {
         $this->fileWriter = $fileWriter;
-        $this->apiOperationFormatGenerator = $apiOperationFormatGenerator;
+        $this->pathCodeGenerator = $pathCodeGenerator;
     }
 
     public function generate(Api $apiService): void
@@ -86,26 +81,8 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
         $construct->addParameter('client')
             ->setTypeHint(ClientInterface::class);
 
-        foreach ($apiService->operations() as $operation) {
-            $referenceMethodName = $operation->method() . $operation->path();
-
-            $requestBody = $operation->requestBody();
-            $nFormats = $requestBody ? \count($requestBody->formats()) : 0;
-
-            if ($nFormats === 0) {
-                $this->apiOperationFormatGenerator->generate($classRep, $namespace, $operation);
-            } else {
-
-                foreach ($requestBody->formats() as $format) {
-                    $this->apiOperationFormatGenerator->generate(
-                        $classRep,
-                        $namespace,
-                        $operation,
-                        $format,
-                        $nFormats > 1
-                    );
-                }
-            }
+        foreach ($apiService->paths() as $path) {
+            $this->pathCodeGenerator->generate($path, $classRep, $namespace);
         }
 
         $this->fileWriter->write((string)$file, $classRep->getName(), $namespace->getName());

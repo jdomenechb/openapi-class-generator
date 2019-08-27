@@ -103,7 +103,7 @@ class Api
     /**
      * @return Path[]
      */
-    public function operations(): array
+    public function paths(): array
     {
         return $this->operations;
     }
