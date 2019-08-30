@@ -40,9 +40,15 @@ class NettePathParameterCodeGenerator
             ->setTypeHint($className)
             ->setNullable(!$pathParameter->required());
 
-        $referenceMethod->addComment(
-            '@param ' . $className . (!$pathParameter->required() ? '|null' : '') . ' ' . $pathParameter->name(
-            ) . ($pathParameter->description() ? ' ' . $pathParameter->description() : '')
-        );
+        $comment = '@param ' . $className . (!$pathParameter->required() ? '|null' : '');
+        $comment .= ' ' . $pathParameter->name() . ' ';
+
+        if ($pathParameter->deprecated()) {
+            $comment .= 'DEPRECATED. ';
+        }
+
+        $comment .= $pathParameter->description() ? ' ' . $pathParameter->description() : '';
+
+        $referenceMethod->addComment($comment);
     }
 }
