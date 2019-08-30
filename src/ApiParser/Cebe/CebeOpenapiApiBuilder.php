@@ -13,6 +13,7 @@ use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
+use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBody;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
@@ -62,6 +63,12 @@ class CebeOpenapiApiBuilder implements ApiBuilder
         // Parse paths
         foreach ($contract->paths as $path => $pathInfo) {
             foreach ($pathInfo->getOperations() as $method => $contractOperation) {
+                $parameters = [];
+
+                foreach ($contractOperation->parameters as $parameter) {
+                    $parameters[] = new PathParameter($parameter->name, $parameter->in, $parameter->description, $parameter->required, $parameter->deprecated, $parameter->schema? $this->typeFactory->build($parameter->schema, 'parameter'): null);
+                }
+
                 $requestBody = null;
 
                 if ($contractOperation->requestBody) {
@@ -82,7 +89,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
                     }
                 }
 
-                $operation = new Path($method, $path, $contractOperation->summary, $contractOperation->description, $requestBody);
+                $operation = new Path($method, $path, $contractOperation->summary, $contractOperation->description, $requestBody, $parameters);
 
                 $apiService->addOperation($operation);
             }

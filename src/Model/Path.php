@@ -34,6 +34,9 @@ class Path
      */
     private $requestBody;
 
+    /** @var PathParameter[] */
+    private $parameters;
+
     /**
      * ApiOperation constructor.
      *
@@ -42,14 +45,16 @@ class Path
      * @param string|null $summary
      * @param string|null $description
      * @param RequestBody|null $requestBody
+     * @param PathParameter[] $parameters
      */
-    public function __construct(string $method, string $path, ?string $summary, ?string $description, ?RequestBody $requestBody)
+    public function __construct(string $method, string $path, ?string $summary, ?string $description, ?RequestBody $requestBody, array $parameters)
     {
         $this->method = $method;
         $this->path = $path;
         $this->summary = $summary;
         $this->description = $description;
         $this->requestBody = $requestBody;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -90,5 +95,13 @@ class Path
     public function requestBody(): ?RequestBody
     {
         return $this->requestBody;
+    }
+
+    /**
+     * @return PathParameter[]
+     */
+    public function parameters(): array
+    {
+        return $this->parameters;
     }
 }
