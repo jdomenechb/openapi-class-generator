@@ -12,6 +12,7 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
 
 use Doctrine\Common\Inflector\Inflector;
+use Exception;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
 use Nette\PhpGenerator\ClassType;
@@ -42,6 +43,8 @@ class NettePathCodeGenerator
      * @param ClassType $classRep
      * @param PhpNamespace $namespace
      * @param Path $path
+     *
+     * @throws Exception
      */
     public function generate(
         ClassType $classRep,
@@ -77,7 +80,7 @@ class NettePathCodeGenerator
         if (!$requestBody) {
             $this->generateWithNoFormats($classRep, $referenceMethod, $path);
         } else {
-            $nFormats = \count($requestBody->formats());
+            $nFormats = count($requestBody->formats());
 
             if ($nFormats === 0) {
                 $this->generateWithNoFormats($classRep, $referenceMethod, $path);
@@ -91,6 +94,11 @@ class NettePathCodeGenerator
         $classRep->removeMethod($referenceMethodName);
     }
 
+    /**
+     * @param ClassType $classRep
+     * @param Method $referenceMethod
+     * @param Path $path
+     */
     private function generateWithNoFormats(ClassType $classRep, Method $referenceMethod, Path $path): void
     {
         $methodName = $path->method() . $path->path();
@@ -102,12 +110,19 @@ class NettePathCodeGenerator
         $method->addBody('return $this->client->request(?, ?);', [$path->method(), $path->path()]);
     }
 
+    /**
+     * @param ClassType $classRep
+     * @param Method $referenceMethod
+     * @param PhpNamespace $namespace
+     * @param Path $path
+     * @param RequestBodyFormat $format
+     */
     private function generateWithFormat(ClassType $classRep, Method $referenceMethod, PhpNamespace $namespace, Path $path, RequestBodyFormat $format): void
     {
         $methodName = $path->method() . $path->path();
         $requestBody = $path->requestBody();
 
-        if ($requestBody && \count($requestBody->formats()) > 1) {
+        if ($requestBody && count($requestBody->formats()) > 1) {
             $methodName .= ' ' . $format->format();
         }
 
