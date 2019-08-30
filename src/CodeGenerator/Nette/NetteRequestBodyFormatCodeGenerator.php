@@ -23,13 +23,20 @@ class NetteRequestBodyFormatCodeGenerator
     private $abstractSchemaCodeGenerator;
 
     /**
+     * @var NetteGuzzleBodyCodeGenerator
+     */
+    private $guzzleBodyCodeGenerator;
+
+    /**
      * NetteRequestBodyFormatCodeGenerator constructor.
      *
      * @param NetteAbstractSchemaCodeGenerator $abstractSchemaCodeGenerator
+     * @param NetteGuzzleBodyCodeGenerator $guzzleBodyCodeGenerator
      */
-    public function __construct(NetteAbstractSchemaCodeGenerator $abstractSchemaCodeGenerator)
+    public function __construct(NetteAbstractSchemaCodeGenerator $abstractSchemaCodeGenerator, NetteGuzzleBodyCodeGenerator $guzzleBodyCodeGenerator)
     {
         $this->abstractSchemaCodeGenerator = $abstractSchemaCodeGenerator;
+        $this->guzzleBodyCodeGenerator = $guzzleBodyCodeGenerator;
     }
 
     public function generate(
@@ -63,28 +70,6 @@ class NetteRequestBodyFormatCodeGenerator
             ->setTypeHint($requestClassName)
             ->setNullable(!$requestBodyRequired);
 
-        if ($format->format() === 'json') {
-            $serializeBody = '\json_encode($requestBody);';
-            $extraGuzzleReqParams =  '\'headers\' => [\'Content-Type\' => \'application/json\']';
-        } else {
-            throw new RuntimeException('Unrecognized format ' . $format->format());
-        }
-
-        $method
-            ->addBody('if ($requestBody !== null) {')
-            ->addBody('    $serializedRequestBody = ' . $serializeBody)
-            ->addBody(
-                '    $response = $this->client->request(?, ?, [\'body\' => $serializedRequestBody' . ($extraGuzzleReqParams? ', ' . $extraGuzzleReqParams: '') . ']);',
-                [$path->method(), $path->path()]
-            )
-            ->addBody('} else {')
-            ->addBody(
-                '    $response = $this->client->request(?, ?, ['. $extraGuzzleReqParams . ']);',
-                [$path->method(), $path->path()]
-            )
-            ->addBody('}')
-            ->addBody('')
-            ->addBody('return $response;');
-
+        $this->guzzleBodyCodeGenerator->generate($method, $path, $format->format());
     }
 }
