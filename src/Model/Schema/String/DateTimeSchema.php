@@ -11,11 +11,13 @@ declare(strict_types=1);
 namespace Jdomenechb\OpenApiClassGenerator\Model\Schema\String;
 
 
+use DateTimeImmutable;
+
 class DateTimeSchema extends StringSchema
 {
     public function getPhpType(): string
     {
-        return '\\' . \DateTimeImmutable::class;
+        return '\\' . DateTimeImmutable::class;
     }
 
     public function getPhpSerializationValue(string $origin): string

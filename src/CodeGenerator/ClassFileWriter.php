@@ -31,10 +31,8 @@ class ClassFileWriter
     {
         $namespacePath = $this->outputPath . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
 
-        if (!is_dir($namespacePath)) {
-            if (!mkdir($namespacePath, 0755, true) && !is_dir($namespacePath)) {
-                throw new RuntimeException(sprintf('Directory "%s" was not created', $namespacePath));
-            }
+        if (!is_dir($namespacePath) && !mkdir($namespacePath, 0755, true) && !is_dir($namespacePath)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $namespacePath));
         }
 
         file_put_contents($namespacePath . DIRECTORY_SEPARATOR . $fileName . '.php', $content);

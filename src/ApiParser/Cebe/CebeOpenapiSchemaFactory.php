@@ -63,9 +63,7 @@ class CebeOpenapiSchemaFactory
                             break;
 
                         default:
-                            //FIXME: Provisional
                             throw new RuntimeException(sprintf('String schema format "%s" not recognized', $schema->format));
-                            return new StringSchema();
                     }
                 } else {
                     $obj = new StringSchema();
@@ -82,9 +80,7 @@ class CebeOpenapiSchemaFactory
                             break;
 
                         default:
-                            //FIXME: Provisional
                             throw new RuntimeException(sprintf('Number schema format "%s" not recognized', $schema->format));
-                            return new NumberSchema();
                     }
                 } else {
                     $obj = new NumberSchema();
@@ -102,9 +98,7 @@ class CebeOpenapiSchemaFactory
                 return new BooleanSchema();
 
             default:
-                //FIXME: Provisional
                 throw new RuntimeException(sprintf('Schema type "%s" not recognized', $schema->type));
-                return new StringSchema();
         }
     }
 }

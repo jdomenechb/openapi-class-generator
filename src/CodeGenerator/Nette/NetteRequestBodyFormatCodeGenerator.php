@@ -48,7 +48,7 @@ class NetteRequestBodyFormatCodeGenerator
         $requestBody = $path->requestBody();
 
         if (!$requestBody) {
-            throw new \RuntimeException('Expected requestBody');
+            throw new RuntimeException('Expected requestBody');
         }
 
         $requestBodyRequired = $requestBody->required();

@@ -17,6 +17,7 @@ use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBody;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
+use RuntimeException;
 
 class CebeOpenapiApiBuilder implements ApiBuilder
 {
@@ -91,7 +92,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
                                 break;
 
                             default:
-                                throw new \RuntimeException('Unrecognized requestBody format: ' . $mediaType);
+                                throw new RuntimeException('Unrecognized requestBody format: ' . $mediaType);
                         }
 
                         $requestBodyFormat = new RequestBodyFormat(

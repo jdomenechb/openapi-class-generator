@@ -23,7 +23,7 @@ class NettePathParameterCodeGenerator
         $this->abstractSchemaCodeGenerator = $abstractSchemaCodeGenerator;
     }
 
-    public function generate(PathParameter $pathParameter, Method $referenceMethod, PhpNamespace $namespace)
+    public function generate(PathParameter $pathParameter, Method $referenceMethod, PhpNamespace $namespace) :void
     {
         if ($pathParameter->schema()) {
             $className = $this->abstractSchemaCodeGenerator->generate(

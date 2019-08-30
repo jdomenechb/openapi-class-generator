@@ -10,15 +10,12 @@ declare(strict_types=1);
 
 namespace Jdomenechb\OpenApiClassGenerator\Model\Schema;
 
-use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
-use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchemaProperty;
-
 class ObjectSchema extends AbstractSchema
 {
     /** @var string */
     private $name;
 
-    /** @var \Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchemaProperty[] */
+    /** @var ObjectSchemaProperty[] */
     private $properties;
 
     /**
@@ -47,7 +44,7 @@ class ObjectSchema extends AbstractSchema
     }
 
     /**
-     * @return \Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchemaProperty[]
+     * @return ObjectSchemaProperty[]
      */
     public function properties(): array
     {

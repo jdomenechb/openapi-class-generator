@@ -10,15 +10,13 @@ declare(strict_types=1);
 
 namespace Jdomenechb\OpenApiClassGenerator\Model\Schema;
 
-use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
-
 class ObjectSchemaProperty
 {
     /** @var string */
     private $name;
 
     /** @var bool */
-    private $required = false;
+    private $required;
     /**
      * @var AbstractSchema
      */

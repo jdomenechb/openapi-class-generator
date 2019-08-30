@@ -13,9 +13,5 @@ namespace Jdomenechb\OpenApiClassGenerator\Model\Schema\Number;
 
 class FloatSchema extends NumberSchema
 {
-    public function getPhpType(): string
-    {
-        return 'float';
-    }
 
 }

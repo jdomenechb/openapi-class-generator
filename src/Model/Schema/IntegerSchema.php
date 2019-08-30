@@ -11,8 +11,6 @@ declare(strict_types=1);
 namespace Jdomenechb\OpenApiClassGenerator\Model\Schema;
 
 
-use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
-
 class IntegerSchema extends AbstractSchema
 {
     public function getPhpType(): string

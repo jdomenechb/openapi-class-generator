@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
-use Doctrine\Common\Inflector\Inflector;
+use Exception;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ApiCodeGenerator;
@@ -41,6 +41,11 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
         $this->pathCodeGenerator = $pathCodeGenerator;
     }
 
+    /**
+     * @param Api $apiService
+     *
+     * @throws Exception
+     */
     public function generate(Api $apiService): void
     {
         $file = new PhpFile();
