@@ -66,13 +66,23 @@ class CebeOpenapiApiBuilder implements ApiBuilder
                 $parameters = [];
 
                 foreach ($contractOperation->parameters as $parameter) {
-                    $parameters[] = new PathParameter($parameter->name, $parameter->in, $parameter->description, $parameter->required, $parameter->deprecated, $parameter->schema? $this->typeFactory->build($parameter->schema, 'parameter'): null);
+                    $parameters[] = new PathParameter(
+                        $parameter->name,
+                        $parameter->in,
+                        $parameter->description,
+                        $parameter->required,
+                        $parameter->deprecated,
+                        $parameter->schema ? $this->typeFactory->build($parameter->schema, 'parameter') : null
+                    );
                 }
 
                 $requestBody = null;
 
                 if ($contractOperation->requestBody) {
-                    $requestBody = new RequestBody($contractOperation->requestBody->description, $contractOperation->requestBody->required);
+                    $requestBody = new RequestBody(
+                        $contractOperation->requestBody->description,
+                        $contractOperation->requestBody->required
+                    );
 
                     foreach ($contractOperation->requestBody->content as $mediaType => $content) {
                         switch ($mediaType) {
@@ -84,12 +94,22 @@ class CebeOpenapiApiBuilder implements ApiBuilder
                                 throw new \RuntimeException('Unrecognized requestBody format: ' . $mediaType);
                         }
 
-                        $requestBodyFormat = new RequestBodyFormat($format, $this->typeFactory->build($content->schema, 'request'));
+                        $requestBodyFormat = new RequestBodyFormat(
+                            $format,
+                            $this->typeFactory->build($content->schema, 'request')
+                        );
                         $requestBody->addFormat($requestBodyFormat);
                     }
                 }
 
-                $operation = new Path($method, $path, $contractOperation->summary, $contractOperation->description, $requestBody, $parameters);
+                $operation = new Path(
+                    $method,
+                    $path,
+                    $contractOperation->summary,
+                    $contractOperation->description,
+                    $requestBody,
+                    $parameters
+                );
 
                 $apiService->addOperation($operation);
             }
