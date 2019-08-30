@@ -35,7 +35,7 @@ class NetteObjectSchemaCodeGenerator
     public function generate(
         ObjectSchema $schema,
         string $namespaceName,
-        string $format,
+        ?string $format = null,
         string $namePrefix = ''
     ): string {
         $name = Inflector::classify($namePrefix . '-' . $schema->name());

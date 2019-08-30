@@ -18,14 +18,18 @@ use RuntimeException;
 
 class NetteRequestBodyFormatCodeGenerator
 {
-    /**
-     * @var NetteObjectSchemaCodeGenerator
-     */
-    private $schemaCodeGenerator;
 
-    public function __construct(NetteObjectSchemaCodeGenerator $schemaCodeGenerator)
+    /** @var NetteAbstractSchemaCodeGenerator */
+    private $abstractSchemaCodeGenerator;
+
+    /**
+     * NetteRequestBodyFormatCodeGenerator constructor.
+     *
+     * @param NetteAbstractSchemaCodeGenerator $abstractSchemaCodeGenerator
+     */
+    public function __construct(NetteAbstractSchemaCodeGenerator $abstractSchemaCodeGenerator)
     {
-        $this->schemaCodeGenerator = $schemaCodeGenerator;
+        $this->abstractSchemaCodeGenerator = $abstractSchemaCodeGenerator;
     }
 
     public function generate(
@@ -34,7 +38,7 @@ class NetteRequestBodyFormatCodeGenerator
         Path $path,
         RequestBodyFormat $format
     ): void {
-        $requestClassName = $this->schemaCodeGenerator->generate(
+        $requestClassName = $this->abstractSchemaCodeGenerator->generate(
             $format->schema(),
             $namespace->getName(),
             $format->format(),
@@ -44,7 +48,7 @@ class NetteRequestBodyFormatCodeGenerator
         $requestBody = $path->requestBody();
 
         if (!$requestBody) {
-            throw new \RuntimeException('Expected RequestBody');
+            throw new \RuntimeException('Expected requestBody');
         }
 
         $requestBodyRequired = $requestBody->required();

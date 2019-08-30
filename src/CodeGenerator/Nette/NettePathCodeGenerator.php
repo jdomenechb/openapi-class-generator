@@ -27,15 +27,22 @@ class NettePathCodeGenerator
      * @var NetteRequestBodyFormatCodeGenerator
      */
     private $requestBodyFormatCodeGenerator;
+    /**
+     * @var NettePathParameterCodeGenerator
+     */
+    private $pathParameterCodeGenerator;
+
 
     /**
      * NettePathCodeGenerator constructor.
      *
      * @param NetteRequestBodyFormatCodeGenerator $requestBodyFormatCodeGenerator
+     * @param NettePathParameterCodeGenerator $pathParameterCodeGenerator
      */
-    public function __construct(NetteRequestBodyFormatCodeGenerator $requestBodyFormatCodeGenerator)
+    public function __construct(NetteRequestBodyFormatCodeGenerator $requestBodyFormatCodeGenerator, NettePathParameterCodeGenerator $pathParameterCodeGenerator)
     {
         $this->requestBodyFormatCodeGenerator = $requestBodyFormatCodeGenerator;
+        $this->pathParameterCodeGenerator = $pathParameterCodeGenerator;
     }
 
 
@@ -74,6 +81,10 @@ class NettePathCodeGenerator
             ->addComment('@return ResponseInterface')
             ->addComment('@throws GuzzleException')
         ;
+
+        foreach ($path->parameters() as $parameter) {
+            $this->pathParameterCodeGenerator->generate($parameter, $referenceMethod, $namespace);
+        }
 
         $requestBody = $path->requestBody();
 
