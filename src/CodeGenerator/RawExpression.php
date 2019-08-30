@@ -19,7 +19,6 @@ class RawExpression
         $this->expression = $expression;
     }
 
-
     /**
      * @return string
      */
@@ -32,6 +31,4 @@ class RawExpression
     {
         return $this->expression;
     }
-
-
 }
