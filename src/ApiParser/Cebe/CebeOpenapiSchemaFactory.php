@@ -13,6 +13,7 @@ namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 use cebe\openapi\spec\Schema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\BooleanSchema;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\IntegerSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\Number\FloatSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\Number\NumberSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
@@ -90,6 +91,9 @@ class CebeOpenapiSchemaFactory
                 }
 
                 return $obj;
+
+            case 'integer':
+                return new IntegerSchema();
 
             case 'array':
                 return new VectorSchema($this->build($schema->items, $name . 'Item'));
