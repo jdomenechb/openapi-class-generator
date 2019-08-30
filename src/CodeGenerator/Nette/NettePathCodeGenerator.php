@@ -26,16 +26,16 @@ class NettePathCodeGenerator
     /**
      * @var NetteRequestBodyFormatCodeGenerator
      */
-    private $apiOperationFormatGenerator;
+    private $requestBodyFormatCodeGenerator;
 
     /**
      * NettePathCodeGenerator constructor.
      *
-     * @param NetteRequestBodyFormatCodeGenerator $apiOperationFormatGenerator
+     * @param NetteRequestBodyFormatCodeGenerator $requestBodyFormatCodeGenerator
      */
-    public function __construct(NetteRequestBodyFormatCodeGenerator $apiOperationFormatGenerator)
+    public function __construct(NetteRequestBodyFormatCodeGenerator $requestBodyFormatCodeGenerator)
     {
-        $this->apiOperationFormatGenerator = $apiOperationFormatGenerator;
+        $this->requestBodyFormatCodeGenerator = $requestBodyFormatCodeGenerator;
     }
 
 
@@ -117,8 +117,13 @@ class NettePathCodeGenerator
      * @param Path $path
      * @param RequestBodyFormat $format
      */
-    private function generateWithFormat(ClassType $classRep, Method $referenceMethod, PhpNamespace $namespace, Path $path, RequestBodyFormat $format): void
-    {
+    private function generateWithFormat(
+        ClassType $classRep,
+        Method $referenceMethod,
+        PhpNamespace $namespace,
+        Path $path,
+        RequestBodyFormat $format
+    ): void {
         $methodName = $path->method() . $path->path();
         $requestBody = $path->requestBody();
 
@@ -131,7 +136,7 @@ class NettePathCodeGenerator
         $method = $referenceMethod->cloneWithName($methodName);
         $classRep->setMethods($classRep->getMethods() + [$method]);
 
-        $this->apiOperationFormatGenerator->generate(
+        $this->requestBodyFormatCodeGenerator->generate(
             $method,
             $namespace,
             $path,
