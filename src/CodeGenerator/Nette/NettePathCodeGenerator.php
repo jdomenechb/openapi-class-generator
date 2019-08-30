@@ -27,22 +27,31 @@ class NettePathCodeGenerator
      * @var NetteRequestBodyFormatCodeGenerator
      */
     private $requestBodyFormatCodeGenerator;
+
     /**
      * @var NettePathParameterCodeGenerator
      */
     private $pathParameterCodeGenerator;
-
+    /**
+     * @var NetteGuzzleBodyCodeGenerator
+     */
+    private $guzzleBodyCodeGenerator;
 
     /**
      * NettePathCodeGenerator constructor.
      *
      * @param NetteRequestBodyFormatCodeGenerator $requestBodyFormatCodeGenerator
      * @param NettePathParameterCodeGenerator $pathParameterCodeGenerator
+     * @param NetteGuzzleBodyCodeGenerator $guzzleBodyCodeGenerator
      */
-    public function __construct(NetteRequestBodyFormatCodeGenerator $requestBodyFormatCodeGenerator, NettePathParameterCodeGenerator $pathParameterCodeGenerator)
-    {
+    public function __construct(
+        NetteRequestBodyFormatCodeGenerator $requestBodyFormatCodeGenerator,
+        NettePathParameterCodeGenerator $pathParameterCodeGenerator,
+        NetteGuzzleBodyCodeGenerator $guzzleBodyCodeGenerator
+    ) {
         $this->requestBodyFormatCodeGenerator = $requestBodyFormatCodeGenerator;
         $this->pathParameterCodeGenerator = $pathParameterCodeGenerator;
+        $this->guzzleBodyCodeGenerator = $guzzleBodyCodeGenerator;
     }
 
 
@@ -118,7 +127,7 @@ class NettePathCodeGenerator
         $method = $referenceMethod->cloneWithName($methodName);
         $classRep->setMethods($classRep->getMethods() + [$method]);
 
-        $method->addBody('return $this->client->request(?, ?);', [$path->method(), $path->path()]);
+        $this->guzzleBodyCodeGenerator->generate($method, $path, null);
     }
 
     /**

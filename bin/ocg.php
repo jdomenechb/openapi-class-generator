@@ -27,7 +27,7 @@ $app->add(
         new NetteApiCodeGenerator($fileWriter, new NettePathCodeGenerator(new NetteRequestBodyFormatCodeGenerator(
             $abstractSchemaCodeGenerator,
             new NetteGuzzleBodyCodeGenerator()
-        ), new NettePathParameterCodeGenerator($abstractSchemaCodeGenerator)))
+        ), new NettePathParameterCodeGenerator($abstractSchemaCodeGenerator), new NetteGuzzleBodyCodeGenerator()))
     )
 );
 

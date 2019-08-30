@@ -39,14 +39,14 @@ class NetteGuzzleBodyCodeGenerator
                 ->addBody('if ($requestBody !== null) {')
                 ->addBody('    $serializedRequestBody = ' . $serializeBody . ';')
                 ->addBody(
-                    '    $response = $this->client->request(?, ?, ' . $guzzleReqParamsStringSerialized . ');',
+                    '    $response = $this->client->request(?, ?' . ($guzzleReqParamsStringSerialized? ', ': '') . $guzzleReqParamsStringSerialized . ');',
                     [$path->method(), $path->path()]
                 )
                 ->addBody('} else {');
         }
 
         $method->addBody(
-            ($serialize ? '    ' : '') . '$response = $this->client->request(?, ?, ' . $guzzleReqParamsString . ');',
+            ($serialize ? '    ' : '') . '$response = $this->client->request(?, ?'. ($guzzleReqParamsString? ', ': '') . $guzzleReqParamsString . ');',
             [$path->method(), $path->path()]
         );
 
