@@ -5,9 +5,12 @@ namespace Jdomenechb\OpenApiClassGenerator\Model;
 
 
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
+use RuntimeException;
 
 class PathParameter
 {
+    private const VALID_IN = ['query', 'path'];
+
     /** @var string */
     private $name;
 
@@ -45,7 +48,7 @@ class PathParameter
         ?AbstractSchema $schema
     ) {
         $this->name = $name;
-        $this->in = $in;
+        $this->setIn($in);
         $this->description = $description;
         $this->required = $required;
         $this->deprecated = $deprecated;
@@ -98,6 +101,18 @@ class PathParameter
     public function schema(): ?AbstractSchema
     {
         return $this->schema;
+    }
+
+    /**
+     * @param string $in
+     */
+    private function setIn(string $in): void
+    {
+        if (!in_array($in, self::VALID_IN, true)) {
+            throw new RuntimeException('Invalid parameter in: ' . $in);
+        }
+
+        $this->in = $in;
     }
 
 
