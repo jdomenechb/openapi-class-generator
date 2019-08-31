@@ -13,6 +13,7 @@ namespace Jdomenechb\OpenApiClassGenerator\Command;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ApiCodeGenerator;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -40,18 +41,24 @@ class GenerateCommand extends Command
         $this->apiCodeGenerator = $apiCodeGenerator;
     }
 
-    protected function configure() : void
+    protected function configure(): void
     {
         $this
             ->setDescription('Generates classes from contracts')
             ->setHelp('This command allows you to generate PHP classes from the given contracts.')
-            ->setName('generate');
+            ->setName('generate')
+            ->addArgument('inputPath', InputArgument::REQUIRED, 'Input folder path where the contracts can be found.')
+            ->addArgument(
+                'outputPath',
+                InputArgument::REQUIRED,
+                'Output folder of the generated source files. WARNING! The folder will be erased entirely before starting the process.'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // FIXME: treat output differently
-        $outputPath = 'output';
+        $inputPath = $input->getArgument('inputPath');
+        $outputPath = $input->getArgument('outputPath');
 
         // Clean output path
         $filesystem = new Filesystem();
@@ -59,12 +66,22 @@ class GenerateCommand extends Command
         $filesystem->mkdir($outputPath);
 
         $finder = new Finder();
-        $finder->files()->in('contracts')->name(['*.yaml', '*.yml', '*.json']);
+        $finder->files()->in($inputPath)->name(['*.yaml', '*.yml', '*.json']);
+
+        $i = 0;
 
         foreach ($finder as $file) {
             $apiService = $this->apiBuilder->fromFile($file->getRealPath());
 
             $this->apiCodeGenerator->generate($apiService);
+
+            $output->writeln('Processed contract: ' . $file->getRelativePath());
+            ++$i;
         }
+
+        if ($i === 0) {
+            $output->writeln('No files processed');
+        }
+
     }
 }
