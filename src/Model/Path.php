@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Jdomenechb\OpenApiClassGenerator\Model;
 
+use cebe\openapi\spec\SecurityScheme;
 
 class Path
 {
@@ -38,6 +39,11 @@ class Path
     private $parameters;
 
     /**
+     * @var SecurityScheme[]
+     */
+    private $securitySchemes;
+
+    /**
      * ApiOperation constructor.
      *
      * @param string $method
@@ -46,8 +52,9 @@ class Path
      * @param string|null $description
      * @param RequestBody|null $requestBody
      * @param PathParameter[] $parameters
+     * @param SecurityScheme[] $securitySchemes
      */
-    public function __construct(string $method, string $path, ?string $summary, ?string $description, ?RequestBody $requestBody, array $parameters)
+    public function __construct(string $method, string $path, ?string $summary, ?string $description, ?RequestBody $requestBody, array $parameters, array $securitySchemes)
     {
         $this->method = $method;
         $this->path = $path;
@@ -55,6 +62,7 @@ class Path
         $this->description = $description;
         $this->requestBody = $requestBody;
         $this->parameters = $parameters;
+        $this->securitySchemes = $securitySchemes;
     }
 
     /**
@@ -103,5 +111,13 @@ class Path
     public function parameters(): array
     {
         return $this->parameters;
+    }
+
+    /**
+     * @return SecurityScheme[]
+     */
+    public function securitySchemes(): array
+    {
+        return $this->securitySchemes;
     }
 }

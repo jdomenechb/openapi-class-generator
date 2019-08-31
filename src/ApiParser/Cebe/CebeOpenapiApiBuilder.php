@@ -28,22 +28,30 @@ class CebeOpenapiApiBuilder implements ApiBuilder
      * @var CebeOpenapiSchemaFactory
      */
     private $typeFactory;
+
     /**
      * @var CebeOpenapiSecuritySchemeFactory
      */
     private $securitySchemeFactory;
+    /**
+     * @var CebeOpenapiSecurityFactory
+     */
+    private $securityFactory;
 
     /**
      * CebeOpenapiApiParser constructor.
      *
      * @param CebeOpenapiFileReader $fileReader
      * @param CebeOpenapiSchemaFactory $typeFactory
+     * @param CebeOpenapiSecuritySchemeFactory $securitySchemeFactory
+     * @param CebeOpenapiSecurityFactory $securityFactory
      */
-    public function __construct(CebeOpenapiFileReader $fileReader, CebeOpenapiSchemaFactory $typeFactory, CebeOpenapiSecuritySchemeFactory $securitySchemeFactory)
+    public function __construct(CebeOpenapiFileReader $fileReader, CebeOpenapiSchemaFactory $typeFactory, CebeOpenapiSecuritySchemeFactory $securitySchemeFactory, CebeOpenapiSecurityFactory $securityFactory)
     {
         $this->fileReader = $fileReader;
         $this->typeFactory = $typeFactory;
         $this->securitySchemeFactory = $securitySchemeFactory;
+        $this->securityFactory = $securityFactory;
     }
 
     /**
@@ -71,29 +79,17 @@ class CebeOpenapiApiBuilder implements ApiBuilder
             $contract->info->contact ? $contract->info->contact->email : null
         );
 
-        // Security
-        $defaultSecurities = [];
+        // SecuritySchemes
+        $securitySchemes = [];
 
-        foreach ($contract->security as $contractSecurityReq) {
-            $contractSecurityReqAsArray = (array) $contractSecurityReq->getSerializableData();
-
-            foreach ($contractSecurityReqAsArray as $contractSecurityReqName => $contractSecurityReqValue) {
-                $foundContractSecurityScheme = null;
-
-                foreach ($contract->components->securitySchemes as $contractSecuritySchemeName => $contractSecurityScheme) {
-                    if ($contractSecuritySchemeName === $contractSecurityReqName) {
-                        $foundContractSecurityScheme = $contractSecurityScheme;
-                        break;
-                    }
-                }
-
-                if ($foundContractSecurityScheme === null) {
-                    throw new RuntimeException(sprintf('Security scheme "%s" not found', $contractSecurityReqName));
-                }
-
-                $defaultSecurities[] = $this->securitySchemeFactory->generate($foundContractSecurityScheme);
+        if (!empty($contract->components->securitySchemes)) {
+            foreach ($contract->components->securitySchemes as $contractSecuritySchemeName => $contractSecurityScheme) {
+                $securitySchemes[$contractSecuritySchemeName] = $this->securitySchemeFactory->generate($contractSecurityScheme);
             }
         }
+
+        // Security
+        $defaultSecurities = $this->securityFactory->generate($contract->security, $securitySchemes);
 
         // Parse paths
         foreach ($contract->paths as $path => $pathInfo) {
@@ -143,7 +139,8 @@ class CebeOpenapiApiBuilder implements ApiBuilder
                     $contractOperation->summary,
                     $contractOperation->description,
                     $requestBody,
-                    $parameters
+                    $parameters,
+                    $contractOperation->security ? $this->securityFactory->generate($contractOperation->security, $securitySchemes) : $defaultSecurities
                 );
 
                 $apiService->addOperation($operation);
