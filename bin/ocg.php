@@ -16,19 +16,6 @@ use Symfony\Component\Console\Application;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$fileWriter = new ClassFileWriter('output');
-$abstractSchemaCodeGenerator = new NetteAbstractSchemaCodeGenerator(new NetteObjectSchemaCodeGenerator($fileWriter));
-
 $app = new Application();
-
-$app->add(
-    new GenerateCommand(
-        new CebeOpenapiApiBuilder(new CebeOpenapiFileReader(), new CebeOpenapiSchemaFactory()),
-        new NetteApiCodeGenerator($fileWriter, new NettePathCodeGenerator(new NetteRequestBodyFormatCodeGenerator(
-            $abstractSchemaCodeGenerator,
-            new NetteGuzzleBodyCodeGenerator()
-        ), new NettePathParameterCodeGenerator($abstractSchemaCodeGenerator), new NetteGuzzleBodyCodeGenerator()))
-    )
-);
-
+$app->add(new GenerateCommand());
 $app->run();
