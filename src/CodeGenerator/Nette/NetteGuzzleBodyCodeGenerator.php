@@ -55,6 +55,7 @@ class NetteGuzzleBodyCodeGenerator
             $method->addBody('}');
         }
 
+        $method->addBody('');
         $method->addBody('return $response;');
 
     }
