@@ -28,6 +28,10 @@ class CebeOpenapiApiBuilder implements ApiBuilder
      * @var CebeOpenapiSchemaFactory
      */
     private $typeFactory;
+    /**
+     * @var CebeOpenapiSecuritySchemeFactory
+     */
+    private $securitySchemeFactory;
 
     /**
      * CebeOpenapiApiParser constructor.
@@ -35,10 +39,11 @@ class CebeOpenapiApiBuilder implements ApiBuilder
      * @param CebeOpenapiFileReader $fileReader
      * @param CebeOpenapiSchemaFactory $typeFactory
      */
-    public function __construct(CebeOpenapiFileReader $fileReader, CebeOpenapiSchemaFactory $typeFactory)
+    public function __construct(CebeOpenapiFileReader $fileReader, CebeOpenapiSchemaFactory $typeFactory, CebeOpenapiSecuritySchemeFactory $securitySchemeFactory)
     {
         $this->fileReader = $fileReader;
         $this->typeFactory = $typeFactory;
+        $this->securitySchemeFactory = $securitySchemeFactory;
     }
 
     /**
@@ -86,21 +91,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
                     throw new RuntimeException(sprintf('Security scheme "%s" not found', $contractSecurityReqName));
                 }
 
-                switch ($foundContractSecurityScheme->type) {
-                    case 'http':
-                        $defaultSecurities[] = new HttpSecurityScheme(
-                            $foundContractSecurityScheme->scheme,
-                            $foundContractSecurityScheme->bearerFormat,
-                            $foundContractSecurityScheme->description
-                        );
-
-                        break;
-
-                    default:
-                        throw new RuntimeException(
-                            'Unrecognized SecurityScheme type: ' . $foundContractSecurityScheme->type
-                        );
-                }
+                $defaultSecurities[] = $this->securitySchemeFactory->generate($foundContractSecurityScheme);
             }
         }
 

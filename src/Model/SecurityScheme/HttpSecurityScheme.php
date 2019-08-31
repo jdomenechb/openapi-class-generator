@@ -30,6 +30,10 @@ class HttpSecurityScheme extends AbstractSecurityScheme
     {
         parent::__construct($description);
 
+        if ($scheme !== 'bearer') {
+            $bearerFormat = null;
+        }
+
         $this->scheme = $scheme;
         $this->bearerFormat = $bearerFormat;
     }

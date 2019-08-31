@@ -14,7 +14,7 @@ namespace Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme;
 abstract class AbstractSecurityScheme
 {
     /** @var string|null */
-    private $description;
+    protected $description;
 
     /**
      * AbstractSecurityScheme constructor.
