@@ -11,11 +11,9 @@ use RuntimeException;
 
 class NetteGuzzleBodyCodeGenerator
 {
-    /** @var array */
-    private $guzzleRequestParameters;
-
     public function generate(Method $method, Path $path, ?string $format) : void
     {
+        $guzzleRequestParameters = [];
         $serialize = false;
         $serializeBody = '';
 
@@ -23,19 +21,19 @@ class NetteGuzzleBodyCodeGenerator
             $serialize = true;
             $serializeBody = '\json_encode($requestBody);';
 
-            $this->guzzleRequestParameters['headers']['Content-Type'] = 'application/json';
+            $guzzleRequestParameters['headers']['Content-Type'] = 'application/json';
         } else if ($format !== null) {
             throw new RuntimeException('Unrecognized format ' . $format);
         }
 
-        $guzzleReqParamsString = $this->serialize($this->guzzleRequestParameters);
 
         $uri = addslashes($path->path());
 
         foreach ($path->parameters() as $parameter) {
-            /** @var */
             if ($parameter->in() === 'path') {
                 $uri = str_replace('{' . $parameter->name() . '}', '\' . $' . $parameter->name() . ' . \'', $uri);
+            } elseif ($parameter->in() === 'query') {
+                $guzzleRequestParameters['query'][$parameter->name()] = new RawExpression('$' . $parameter->name());
             }
         }
 
@@ -44,9 +42,11 @@ class NetteGuzzleBodyCodeGenerator
         $uri = preg_replace("#''\s*\.\s*#", '', $uri);
         $uri = preg_replace("#\s*\.\s*''#", '', $uri);
 
+        $guzzleReqParamsString = $this->serialize($guzzleRequestParameters);
+
         if ($serialize) {
             $guzzleReqParamsStringSerialized = $this->serialize(
-                $this->guzzleRequestParameters + ['body' => new RawExpression('$serializedRequestBody')]
+                $guzzleRequestParameters + ['body' => new RawExpression('$serializedRequestBody')]
             );
 
             $method
