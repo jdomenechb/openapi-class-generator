@@ -17,6 +17,7 @@ use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBody;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
+use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\HttpSecurityScheme;
 use RuntimeException;
 
 class CebeOpenapiApiBuilder implements ApiBuilder
@@ -52,6 +53,10 @@ class CebeOpenapiApiBuilder implements ApiBuilder
     {
         $contract = $this->fileReader->read($filename);
 
+        if (!$contract->validate()) {
+            throw new RuntimeException('Invalid contract');
+        }
+
         $apiService = new Api(
             $contract->info->title,
             $contract->info->version,
@@ -60,6 +65,44 @@ class CebeOpenapiApiBuilder implements ApiBuilder
             $contract->info->contact ? $contract->info->contact->name : null,
             $contract->info->contact ? $contract->info->contact->email : null
         );
+
+        // Security
+        $defaultSecurities = [];
+
+        foreach ($contract->security as $contractSecurityReq) {
+            $contractSecurityReqAsArray = (array) $contractSecurityReq->getSerializableData();
+
+            foreach ($contractSecurityReqAsArray as $contractSecurityReqName => $contractSecurityReqValue) {
+                $foundContractSecurityScheme = null;
+
+                foreach ($contract->components->securitySchemes as $contractSecuritySchemeName => $contractSecurityScheme) {
+                    if ($contractSecuritySchemeName === $contractSecurityReqName) {
+                        $foundContractSecurityScheme = $contractSecurityScheme;
+                        break;
+                    }
+                }
+
+                if ($foundContractSecurityScheme === null) {
+                    throw new RuntimeException(sprintf('Security scheme "%s" not found', $contractSecurityReqName));
+                }
+
+                switch ($foundContractSecurityScheme->type) {
+                    case 'http':
+                        $defaultSecurities[] = new HttpSecurityScheme(
+                            $foundContractSecurityScheme->scheme,
+                            $foundContractSecurityScheme->bearerFormat,
+                            $foundContractSecurityScheme->description
+                        );
+
+                        break;
+
+                    default:
+                        throw new RuntimeException(
+                            'Unrecognized SecurityScheme type: ' . $foundContractSecurityScheme->type
+                        );
+                }
+            }
+        }
 
         // Parse paths
         foreach ($contract->paths as $path => $pathInfo) {
