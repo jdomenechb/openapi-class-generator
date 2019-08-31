@@ -30,6 +30,19 @@ class NetteGuzzleBodyCodeGenerator
 
         $guzzleReqParamsString = $this->serialize($this->guzzleRequestParameters);
 
+        $uri = addslashes($path->path());
+
+        foreach ($path->parameters() as $parameter) {
+            /** @var */
+            if ($parameter->in() === 'path') {
+                $uri = str_replace('{' . $parameter->name() . '}', '\' . $' . $parameter->name() . ' . \'', $uri);
+            }
+        }
+
+        $uri = "'$uri'";
+
+        $uri = preg_replace("#''\s*\.\s*#", '', $uri);
+        $uri = preg_replace("#\s*\.\s*''#", '', $uri);
 
         if ($serialize) {
             $guzzleReqParamsStringSerialized = $this->serialize(
@@ -40,15 +53,15 @@ class NetteGuzzleBodyCodeGenerator
                 ->addBody('if ($requestBody !== null) {')
                 ->addBody('    $serializedRequestBody = ' . $serializeBody . ';')
                 ->addBody(
-                    '    $response = $this->client->request(?, ?' . ($guzzleReqParamsStringSerialized? ', ': '') . $guzzleReqParamsStringSerialized . ');',
-                    [$path->method(), $path->path()]
+                    '    $response = $this->client->request(?, ' . $uri . ($guzzleReqParamsStringSerialized? ', ': '') . $guzzleReqParamsStringSerialized . ');',
+                    [$path->method()]
                 )
                 ->addBody('} else {');
         }
 
         $method->addBody(
-            ($serialize ? '    ' : '') . '$response = $this->client->request(?, ?'. ($guzzleReqParamsString? ', ': '') . $guzzleReqParamsString . ');',
-            [$path->method(), $path->path()]
+            ($serialize ? '    ' : '') . '$response = $this->client->request(?, ' . $uri . ($guzzleReqParamsString? ', ': '') . $guzzleReqParamsString . ');',
+            [$path->method()]
         );
 
         if ($serialize) {
