@@ -27,6 +27,9 @@ class RawExpression
         return $this->expression;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->expression;

@@ -7,6 +7,7 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\RawExpression;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Nette\PhpGenerator\Method;
+use RuntimeException;
 
 class NetteGuzzleBodyCodeGenerator
 {
@@ -24,7 +25,7 @@ class NetteGuzzleBodyCodeGenerator
 
             $this->guzzleRequestParameters['headers']['Content-Type'] = 'application/json';
         } else if ($format !== null) {
-            throw new \RuntimeException('Unrecognized format ' . $format);
+            throw new RuntimeException('Unrecognized format ' . $format);
         }
 
         $guzzleReqParamsString = $this->serialize($this->guzzleRequestParameters);
