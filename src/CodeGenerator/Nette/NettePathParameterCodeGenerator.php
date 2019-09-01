@@ -32,7 +32,7 @@ class NettePathParameterCodeGenerator
 
     public function generate(PathParameter $pathParameter, Method $referenceMethod, PhpNamespace $namespace): void
     {
-        if ($pathParameter->schema()) {
+        if (null !== $pathParameter->schema()) {
             $className = $this->abstractSchemaCodeGenerator->generate(
                 $pathParameter->schema(),
                 $namespace->getName(),

@@ -20,7 +20,7 @@ class VectorSchema extends AbstractSchema
     /**
      * Vector constructor.
      *
-     * @param $wrapped
+     * @param AbstractSchema $wrapped
      */
     public function __construct(AbstractSchema $wrapped)
     {

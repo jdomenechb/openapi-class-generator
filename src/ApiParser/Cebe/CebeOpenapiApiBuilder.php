@@ -13,6 +13,7 @@ namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
+use cebe\openapi\spec\RequestBody as CebeRequestBody;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
@@ -111,13 +112,17 @@ class CebeOpenapiApiBuilder implements ApiBuilder
 
                 $requestBody = null;
 
-                if ($contractOperation->requestBody) {
+                // FIXME: Provisional fix for https://github.com/cebe/php-openapi/issues/34
+                /** @var CebeRequestBody|null $contractOpRequestBody */
+                $contractOpRequestBody = $contractOperation->requestBody;
+
+                if ($contractOpRequestBody) {
                     $requestBody = new RequestBody(
-                        $contractOperation->requestBody->description,
-                        $contractOperation->requestBody->required
+                        $contractOpRequestBody->description,
+                        $contractOpRequestBody->required
                     );
 
-                    foreach ($contractOperation->requestBody->content as $mediaType => $content) {
+                    foreach ($contractOpRequestBody->content as $mediaType => $content) {
                         switch ($mediaType) {
                             case 'application/json':
                                 $format = 'json';

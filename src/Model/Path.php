@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Jdomenechb\OpenApiClassGenerator\Model;
 
-use cebe\openapi\spec\SecurityScheme;
+use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\AbstractSecurityScheme;
 
 class Path
 {
@@ -42,20 +42,20 @@ class Path
     private $parameters;
 
     /**
-     * @var SecurityScheme[]
+     * @var AbstractSecurityScheme[]
      */
     private $securitySchemes;
 
     /**
      * ApiOperation constructor.
      *
-     * @param string           $method
-     * @param string           $path
-     * @param string|null      $summary
-     * @param string|null      $description
-     * @param RequestBody|null $requestBody
-     * @param PathParameter[]  $parameters
-     * @param SecurityScheme[] $securitySchemes
+     * @param string                   $method
+     * @param string                   $path
+     * @param string|null              $summary
+     * @param string|null              $description
+     * @param RequestBody|null         $requestBody
+     * @param PathParameter[]          $parameters
+     * @param AbstractSecurityScheme[] $securitySchemes
      */
     public function __construct(string $method, string $path, ?string $summary, ?string $description, ?RequestBody $requestBody, array $parameters, array $securitySchemes)
     {
@@ -117,7 +117,7 @@ class Path
     }
 
     /**
-     * @return SecurityScheme[]
+     * @return AbstractSecurityScheme[]
      */
     public function securitySchemes(): array
     {

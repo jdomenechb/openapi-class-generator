@@ -67,9 +67,9 @@ class GenerateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $inputPath = $input->getArgument('inputPath');
-        $outputPath = $input->getArgument('outputPath');
-        $namespace = $input->getOption('namespace');
+        $inputPath = (string) $input->getArgument('inputPath');
+        $outputPath = (string) $input->getArgument('outputPath');
+        $namespace = (string) $input->getOption('namespace');
 
         $output->writeln('Using namespace: ' . $namespace);
 
@@ -101,7 +101,13 @@ class GenerateCommand extends Command
         $i = 0;
 
         foreach ($finder as $file) {
-            $apiService = $apiBuilder->fromFile($file->getRealPath(), $namespace);
+            $realPath = $file->getRealPath();
+
+            if (false === $realPath) {
+                continue;
+            }
+
+            $apiService = $apiBuilder->fromFile($realPath, $namespace);
             $apiCodeGenerator->generate($apiService);
 
             $output->writeln('Processed contract: ' . $file->getBasename());

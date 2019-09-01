@@ -13,6 +13,7 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\RawExpression;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
+use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\HttpSecurityScheme;
 use Nette\PhpGenerator\Method;
 use RuntimeException;
 
@@ -51,10 +52,14 @@ class NetteGuzzleBodyCodeGenerator
 
         // Security
         foreach ($path->securitySchemes() as $securityScheme) {
-            switch ($securityScheme->scheme()) {
-                case 'bearer':
-                    $guzzleRequestParameters['headers']['Authorization'] = new RawExpression("'Bearer ' . \$bearer");
-                    break;
+            if ($securityScheme instanceof HttpSecurityScheme) {
+                switch ($securityScheme->scheme()) {
+                    case 'bearer':
+                        $guzzleRequestParameters['headers']['Authorization'] = new RawExpression(
+                            "'Bearer ' . \$bearer"
+                        );
+                        break;
+                }
             }
         }
 
@@ -89,7 +94,7 @@ class NetteGuzzleBodyCodeGenerator
     }
 
     /**
-     * @param $item
+     * @param mixed $item
      *
      * @return string
      */
