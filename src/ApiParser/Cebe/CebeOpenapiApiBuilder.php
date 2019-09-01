@@ -133,6 +133,9 @@ class CebeOpenapiApiBuilder implements ApiBuilder
                     }
                 }
 
+                // FIXME: Provisional fix for issue https://github.com/cebe/php-openapi/issues/33
+                $contractOperationSerialized = $contractOperation->getSerializableData();
+
                 $operation = new Path(
                     $method,
                     $path,
@@ -140,7 +143,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
                     $contractOperation->description,
                     $requestBody,
                     $parameters,
-                    $contractOperation->security ? $this->securityFactory->generate($contractOperation->security, $securitySchemes) : $defaultSecurities
+                    isset($contractOperationSerialized->security) ? $this->securityFactory->generate($contractOperation->security, $securitySchemes) : $defaultSecurities
                 );
 
                 $apiService->addOperation($operation);
