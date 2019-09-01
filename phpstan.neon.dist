@@ -2,6 +2,6 @@ parameters:
     paths:
         - bin
         - src
-        #- tests
+        - tests
     level: max
     inferPrivatePropertyTypeFromConstructor: true

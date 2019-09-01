@@ -32,10 +32,11 @@
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.15",
-    "phpstan/phpstan": "^0.11.15"
+    "phpstan/phpstan": "^0.11.15",
+    "phpunit/phpunit": "^8"
   },
   "scripts": {
-    "test": "bin/phpunit",
+    "test": "vendor/bin/phpunit --bootstrap vendor/autoload.php tests",
     "cs": "vendor/bin/php-cs-fixer fix",
     "stan": "vendor/bin/phpstan analyze"
   }
