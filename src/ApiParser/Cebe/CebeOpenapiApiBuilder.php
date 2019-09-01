@@ -88,7 +88,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
             }
         }
 
-        // Security
+        // Default Security
         $defaultSecurities = $this->securityFactory->generate($contract->security, $securitySchemes);
 
         // Parse paths

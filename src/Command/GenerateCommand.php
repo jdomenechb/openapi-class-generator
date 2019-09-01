@@ -25,6 +25,7 @@ use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteObjectSchemaCodeGe
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NettePathCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NettePathParameterCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteRequestBodyFormatCodeGenerator;
+use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteSecuritySchemeCodeGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -80,7 +81,8 @@ class GenerateCommand extends Command
                     new NetteGuzzleBodyCodeGenerator()
                 ),
                 new NettePathParameterCodeGenerator($abstractSchemaCodeGenerator),
-                new NetteGuzzleBodyCodeGenerator()
+                new NetteGuzzleBodyCodeGenerator(),
+                new NetteSecuritySchemeCodeGenerator()
             )
         );
 

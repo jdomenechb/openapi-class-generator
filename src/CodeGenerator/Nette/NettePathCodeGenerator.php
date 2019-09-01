@@ -36,6 +36,10 @@ class NettePathCodeGenerator
      * @var NetteGuzzleBodyCodeGenerator
      */
     private $guzzleBodyCodeGenerator;
+    /**
+     * @var NetteSecuritySchemeCodeGenerator
+     */
+    private $securitySchemeCodeGenerator;
 
     /**
      * NettePathCodeGenerator constructor.
@@ -43,15 +47,18 @@ class NettePathCodeGenerator
      * @param NetteRequestBodyFormatCodeGenerator $requestBodyFormatCodeGenerator
      * @param NettePathParameterCodeGenerator $pathParameterCodeGenerator
      * @param NetteGuzzleBodyCodeGenerator $guzzleBodyCodeGenerator
+     * @param NetteSecuritySchemeCodeGenerator $securitySchemeCodeGenerator
      */
     public function __construct(
         NetteRequestBodyFormatCodeGenerator $requestBodyFormatCodeGenerator,
         NettePathParameterCodeGenerator $pathParameterCodeGenerator,
-        NetteGuzzleBodyCodeGenerator $guzzleBodyCodeGenerator
+        NetteGuzzleBodyCodeGenerator $guzzleBodyCodeGenerator,
+        NetteSecuritySchemeCodeGenerator $securitySchemeCodeGenerator
     ) {
         $this->requestBodyFormatCodeGenerator = $requestBodyFormatCodeGenerator;
         $this->pathParameterCodeGenerator = $pathParameterCodeGenerator;
         $this->guzzleBodyCodeGenerator = $guzzleBodyCodeGenerator;
+        $this->securitySchemeCodeGenerator = $securitySchemeCodeGenerator;
     }
 
 
@@ -90,6 +97,10 @@ class NettePathCodeGenerator
             ->addComment('@return ResponseInterface')
             ->addComment('@throws GuzzleException')
         ;
+
+        foreach ($path->securitySchemes() as $securityScheme) {
+            $this->securitySchemeCodeGenerator->generate($securityScheme, $referenceMethod);
+        }
 
         foreach ($path->parameters() as $parameter) {
             $this->pathParameterCodeGenerator->generate($parameter, $referenceMethod, $namespace);

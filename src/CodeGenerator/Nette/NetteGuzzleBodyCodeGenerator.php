@@ -26,7 +26,7 @@ class NetteGuzzleBodyCodeGenerator
             throw new RuntimeException('Unrecognized format ' . $format);
         }
 
-
+        // Parameters
         $uri = addslashes($path->path());
 
         foreach ($path->parameters() as $parameter) {
@@ -41,6 +41,15 @@ class NetteGuzzleBodyCodeGenerator
 
         $uri = preg_replace("#''\s*\.\s*#", '', $uri);
         $uri = preg_replace("#\s*\.\s*''#", '', $uri);
+
+        // Security
+        foreach ($path->securitySchemes() as $securityScheme) {
+            switch ($securityScheme->scheme()) {
+                case 'bearer':
+                    $guzzleRequestParameters['headers']['Authorization'] = new RawExpression("'Bearer ' . \$bearer");
+                    break;
+            }
+        }
 
         $guzzleReqParamsString = $this->serialize($guzzleRequestParameters);
 
