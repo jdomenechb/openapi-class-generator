@@ -4,20 +4,21 @@
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 
-
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiBuilder;
+use Jdomenechb\OpenApiClassGenerator\Model\Api;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBody;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
-use Jdomenechb\OpenApiClassGenerator\Model\Api;
-use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\HttpSecurityScheme;
 use RuntimeException;
 
 class CebeOpenapiApiBuilder implements ApiBuilder
@@ -41,10 +42,10 @@ class CebeOpenapiApiBuilder implements ApiBuilder
     /**
      * CebeOpenapiApiParser constructor.
      *
-     * @param CebeOpenapiFileReader $fileReader
-     * @param CebeOpenapiSchemaFactory $typeFactory
+     * @param CebeOpenapiFileReader            $fileReader
+     * @param CebeOpenapiSchemaFactory         $typeFactory
      * @param CebeOpenapiSecuritySchemeFactory $securitySchemeFactory
-     * @param CebeOpenapiSecurityFactory $securityFactory
+     * @param CebeOpenapiSecurityFactory       $securityFactory
      */
     public function __construct(CebeOpenapiFileReader $fileReader, CebeOpenapiSchemaFactory $typeFactory, CebeOpenapiSecuritySchemeFactory $securitySchemeFactory, CebeOpenapiSecurityFactory $securityFactory)
     {
@@ -58,11 +59,12 @@ class CebeOpenapiApiBuilder implements ApiBuilder
      * @param string $filename
      * @param string $namespacePrefix
      *
-     * @return Api
      * @throws TypeErrorException
      * @throws UnresolvableReferenceException
+     *
+     * @return Api
      */
-    public function fromFile(string $filename, string $namespacePrefix = '') :Api
+    public function fromFile(string $filename, string $namespacePrefix = ''): Api
     {
         $contract = $this->fileReader->read($filename);
 
@@ -152,5 +154,4 @@ class CebeOpenapiApiBuilder implements ApiBuilder
 
         return $apiService;
     }
-
 }

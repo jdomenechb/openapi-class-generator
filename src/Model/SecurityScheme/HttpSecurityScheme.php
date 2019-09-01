@@ -6,10 +6,12 @@ declare(strict_types=1);
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme;
-
 
 class HttpSecurityScheme extends AbstractSecurityScheme
 {
@@ -22,7 +24,7 @@ class HttpSecurityScheme extends AbstractSecurityScheme
     /**
      * HttpSecurityScheme constructor.
      *
-     * @param string $scheme
+     * @param string      $scheme
      * @param string|null $bearerFormat
      * @param string|null $description
      */
@@ -30,14 +32,13 @@ class HttpSecurityScheme extends AbstractSecurityScheme
     {
         parent::__construct($description);
 
-        if ($scheme !== 'bearer') {
+        if ('bearer' !== $scheme) {
             $bearerFormat = null;
         }
 
         $this->scheme = $scheme;
         $this->bearerFormat = $bearerFormat;
     }
-
 
     public function type(): string
     {

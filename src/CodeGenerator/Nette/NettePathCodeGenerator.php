@@ -6,10 +6,12 @@ declare(strict_types=1);
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
-
 
 use Doctrine\Common\Inflector\Inflector;
 use Exception;
@@ -19,7 +21,6 @@ use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpNamespace;
 use Psr\Http\Message\ResponseInterface;
-use function count;
 
 class NettePathCodeGenerator
 {
@@ -45,9 +46,9 @@ class NettePathCodeGenerator
      * NettePathCodeGenerator constructor.
      *
      * @param NetteRequestBodyFormatCodeGenerator $requestBodyFormatCodeGenerator
-     * @param NettePathParameterCodeGenerator $pathParameterCodeGenerator
-     * @param NetteGuzzleBodyCodeGenerator $guzzleBodyCodeGenerator
-     * @param NetteSecuritySchemeCodeGenerator $securitySchemeCodeGenerator
+     * @param NettePathParameterCodeGenerator     $pathParameterCodeGenerator
+     * @param NetteGuzzleBodyCodeGenerator        $guzzleBodyCodeGenerator
+     * @param NetteSecuritySchemeCodeGenerator    $securitySchemeCodeGenerator
      */
     public function __construct(
         NetteRequestBodyFormatCodeGenerator $requestBodyFormatCodeGenerator,
@@ -61,11 +62,10 @@ class NettePathCodeGenerator
         $this->securitySchemeCodeGenerator = $securitySchemeCodeGenerator;
     }
 
-
     /**
-     * @param ClassType $classRep
+     * @param ClassType    $classRep
      * @param PhpNamespace $namespace
-     * @param Path $path
+     * @param Path         $path
      *
      * @throws Exception
      */
@@ -74,7 +74,7 @@ class NettePathCodeGenerator
         PhpNamespace $namespace,
         Path $path
     ): void {
-        $referenceMethodName = 'REFERENCEMETHOD' . random_int(1000, 9999);
+        $referenceMethodName = 'REFERENCEMETHOD' . \random_int(1000, 9999);
 
         $referenceMethod = $classRep->addMethod($referenceMethodName)
             ->setVisibility('public')
@@ -92,7 +92,7 @@ class NettePathCodeGenerator
 
         $referenceMethod
             ->addComment('Endpoint URL: ' . $path->path())
-            ->addComment('Method: ' . strtoupper($path->method()))
+            ->addComment('Method: ' . \strtoupper($path->method()))
             ->addComment('')
             ->addComment('@return ResponseInterface')
             ->addComment('@throws GuzzleException')
@@ -111,9 +111,9 @@ class NettePathCodeGenerator
         if (!$requestBody) {
             $this->generateWithNoFormats($classRep, $referenceMethod, $path);
         } else {
-            $nFormats = count($requestBody->formats());
+            $nFormats = \count($requestBody->formats());
 
-            if ($nFormats === 0) {
+            if (0 === $nFormats) {
                 $this->generateWithNoFormats($classRep, $referenceMethod, $path);
             } else {
                 foreach ($requestBody->formats() as $format) {
@@ -127,13 +127,13 @@ class NettePathCodeGenerator
 
     /**
      * @param ClassType $classRep
-     * @param Method $referenceMethod
-     * @param Path $path
+     * @param Method    $referenceMethod
+     * @param Path      $path
      */
     private function generateWithNoFormats(ClassType $classRep, Method $referenceMethod, Path $path): void
     {
         $methodName = $path->method() . $path->path();
-        $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $methodName));
+        $methodName = Inflector::camelize(\preg_replace('#\\W#', ' ', $methodName));
 
         $method = $referenceMethod->cloneWithName($methodName);
         $classRep->setMethods($classRep->getMethods() + [$method]);
@@ -142,10 +142,10 @@ class NettePathCodeGenerator
     }
 
     /**
-     * @param ClassType $classRep
-     * @param Method $referenceMethod
-     * @param PhpNamespace $namespace
-     * @param Path $path
+     * @param ClassType         $classRep
+     * @param Method            $referenceMethod
+     * @param PhpNamespace      $namespace
+     * @param Path              $path
      * @param RequestBodyFormat $format
      */
     private function generateWithFormat(
@@ -158,11 +158,11 @@ class NettePathCodeGenerator
         $methodName = $path->method() . $path->path();
         $requestBody = $path->requestBody();
 
-        if ($requestBody && count($requestBody->formats()) > 1) {
+        if ($requestBody && \count($requestBody->formats()) > 1) {
             $methodName .= ' ' . $format->format();
         }
 
-        $methodName = Inflector::camelize(preg_replace('#\W#', ' ', $methodName));
+        $methodName = Inflector::camelize(\preg_replace('#\\W#', ' ', $methodName));
 
         $method = $referenceMethod->cloneWithName($methodName);
         $classRep->setMethods($classRep->getMethods() + [$method]);

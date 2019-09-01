@@ -6,6 +6,9 @@ declare(strict_types=1);
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
@@ -28,7 +31,6 @@ class NetteObjectSchemaCodeGenerator
 
     public function __construct(ClassFileWriter $fileWriter)
     {
-
         $this->fileWriter = $fileWriter;
     }
 
@@ -57,7 +59,7 @@ class NetteObjectSchemaCodeGenerator
             // Getter
             $classRef->addMethod($propertyName)
                 ->setVisibility('public')
-                ->setBody(sprintf('return $this->%s;', $propertyName))
+                ->setBody(\sprintf('return $this->%s;', $propertyName))
                 ->setReturnType($propertySchema->getPhpType())
                 ->setReturnNullable(!$property->required());
 
@@ -70,7 +72,7 @@ class NetteObjectSchemaCodeGenerator
                 $construct->addBody($propertySchema->getPhpValidation('$' . $propertyName) . "\n");
             }
 
-            $construct->addBody(sprintf('$this->%s = $%s;', $propertyName, $propertyName));
+            $construct->addBody(\sprintf('$this->%s = $%s;', $propertyName, $propertyName));
 
             if ($propertySchema instanceof ObjectSchema) {
                 $this->generate($propertySchema, $namespaceName, $format, $name);
@@ -81,7 +83,7 @@ class NetteObjectSchemaCodeGenerator
             }
         }
 
-        if ($format === 'json') {
+        if ('json' === $format) {
             $classRef->addImplement(JsonSerializable::class);
 
             $serializeMethod = $classRef->addMethod('jsonSerialize')
@@ -90,7 +92,7 @@ class NetteObjectSchemaCodeGenerator
 
             foreach ($schema->properties() as $property) {
                 $serializedValue = $property->schema()->getPhpSerializationValue("\$this->{$property->name()}");
-                $serializeMethod->addBody("    '{$property->name()}' => $serializedValue,");
+                $serializeMethod->addBody("    '{$property->name()}' => ${serializedValue},");
             }
 
             $serializeMethod->addBody('];');
@@ -100,9 +102,8 @@ class NetteObjectSchemaCodeGenerator
         $namespace = $file->addNamespace($namespaceName . '\\Dto');
         $namespace->add($classRef);
 
-        $this->fileWriter->write((string)$file, $classRef->getName(), $namespace->getName());
+        $this->fileWriter->write((string) $file, $classRef->getName(), $namespace->getName());
 
         return '\\' . $namespace->getName() . '\\' . $classRef->getName();
     }
-
 }

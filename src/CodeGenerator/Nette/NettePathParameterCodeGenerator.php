@@ -1,8 +1,15 @@
 <?php
 
+/**
+ * This file is part of the openapi-class-generator package.
+ *
+ * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
-
 
 use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
 use Nette\PhpGenerator\Method;
@@ -23,14 +30,14 @@ class NettePathParameterCodeGenerator
         $this->abstractSchemaCodeGenerator = $abstractSchemaCodeGenerator;
     }
 
-    public function generate(PathParameter $pathParameter, Method $referenceMethod, PhpNamespace $namespace) :void
+    public function generate(PathParameter $pathParameter, Method $referenceMethod, PhpNamespace $namespace): void
     {
         if ($pathParameter->schema()) {
             $className = $this->abstractSchemaCodeGenerator->generate(
                 $pathParameter->schema(),
                 $namespace->getName(),
                 null,
-                $referenceMethod->getName() . ucfirst($pathParameter->name())
+                $referenceMethod->getName() . \ucfirst($pathParameter->name())
             );
         } else {
             $className = 'string';

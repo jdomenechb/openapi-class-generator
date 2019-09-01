@@ -6,6 +6,9 @@ declare(strict_types=1);
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\Model;
@@ -42,9 +45,9 @@ class Api
     /**
      * ApiService constructor.
      *
-     * @param string $name
-     * @param string $version
-     * @param string $namespace
+     * @param string      $name
+     * @param string      $version
+     * @param string      $namespace
      * @param string|null $description
      * @param string|null $author
      * @param string|null $authorEmail
@@ -75,26 +78,6 @@ class Api
     public function namespace(): string
     {
         return $this->namespace;
-    }
-
-    /**
-     * @param string $name
-     */
-    private function setName(string $name): void
-    {
-        $this->name = Inflector::classify($name);
-    }
-
-    /**
-     * @param string $namespace
-     */
-    private function setNamespace(string $namespace): void
-    {
-        if (!$namespace) {
-            $namespace = 'Ocg';
-        }
-
-        $this->namespace = trim($namespace, '\\');
     }
 
     public function addOperation(Path $operation): void
@@ -140,5 +123,25 @@ class Api
     public function authorEmail(): ?string
     {
         return $this->authorEmail;
+    }
+
+    /**
+     * @param string $name
+     */
+    private function setName(string $name): void
+    {
+        $this->name = Inflector::classify($name);
+    }
+
+    /**
+     * @param string $namespace
+     */
+    private function setNamespace(string $namespace): void
+    {
+        if (!$namespace) {
+            $namespace = 'Ocg';
+        }
+
+        $this->namespace = \trim($namespace, '\\');
     }
 }

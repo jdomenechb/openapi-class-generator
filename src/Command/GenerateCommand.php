@@ -6,12 +6,16 @@ declare(strict_types=1);
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\Command;
 
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
+use Exception;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiFileReader;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSchemaFactory;
@@ -33,7 +37,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Exception;
 
 class GenerateCommand extends Command
 {
@@ -53,13 +56,14 @@ class GenerateCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return int|void|null
      * @throws TypeErrorException
      * @throws UnresolvableReferenceException
      * @throws Exception
+     *
+     * @return int|void|null
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -104,7 +108,7 @@ class GenerateCommand extends Command
             ++$i;
         }
 
-        if ($i === 0) {
+        if (0 === $i) {
             $output->writeln('No files processed');
         }
     }

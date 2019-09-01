@@ -6,6 +6,9 @@ declare(strict_types=1);
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\Model\Schema;
@@ -29,7 +32,6 @@ class ObjectSchema extends AbstractSchema
         $this->properties = [];
     }
 
-
     /**
      * @return string
      */
@@ -38,7 +40,7 @@ class ObjectSchema extends AbstractSchema
         return $this->name;
     }
 
-    public function addProperty(ObjectSchemaProperty $property) :void
+    public function addProperty(ObjectSchemaProperty $property): void
     {
         $this->properties[] = $property;
     }
@@ -55,6 +57,4 @@ class ObjectSchema extends AbstractSchema
     {
         return 'object';
     }
-
-
 }

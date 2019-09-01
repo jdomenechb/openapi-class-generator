@@ -6,6 +6,9 @@ declare(strict_types=1);
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
@@ -25,18 +28,17 @@ use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\StringSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\UriSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\VectorSchema;
 use RuntimeException;
-use function in_array;
 
 class CebeOpenapiSchemaFactory
 {
-    public function build(Schema $schema, string $name) : AbstractSchema
+    public function build(Schema $schema, string $name): AbstractSchema
     {
         switch ($schema->type) {
             case 'object':
                 $obj = new ObjectSchema($name);
 
                 foreach ($schema->properties as $propertyName => $property) {
-                    $dtoProperty = new ObjectSchemaProperty($propertyName, in_array($propertyName, $schema->required, true), $this->build($property, $propertyName));
+                    $dtoProperty = new ObjectSchemaProperty($propertyName, \in_array($propertyName, $schema->required, true), $this->build($property, $propertyName));
 
                     $obj->addProperty($dtoProperty);
                 }
@@ -63,7 +65,7 @@ class CebeOpenapiSchemaFactory
                             break;
 
                         default:
-                            throw new RuntimeException(sprintf('String schema format "%s" not recognized', $schema->format));
+                            throw new RuntimeException(\sprintf('String schema format "%s" not recognized', $schema->format));
                     }
                 } else {
                     $obj = new StringSchema();
@@ -80,7 +82,7 @@ class CebeOpenapiSchemaFactory
                             break;
 
                         default:
-                            throw new RuntimeException(sprintf('Number schema format "%s" not recognized', $schema->format));
+                            throw new RuntimeException(\sprintf('Number schema format "%s" not recognized', $schema->format));
                     }
                 } else {
                     $obj = new NumberSchema();
@@ -98,7 +100,7 @@ class CebeOpenapiSchemaFactory
                 return new BooleanSchema();
 
             default:
-                throw new RuntimeException(sprintf('Schema type "%s" not recognized', $schema->type));
+                throw new RuntimeException(\sprintf('Schema type "%s" not recognized', $schema->type));
         }
     }
 }

@@ -29,5 +29,13 @@
     "psr/http-client": "^1.0",
     "guzzlehttp/guzzle": "^6.3",
     "symfony/filesystem": "^4.3"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.15"
+  },
+  "scripts": {
+    "test": "bin/phpunit",
+    "cs": "vendor/bin/php-cs-fixer fix",
+    "stan": "vendor/bin/phpstan analyze"
   }
 }

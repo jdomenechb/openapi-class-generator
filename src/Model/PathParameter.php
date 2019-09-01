@@ -1,8 +1,15 @@
 <?php
 
+/**
+ * This file is part of the openapi-class-generator package.
+ *
+ * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Jdomenechb\OpenApiClassGenerator\Model;
-
 
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 use RuntimeException;
@@ -32,11 +39,11 @@ class PathParameter
     /**
      * PathParameter constructor.
      *
-     * @param string $name
-     * @param string $in
-     * @param string|null $description
-     * @param bool $required
-     * @param bool $deprecated
+     * @param string              $name
+     * @param string              $in
+     * @param string|null         $description
+     * @param bool                $required
+     * @param bool                $deprecated
      * @param AbstractSchema|null $schema
      */
     public function __construct(
@@ -108,12 +115,10 @@ class PathParameter
      */
     private function setIn(string $in): void
     {
-        if (!in_array($in, self::VALID_IN, true)) {
+        if (!\in_array($in, self::VALID_IN, true)) {
             throw new RuntimeException('Invalid parameter in: ' . $in);
         }
 
         $this->in = $in;
     }
-
-
 }

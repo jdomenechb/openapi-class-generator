@@ -6,6 +6,9 @@ declare(strict_types=1);
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\Model\Schema;
@@ -25,8 +28,8 @@ class ObjectSchemaProperty
     /**
      * DtoProperty constructor.
      *
-     * @param string $name
-     * @param bool $required
+     * @param string         $name
+     * @param bool           $required
      * @param AbstractSchema $schema
      */
     public function __construct(string $name, bool $required, AbstractSchema $schema)
