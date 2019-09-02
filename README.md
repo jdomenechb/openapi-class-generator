@@ -15,3 +15,10 @@ vendor/bin/ocg generate <inputPathFolder> <outputPathFolder>
 ```
 
 **WARNING:** The contents of the output folder will be deleted entirely at each generation.
+
+The namespace for the generated files can be defined by using `--namespace`:
+
+```bash
+vendor/bin/ocg generate contracts src-generated --namespace An\\Org\\Namespace
+```
+
