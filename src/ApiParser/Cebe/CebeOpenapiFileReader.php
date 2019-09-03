@@ -41,10 +41,6 @@ class CebeOpenapiFileReader
             throw new RuntimeException('Invalid contract extension: ' . $ext);
         }
 
-        if (!$contract instanceof OpenApi) {
-            throw new \RuntimeException('File is not an OpenAPI contract');
-        }
-
         return $contract;
     }
 }
