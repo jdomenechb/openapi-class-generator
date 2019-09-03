@@ -17,6 +17,9 @@ use TypeError;
 
 class CebeOpenapiSecuritySchemeFactoryTest extends TestCase
 {
+    /**
+     * @covers \Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecuritySchemeFactory::generate
+     */
     public function testCannotGenerateSecuritySchemeWithInvalidType()
     {
         $this->expectException(RuntimeException::class);
@@ -28,6 +31,9 @@ class CebeOpenapiSecuritySchemeFactoryTest extends TestCase
         $factory->generate($from);
     }
 
+    /**
+     * @covers \Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecuritySchemeFactory::generate
+     */
     public function testGenerateHttpSecuritySchemeWithNoScheme()
     {
         $this->expectException(TypeError::class);

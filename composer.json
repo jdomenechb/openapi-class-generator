@@ -15,7 +15,8 @@
   ],
   "autoload": {
     "psr-4": {
-      "Jdomenechb\\OpenApiClassGenerator\\" : "src/"
+      "Jdomenechb\\OpenApiClassGenerator\\" : "src/",
+      "Jdomenechb\\OpenApiClassGenerator\\Tests\\" : "tests/"
     }
   },
   "require": {
@@ -33,7 +34,8 @@
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.15",
     "phpstan/phpstan": "^0.11.15",
-    "phpunit/phpunit": "^8"
+    "phpunit/phpunit": "^8",
+    "infection/infection": "^0.13.6"
   },
   "scripts": {
     "test": "vendor/bin/phpunit --bootstrap vendor/autoload.php tests",

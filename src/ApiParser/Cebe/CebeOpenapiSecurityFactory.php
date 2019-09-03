@@ -13,14 +13,15 @@ declare(strict_types=1);
 
 namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 
+use cebe\openapi\spec\SecurityRequirement;
 use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\AbstractSecurityScheme;
 use RuntimeException;
 
 class CebeOpenapiSecurityFactory
 {
     /**
-     * @param array $securityRequirements
-     * @param array $availableSecuritySchemes
+     * @param SecurityRequirement[] $securityRequirements
+     * @param AbstractSecurityScheme[] $availableSecuritySchemes
      *
      * @return AbstractSecurityScheme[]
      */
@@ -29,9 +30,9 @@ class CebeOpenapiSecurityFactory
         $securities = [];
 
         foreach ($securityRequirements as $contractSecurityReq) {
-            $contractSecurityReqAsArray = (array) $contractSecurityReq->getSerializableData();
+            $contractSecurityReqSerialized = $contractSecurityReq->getSerializableData();
 
-            foreach ($contractSecurityReqAsArray as $contractSecurityReqName => $contractSecurityReqValue) {
+            foreach ($contractSecurityReqSerialized as $contractSecurityReqName => $contractSecurityReqValue) {
                 if (!isset($availableSecuritySchemes[$contractSecurityReqName])) {
                     throw new RuntimeException(\sprintf('Security scheme "%s" not found', $contractSecurityReqName));
                 }

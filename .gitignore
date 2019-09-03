@@ -2,3 +2,5 @@
 /.idea
 /contracts
 /output
+/infection.log
+/.phpunit.result.cache

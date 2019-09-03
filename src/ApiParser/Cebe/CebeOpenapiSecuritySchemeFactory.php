@@ -29,8 +29,6 @@ class CebeOpenapiSecuritySchemeFactory
                     $securityScheme->bearerFormat,
                     $securityScheme->description
                 );
-
-                break;
         }
 
         throw new RuntimeException(
