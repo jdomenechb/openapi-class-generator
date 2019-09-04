@@ -38,7 +38,11 @@ class CebeOpenapiSchemaFactory
                 $obj = new ObjectSchema($name);
 
                 foreach ($schema->properties as $propertyName => $property) {
-                    $dtoProperty = new ObjectSchemaProperty($propertyName, \in_array($propertyName, $schema->required, true), $this->build($property, $propertyName));
+                    $dtoProperty = new ObjectSchemaProperty(
+                        $propertyName,
+                        \in_array($propertyName, $schema->required ?? [], true),
+                        $this->build($property, $propertyName)
+                    );
 
                     $obj->addProperty($dtoProperty);
                 }
@@ -94,6 +98,10 @@ class CebeOpenapiSchemaFactory
                 return new IntegerSchema();
 
             case 'array':
+                if ($schema->items === null) {
+                    throw new \RuntimeException('Property "items" is required for schema with type array');
+                }
+
                 return new VectorSchema($this->build($schema->items, $name . 'Item'));
 
             case 'boolean':
