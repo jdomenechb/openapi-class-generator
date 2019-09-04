@@ -27,9 +27,6 @@ class CebeOpenapiSecurityFactoryTest extends TestCase
         $this->obj = new CebeOpenapiSecurityFactory();
     }
 
-    /**
-     * #@covers \Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecurityFactory::generate.
-     */
     public function testWithEmptySecurities(): void
     {
         $availableSecuritySchemes = [];
@@ -40,9 +37,6 @@ class CebeOpenapiSecurityFactoryTest extends TestCase
         $this->assertSame([], $result);
     }
 
-    /**
-     * @covers \Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecurityFactory::generate
-     */
     public function testWithAvailableSecuritySchemesButWithoutSecurityRequirements(): void
     {
         $availableSecuritySchemes = [
