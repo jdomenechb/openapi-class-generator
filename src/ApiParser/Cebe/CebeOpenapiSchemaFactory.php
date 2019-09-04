@@ -35,74 +35,19 @@ class CebeOpenapiSchemaFactory
     {
         switch ($schema->type) {
             case 'object':
-                $obj = new ObjectSchema($name);
-
-                foreach ($schema->properties as $propertyName => $property) {
-                    $dtoProperty = new ObjectSchemaProperty(
-                        $propertyName,
-                        \in_array($propertyName, $schema->required ?? [], true),
-                        $this->build($property, $propertyName)
-                    );
-
-                    $obj->addProperty($dtoProperty);
-                }
-
-                return $obj;
+                return $this->createObject($schema, $name);
 
             case 'string':
-                if ($schema->format) {
-                    switch ($schema->format) {
-                        case 'email':
-                            $obj = new EmailSchema();
-                            break;
-
-                        case 'password':
-                            $obj = new PasswordSchema();
-                            break;
-
-                        case 'date-time':
-                            $obj = new DateTimeSchema();
-                            break;
-
-                        case 'uri':
-                            $obj = new UriSchema();
-                            break;
-
-                        default:
-                            throw new RuntimeException(\sprintf('String schema format "%s" not recognized', $schema->format));
-                    }
-                } else {
-                    $obj = new StringSchema();
-                }
-
-                return $obj;
+                return $this->createString($schema);
 
             case 'number':
-                if ($schema->format) {
-                    switch ($schema->format) {
-                        case 'float':
-                        case 'double':
-                            $obj = new FloatSchema();
-                            break;
-
-                        default:
-                            throw new RuntimeException(\sprintf('Number schema format "%s" not recognized', $schema->format));
-                    }
-                } else {
-                    $obj = new NumberSchema();
-                }
-
-                return $obj;
+                return $this->createNumber($schema);
 
             case 'integer':
                 return new IntegerSchema();
 
             case 'array':
-                if ($schema->items === null) {
-                    throw new \RuntimeException('Property "items" is required for schema with type array');
-                }
-
-                return new VectorSchema($this->build($schema->items, $name . 'Item'));
+                return $this->createArray($schema, $name);
 
             case 'boolean':
                 return new BooleanSchema();
@@ -110,5 +55,102 @@ class CebeOpenapiSchemaFactory
             default:
                 throw new RuntimeException(\sprintf('Schema type "%s" not recognized', $schema->type));
         }
+    }
+
+    /**
+     * @param Schema $schema
+     * @param string $name
+     *
+     * @return ObjectSchema
+     */
+    private function createObject(Schema $schema, string $name): ObjectSchema
+    {
+        $obj = new ObjectSchema($name);
+
+        foreach ($schema->properties as $propertyName => $property) {
+            $dtoProperty = new ObjectSchemaProperty(
+                $propertyName,
+                \in_array($propertyName, $schema->required ?? [], true),
+                $this->build($property, $propertyName)
+            );
+
+            $obj->addProperty($dtoProperty);
+        }
+
+        return $obj;
+    }
+
+    /**
+     * @param Schema $schema
+     *
+     * @return DateTimeSchema|EmailSchema|PasswordSchema|StringSchema|UriSchema
+     */
+    private function createString(Schema $schema)
+    {
+        if ($schema->format) {
+            switch ($schema->format) {
+                case 'email':
+                    $obj = new EmailSchema();
+                    break;
+
+                case 'password':
+                    $obj = new PasswordSchema();
+                    break;
+
+                case 'date-time':
+                    $obj = new DateTimeSchema();
+                    break;
+
+                case 'uri':
+                    $obj = new UriSchema();
+                    break;
+
+                default:
+                    throw new RuntimeException(\sprintf('String schema format "%s" not recognized', $schema->format));
+            }
+        } else {
+            $obj = new StringSchema();
+        }
+
+        return $obj;
+    }
+
+    /**
+     * @param Schema $schema
+     *
+     * @return FloatSchema|NumberSchema
+     */
+    private function createNumber(Schema $schema)
+    {
+        if ($schema->format) {
+            switch ($schema->format) {
+                case 'float':
+                case 'double':
+                    $obj = new FloatSchema();
+                    break;
+
+                default:
+                    throw new RuntimeException(\sprintf('Number schema format "%s" not recognized', $schema->format));
+            }
+        } else {
+            $obj = new NumberSchema();
+        }
+
+        return $obj;
+    }
+
+    /**
+     * @param Schema $schema
+     * @param string $name
+     *
+     * @return VectorSchema
+     */
+    private function createArray(Schema $schema, string $name): VectorSchema
+    {
+        if (null === $schema->items) {
+            throw new RuntimeException('Property "items" is required for schema with type array');
+        }
+
+        return new VectorSchema($this->build($schema->items, $name . 'Item'));
     }
 }
