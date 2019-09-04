@@ -4,6 +4,9 @@
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\Tests\ApiParser\Cebe;
@@ -50,7 +53,7 @@ class CebeOpenapiSecuritySchemeFactoryTest extends TestCase
             'type' => 'http',
             'scheme' => 'anScheme',
             'bearerFormat' => 'aBearerFormat',
-            'description' => 'aDescription'
+            'description' => 'aDescription',
         ]);
 
         $factory = new CebeOpenapiSecuritySchemeFactory();
@@ -70,7 +73,7 @@ class CebeOpenapiSecuritySchemeFactoryTest extends TestCase
             'type' => 'http',
             'scheme' => 'bearer',
             'bearerFormat' => 'aBearerFormat',
-            'description' => 'aDescription'
+            'description' => 'aDescription',
         ]);
 
         $factory = new CebeOpenapiSecuritySchemeFactory();

@@ -20,7 +20,7 @@ use RuntimeException;
 class CebeOpenapiSecurityFactory
 {
     /**
-     * @param SecurityRequirement[] $securityRequirements
+     * @param SecurityRequirement[]    $securityRequirements
      * @param AbstractSecurityScheme[] $availableSecuritySchemes
      *
      * @return AbstractSecurityScheme[]

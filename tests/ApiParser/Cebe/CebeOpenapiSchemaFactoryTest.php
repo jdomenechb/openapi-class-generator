@@ -4,6 +4,9 @@
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\Tests\ApiParser\Cebe;
@@ -68,7 +71,6 @@ class CebeOpenapiSchemaFactoryTest extends TestCase
 
         $schema = new Schema(['type' => 'array']);
         $this->obj->build($schema, 'any');
-
     }
 
     public function testString(): void
@@ -170,7 +172,7 @@ class CebeOpenapiSchemaFactoryTest extends TestCase
                     'name' => new Schema(['type' => 'string']),
                     'age' => new Schema(['type' => 'integer']),
                 ],
-                'required' => ['age']
+                'required' => ['age'],
             ]
         );
 

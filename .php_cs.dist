@@ -51,6 +51,7 @@ $config = PhpCsFixer\Config::create()
         PhpCsFixer\Finder::create()
             ->in('src')
             ->in('bin')
+            ->in('tests')
     // Define as many as needed...
     )
     ->setUsingCache(false)

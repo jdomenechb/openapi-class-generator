@@ -4,6 +4,9 @@
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\Tests\ApiParser\Cebe;
@@ -25,7 +28,7 @@ class CebeOpenapiSecurityFactoryTest extends TestCase
     }
 
     /**
-     * #@covers \Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecurityFactory::generate
+     * #@covers \Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecurityFactory::generate.
      */
     public function testWithEmptySecurities(): void
     {
@@ -67,7 +70,7 @@ class CebeOpenapiSecurityFactoryTest extends TestCase
 
         $securityRequirements = [
             new SecurityRequirement([
-                'name2' => []
+                'name2' => [],
             ]),
         ];
 
@@ -89,7 +92,7 @@ class CebeOpenapiSecurityFactoryTest extends TestCase
 
         $securityRequirements = [
             new SecurityRequirement([
-                'name1' => []
+                'name1' => [],
             ]),
         ];
 
@@ -119,10 +122,10 @@ class CebeOpenapiSecurityFactoryTest extends TestCase
 
         $securityRequirements = [
             new SecurityRequirement([
-                'name3' => []
+                'name3' => [],
             ]),
             new SecurityRequirement([
-                'name2' => []
+                'name2' => [],
             ]),
         ];
 
