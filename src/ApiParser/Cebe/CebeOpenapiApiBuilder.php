@@ -26,6 +26,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
 {
     /** @var CebeOpenapiFileReader */
     private $fileReader;
+
     /**
      * @var CebeOpenapiSchemaFactory
      */
@@ -35,6 +36,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
      * @var CebeOpenapiSecuritySchemeFactory
      */
     private $securitySchemeFactory;
+
     /**
      * @var CebeOpenapiSecurityFactory
      */
@@ -44,14 +46,18 @@ class CebeOpenapiApiBuilder implements ApiBuilder
      * CebeOpenapiApiParser constructor.
      *
      * @param CebeOpenapiFileReader            $fileReader
-     * @param CebeOpenapiSchemaFactory         $typeFactory
+     * @param CebeOpenapiSchemaFactory         $schemaFactory
      * @param CebeOpenapiSecuritySchemeFactory $securitySchemeFactory
      * @param CebeOpenapiSecurityFactory       $securityFactory
      */
-    public function __construct(CebeOpenapiFileReader $fileReader, CebeOpenapiSchemaFactory $typeFactory, CebeOpenapiSecuritySchemeFactory $securitySchemeFactory, CebeOpenapiSecurityFactory $securityFactory)
-    {
+    public function __construct(
+        CebeOpenapiFileReader $fileReader,
+        CebeOpenapiSchemaFactory $schemaFactory,
+        CebeOpenapiSecuritySchemeFactory $securitySchemeFactory,
+        CebeOpenapiSecurityFactory $securityFactory
+    ) {
         $this->fileReader = $fileReader;
-        $this->typeFactory = $typeFactory;
+        $this->typeFactory = $schemaFactory;
         $this->securitySchemeFactory = $securitySchemeFactory;
         $this->securityFactory = $securityFactory;
     }
@@ -78,8 +84,8 @@ class CebeOpenapiApiBuilder implements ApiBuilder
             $contract->info->version,
             $namespacePrefix,
             $contract->info->description,
-            $contract->info->contact ? $contract->info->contact->name : null,
-            $contract->info->contact ? $contract->info->contact->email : null
+            $contract->info->contact->name ?? null,
+            $contract->info->contact->email ?? null
         );
 
         // SecuritySchemes
@@ -87,7 +93,9 @@ class CebeOpenapiApiBuilder implements ApiBuilder
 
         if (!empty($contract->components->securitySchemes)) {
             foreach ($contract->components->securitySchemes as $contractSecuritySchemeName => $contractSecurityScheme) {
-                $securitySchemes[$contractSecuritySchemeName] = $this->securitySchemeFactory->generate($contractSecurityScheme);
+                $securitySchemes[$contractSecuritySchemeName] = $this->securitySchemeFactory->generate(
+                    $contractSecurityScheme
+                );
             }
         }
 
@@ -150,7 +158,10 @@ class CebeOpenapiApiBuilder implements ApiBuilder
                     $contractOperation->description,
                     $requestBody,
                     $parameters,
-                    isset($contractOperationSerialized->security) ? $this->securityFactory->generate($contractOperation->security, $securitySchemes) : $defaultSecurities
+                    isset($contractOperationSerialized->security) ? $this->securityFactory->generate(
+                        $contractOperation->security,
+                        $securitySchemes
+                    ) : $defaultSecurities
                 );
 
                 $apiService->addOperation($operation);
