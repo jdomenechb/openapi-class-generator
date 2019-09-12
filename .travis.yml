@@ -10,7 +10,7 @@ script:
   - ./infection.phar --min-msi=95 --threads=4
 
 before_script:
-  - composer install
+  - composer update
 
   # Install infection
   - wget https://github.com/infection/infection/releases/download/0.13.0/infection.phar
