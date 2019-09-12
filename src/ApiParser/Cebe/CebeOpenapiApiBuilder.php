@@ -70,7 +70,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
         $contract = $this->fileReader->read($filename);
 
         if (!$contract->validate()) {
-            throw new RuntimeException('Invalid contract: ' . implode('; ', $contract->getErrors()));
+            throw new RuntimeException('Invalid contract: ' . \implode('; ', $contract->getErrors()));
         }
 
         $apiService = new Api(

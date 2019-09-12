@@ -157,7 +157,7 @@ class CebeOpenapiApiBuilderTest extends TestCase
         $contract->paths->addPath('/path1',
             new PathItem([
                 'post' => new Operation([
-                    'responses' => new Responses([])
+                    'responses' => new Responses([]),
                 ]),
             ])
         );
@@ -165,7 +165,7 @@ class CebeOpenapiApiBuilderTest extends TestCase
         $contract->paths->addPath('/path2',
             new PathItem([
                 'get' => new Operation([
-                    'responses' => new Responses([])
+                    'responses' => new Responses([]),
                 ]),
             ])
         );
@@ -188,7 +188,6 @@ class CebeOpenapiApiBuilderTest extends TestCase
             ->expects($this->exactly(2))
             ->method('generate')
             ->willReturnOnConsecutiveCalls($modelPath1, $modelPath2);
-
 
         $result = $this->obj->fromFile('a/file/name.yml');
 
@@ -226,8 +225,9 @@ class CebeOpenapiApiBuilderTest extends TestCase
     }
 
     /**
-     * @return array
      * @throws TypeErrorException
+     *
+     * @return array
      */
     private function prepareSecurityInContract(): array
     {
@@ -264,6 +264,6 @@ class CebeOpenapiApiBuilderTest extends TestCase
             $securityRequirement,
         ];
 
-        return array($securityScheme1, $securityScheme2, $contract);
+        return [$securityScheme1, $securityScheme2, $contract];
     }
 }
