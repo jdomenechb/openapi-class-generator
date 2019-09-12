@@ -6,7 +6,7 @@ php:
   - '7.4snapshot'
 
 script:
-  - phpunit
+  - ./vendor/bin/phpunit
   - ./vendor/bin/infection --min-msi=95 --threads=4 --only-covered
 
 before_script:
