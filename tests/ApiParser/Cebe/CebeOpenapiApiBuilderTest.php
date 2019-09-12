@@ -21,6 +21,7 @@ use cebe\openapi\spec\SecurityRequirement;
 use cebe\openapi\spec\SecurityScheme;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiFileReader;
+use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiPathFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSchemaFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecurityFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecuritySchemeFactory;
@@ -41,7 +42,7 @@ class CebeOpenapiApiBuilderTest extends TestCase
     /**
      * @var CebeOpenapiSchemaFactory
      */
-    private $schemaFactory;
+    private $pathFactory;
 
     /**
      * @var CebeOpenapiSecurityFactory
@@ -56,15 +57,15 @@ class CebeOpenapiApiBuilderTest extends TestCase
     protected function setUp(): void
     {
         $this->fileReader = $this->createMock(CebeOpenapiFileReader::class);
-        $this->schemaFactory = $this->createMock(CebeOpenapiSchemaFactory::class);
+        $this->pathFactory = $this->createMock(CebeOpenapiPathFactory::class);
         $this->securitySchemeFactory = $this->createMock(CebeOpenapiSecuritySchemeFactory::class);
         $this->securityFactory = $this->createMock(CebeOpenapiSecurityFactory::class);
 
         $this->obj = new CebeOpenapiApiBuilder(
             $this->fileReader,
-            $this->schemaFactory,
             $this->securitySchemeFactory,
-            $this->securityFactory
+            $this->securityFactory,
+            $this->pathFactory
         );
     }
 

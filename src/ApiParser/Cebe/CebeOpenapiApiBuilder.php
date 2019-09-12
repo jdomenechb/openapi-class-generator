@@ -13,24 +13,14 @@ namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
-use cebe\openapi\spec\RequestBody as CebeRequestBody;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
-use Jdomenechb\OpenApiClassGenerator\Model\Path;
-use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
-use Jdomenechb\OpenApiClassGenerator\Model\RequestBody;
-use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
 use RuntimeException;
 
 class CebeOpenapiApiBuilder implements ApiBuilder
 {
     /** @var CebeOpenapiFileReader */
     private $fileReader;
-
-    /**
-     * @var CebeOpenapiSchemaFactory
-     */
-    private $typeFactory;
 
     /**
      * @var CebeOpenapiSecuritySchemeFactory
@@ -41,25 +31,29 @@ class CebeOpenapiApiBuilder implements ApiBuilder
      * @var CebeOpenapiSecurityFactory
      */
     private $securityFactory;
+    /**
+     * @var CebeOpenapiPathFactory
+     */
+    private $pathFactory;
 
     /**
      * CebeOpenapiApiParser constructor.
      *
-     * @param CebeOpenapiFileReader            $fileReader
-     * @param CebeOpenapiSchemaFactory         $schemaFactory
+     * @param CebeOpenapiFileReader $fileReader
      * @param CebeOpenapiSecuritySchemeFactory $securitySchemeFactory
-     * @param CebeOpenapiSecurityFactory       $securityFactory
+     * @param CebeOpenapiSecurityFactory $securityFactory
+     * @param CebeOpenapiPathFactory $pathFactory
      */
     public function __construct(
         CebeOpenapiFileReader $fileReader,
-        CebeOpenapiSchemaFactory $schemaFactory,
         CebeOpenapiSecuritySchemeFactory $securitySchemeFactory,
-        CebeOpenapiSecurityFactory $securityFactory
+        CebeOpenapiSecurityFactory $securityFactory,
+        CebeOpenapiPathFactory $pathFactory
     ) {
         $this->fileReader = $fileReader;
-        $this->typeFactory = $schemaFactory;
         $this->securitySchemeFactory = $securitySchemeFactory;
         $this->securityFactory = $securityFactory;
+        $this->pathFactory = $pathFactory;
     }
 
     /**
@@ -105,66 +99,20 @@ class CebeOpenapiApiBuilder implements ApiBuilder
         // Parse paths
         foreach ($contract->paths as $path => $pathInfo) {
             foreach ($pathInfo->getOperations() as $method => $contractOperation) {
-                $parameters = [];
-
-                foreach ($contractOperation->parameters as $parameter) {
-                    $parameters[] = new PathParameter(
-                        $parameter->name,
-                        $parameter->in,
-                        $parameter->description,
-                        $parameter->required,
-                        $parameter->deprecated,
-                        $parameter->schema ? $this->typeFactory->build($parameter->schema, 'parameter') : null
-                    );
-                }
-
-                $requestBody = null;
-
-                // FIXME: Provisional fix for https://github.com/cebe/php-openapi/issues/34
-                /** @var CebeRequestBody|null $contractOpRequestBody */
-                $contractOpRequestBody = $contractOperation->requestBody;
-
-                if ($contractOpRequestBody) {
-                    $requestBody = new RequestBody(
-                        $contractOpRequestBody->description,
-                        $contractOpRequestBody->required
-                    );
-
-                    foreach ($contractOpRequestBody->content as $mediaType => $content) {
-                        switch ($mediaType) {
-                            case 'application/json':
-                                $format = 'json';
-                                break;
-
-                            default:
-                                throw new RuntimeException('Unrecognized requestBody format: ' . $mediaType);
-                        }
-
-                        $requestBodyFormat = new RequestBodyFormat(
-                            $format,
-                            $this->typeFactory->build($content->schema, 'request')
-                        );
-                        $requestBody->addFormat($requestBodyFormat);
-                    }
-                }
-
                 // FIXME: Provisional fix for issue https://github.com/cebe/php-openapi/issues/33
                 $contractOperationSerialized = $contractOperation->getSerializableData();
 
-                $operation = new Path(
+                $pathObj = $this->pathFactory->generate(
+                    $contractOperation,
                     $method,
                     $path,
-                    $contractOperation->summary,
-                    $contractOperation->description,
-                    $requestBody,
-                    $parameters,
                     isset($contractOperationSerialized->security) ? $this->securityFactory->generate(
                         $contractOperation->security,
                         $securitySchemes
                     ) : $defaultSecurities
                 );
 
-                $apiService->addOperation($operation);
+                $apiService->addOperation($pathObj);
             }
         }
 

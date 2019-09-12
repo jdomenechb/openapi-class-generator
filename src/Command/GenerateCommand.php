@@ -18,6 +18,7 @@ use cebe\openapi\exceptions\UnresolvableReferenceException;
 use Exception;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiFileReader;
+use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiPathFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSchemaFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecurityFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecuritySchemeFactory;
@@ -76,7 +77,13 @@ class GenerateCommand extends Command
         $fileWriter = new ClassFileWriter($outputPath);
         $abstractSchemaCodeGenerator = new NetteAbstractSchemaCodeGenerator(new NetteObjectSchemaCodeGenerator($fileWriter));
 
-        $apiBuilder = new CebeOpenapiApiBuilder(new CebeOpenapiFileReader(), new CebeOpenapiSchemaFactory(), new CebeOpenapiSecuritySchemeFactory(), new CebeOpenapiSecurityFactory());
+        $apiBuilder = new CebeOpenapiApiBuilder(
+            new CebeOpenapiFileReader(),
+            new CebeOpenapiSecuritySchemeFactory(),
+            new CebeOpenapiSecurityFactory(),
+            new CebeOpenapiPathFactory(new CebeOpenapiSchemaFactory())
+        );
+
         $apiCodeGenerator = new NetteApiCodeGenerator(
             $fileWriter,
             new NettePathCodeGenerator(
