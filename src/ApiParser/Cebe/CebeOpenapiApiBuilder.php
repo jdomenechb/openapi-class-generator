@@ -39,10 +39,10 @@ class CebeOpenapiApiBuilder implements ApiBuilder
     /**
      * CebeOpenapiApiParser constructor.
      *
-     * @param CebeOpenapiFileReader $fileReader
+     * @param CebeOpenapiFileReader            $fileReader
      * @param CebeOpenapiSecuritySchemeFactory $securitySchemeFactory
-     * @param CebeOpenapiSecurityFactory $securityFactory
-     * @param CebeOpenapiPathFactory $pathFactory
+     * @param CebeOpenapiSecurityFactory       $securityFactory
+     * @param CebeOpenapiPathFactory           $pathFactory
      */
     public function __construct(
         CebeOpenapiFileReader $fileReader,
@@ -70,7 +70,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
         $contract = $this->fileReader->read($filename);
 
         if (!$contract->validate()) {
-            throw new RuntimeException('Invalid contract');
+            throw new RuntimeException('Invalid contract: ' . implode('; ', $contract->getErrors()));
         }
 
         $apiService = new Api(
@@ -112,7 +112,7 @@ class CebeOpenapiApiBuilder implements ApiBuilder
                     ) : $defaultSecurities
                 );
 
-                $apiService->addOperation($pathObj);
+                $apiService->addPath($pathObj);
             }
         }
 

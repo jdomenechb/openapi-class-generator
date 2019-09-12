@@ -16,7 +16,10 @@ use cebe\openapi\spec\Components;
 use cebe\openapi\spec\Contact;
 use cebe\openapi\spec\Info;
 use cebe\openapi\spec\OpenApi;
+use cebe\openapi\spec\Operation;
+use cebe\openapi\spec\PathItem;
 use cebe\openapi\spec\Paths;
+use cebe\openapi\spec\Responses;
 use cebe\openapi\spec\SecurityRequirement;
 use cebe\openapi\spec\SecurityScheme;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiApiBuilder;
@@ -25,6 +28,7 @@ use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiPathFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSchemaFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecurityFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecuritySchemeFactory;
+use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\AbstractSecurityScheme;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -117,37 +121,11 @@ class CebeOpenapiApiBuilderTest extends TestCase
 
     public function testOkWithSecuritySchemes(): void
     {
-        $securityScheme1 = new SecurityScheme(
-            [
-                'type' => 'http',
-                'scheme' => 'anScheme1',
-            ]
-        );
-
-        $securityScheme2 = new SecurityScheme(
-            [
-                'type' => 'http',
-                'scheme' => 'anScheme2',
-            ]
-        );
-
-        $contract = $this->getMinimalValidContract();
-
-        $contract->components = new Components([
-            'securitySchemes' => [
-                'aSecuritySchemeName1' => $securityScheme1,
-                'aSecuritySchemeName2' => $securityScheme2,
-            ],
-        ]);
-
-        $securityRequirement = new SecurityRequirement([]);
-
-        $contract->security = [
-            $securityRequirement,
-        ];
+        [$securityScheme1, $securityScheme2, $contract] = $this->prepareSecurityInContract();
 
         $this->fileReader->method('read')->willReturn($contract);
 
+        // Prepare expectations and mocked behaviour
         $buildSecurityScheme1 = $this->createMock(AbstractSecurityScheme::class);
         $buildSecurityScheme2 = $this->createMock(AbstractSecurityScheme::class);
 
@@ -168,6 +146,53 @@ class CebeOpenapiApiBuilderTest extends TestCase
             );
 
         $this->obj->fromFile('a/file/name.yml');
+    }
+
+    public function testOkWithSecuritySchemesAndPaths(): void
+    {
+        /** @var OpenApi $contract */
+        [$securityScheme1, $securityScheme2, $contract] = $this->prepareSecurityInContract();
+
+        // Add paths to contract
+        $contract->paths->addPath('/path1',
+            new PathItem([
+                'post' => new Operation([
+                    'responses' => new Responses([])
+                ]),
+            ])
+        );
+
+        $contract->paths->addPath('/path2',
+            new PathItem([
+                'get' => new Operation([
+                    'responses' => new Responses([])
+                ]),
+            ])
+        );
+
+        $this->fileReader->method('read')->willReturn($contract);
+
+        // Prepare mocked behaviour
+        $buildSecurityScheme1 = $this->createMock(AbstractSecurityScheme::class);
+        $buildSecurityScheme2 = $this->createMock(AbstractSecurityScheme::class);
+
+        $this->securitySchemeFactory->method('generate')->willReturnOnConsecutiveCalls(
+            $buildSecurityScheme1,
+            $buildSecurityScheme2
+        );
+
+        $modelPath1 = $this->createMock(Path::class);
+        $modelPath2 = $this->createMock(Path::class);
+
+        $this->pathFactory
+            ->expects($this->exactly(2))
+            ->method('generate')
+            ->willReturnOnConsecutiveCalls($modelPath1, $modelPath2);
+
+
+        $result = $this->obj->fromFile('a/file/name.yml');
+
+        $this->assertSame([$modelPath1, $modelPath2], $result->paths());
     }
 
     /**
@@ -198,5 +223,47 @@ class CebeOpenapiApiBuilderTest extends TestCase
         );
 
         return $contract;
+    }
+
+    /**
+     * @return array
+     * @throws TypeErrorException
+     */
+    private function prepareSecurityInContract(): array
+    {
+        // Prepare mocks & stubs
+        $securityScheme1 = new SecurityScheme(
+            [
+                'type' => 'http',
+                'scheme' => 'anScheme1',
+            ]
+        );
+
+        $securityScheme2 = new SecurityScheme(
+            [
+                'type' => 'http',
+                'scheme' => 'anScheme2',
+            ]
+        );
+
+        // Add them to contract and prepare contract to be returned
+        $contract = $this->getMinimalValidContract();
+
+        $contract->components = new Components(
+            [
+                'securitySchemes' => [
+                    'aSecuritySchemeName1' => $securityScheme1,
+                    'aSecuritySchemeName2' => $securityScheme2,
+                ],
+            ]
+        );
+
+        $securityRequirement = new SecurityRequirement([]);
+
+        $contract->security = [
+            $securityRequirement,
+        ];
+
+        return array($securityScheme1, $securityScheme2, $contract);
     }
 }

@@ -27,7 +27,7 @@ class Api
     private $description;
 
     /** @var Path[] */
-    private $operations;
+    private $paths;
 
     /**
      * @var string
@@ -59,7 +59,7 @@ class Api
 
         $this->version = $version;
         $this->description = $description;
-        $this->operations = [];
+        $this->paths = [];
         $this->author = $author;
         $this->authorEmail = $authorEmail;
     }
@@ -80,9 +80,9 @@ class Api
         return $this->namespace;
     }
 
-    public function addOperation(Path $operation): void
+    public function addPath(Path $path): void
     {
-        $this->operations[] = $operation;
+        $this->paths[] = $path;
     }
 
     /**
@@ -90,7 +90,7 @@ class Api
      */
     public function paths(): array
     {
-        return $this->operations;
+        return $this->paths;
     }
 
     /**
