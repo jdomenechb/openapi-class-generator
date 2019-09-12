@@ -4,6 +4,9 @@
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\Tests\ApiParser\Cebe;
@@ -21,7 +24,6 @@ use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiFileReader;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSchemaFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecurityFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecuritySchemeFactory;
-use Jdomenechb\OpenApiClassGenerator\Model\Api;
 use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\AbstractSecurityScheme;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -66,7 +68,7 @@ class CebeOpenapiApiBuilderTest extends TestCase
         );
     }
 
-    public function testInvalidContract() :void
+    public function testInvalidContract(): void
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Invalid contract');
@@ -78,7 +80,7 @@ class CebeOpenapiApiBuilderTest extends TestCase
         $this->obj->fromFile('a/file/name.yml');
     }
 
-    public function testOkMinimal() :void
+    public function testOkMinimal(): void
     {
         $contract = $this->getMinimalValidContract();
 
@@ -95,7 +97,7 @@ class CebeOpenapiApiBuilderTest extends TestCase
         $this->assertSame('email@email.com', $result->authorEmail());
     }
 
-    public function testOkMinimalWithNamespaceWithBackslash() :void
+    public function testOkMinimalWithNamespaceWithBackslash(): void
     {
         $contract = $this->getMinimalValidContract();
 
@@ -112,7 +114,7 @@ class CebeOpenapiApiBuilderTest extends TestCase
         $this->assertSame('email@email.com', $result->authorEmail());
     }
 
-    public function testOkWithSecuritySchemes() :void
+    public function testOkWithSecuritySchemes(): void
     {
         $securityScheme1 = new SecurityScheme(
             [
@@ -133,8 +135,8 @@ class CebeOpenapiApiBuilderTest extends TestCase
         $contract->components = new Components([
             'securitySchemes' => [
                 'aSecuritySchemeName1' => $securityScheme1,
-                'aSecuritySchemeName2' => $securityScheme2
-            ]
+                'aSecuritySchemeName2' => $securityScheme2,
+            ],
         ]);
 
         $securityRequirement = new SecurityRequirement([]);
@@ -168,8 +170,9 @@ class CebeOpenapiApiBuilderTest extends TestCase
     }
 
     /**
-     * @return OpenApi
      * @throws TypeErrorException
+     *
+     * @return OpenApi
      */
     private function getMinimalValidContract(): OpenApi
     {
@@ -186,12 +189,13 @@ class CebeOpenapiApiBuilderTest extends TestCase
                                 'name' => 'A name',
                                 'email' => 'email@email.com',
                             ]
-                        )
+                        ),
                     ]
                 ),
-                'paths' => new Paths([])
+                'paths' => new Paths([]),
             ]
         );
+
         return $contract;
     }
 }
