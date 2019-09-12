@@ -7,7 +7,7 @@ php:
 
 script:
   - phpunit
-  - ./vendor/bin/infection --min-msi=95 --threads=4
+  - ./vendor/bin/infection --min-msi=95 --threads=4 --only-covered
 
 before_script:
   - composer update
