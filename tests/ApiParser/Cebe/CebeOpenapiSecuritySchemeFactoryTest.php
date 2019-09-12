@@ -82,6 +82,7 @@ class CebeOpenapiSecuritySchemeFactoryTest extends TestCase
         $result = $factory->generate($from);
 
         $this->assertInstanceOf(HttpSecurityScheme::class, $result);
+        $this->assertSame('http', $result->type());
         $this->assertSame('bearer', $result->scheme());
         $this->assertSame('aBearerFormat', $result->bearerFormat());
         $this->assertSame('aDescription', $result->description());
