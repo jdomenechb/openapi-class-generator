@@ -166,7 +166,7 @@ class CebeOpenapiApiBuilderTest extends TestCase
             new PathItem([
                 'get' => new Operation([
                     'responses' => new Responses([]),
-                    'security' => []
+                    'security' => [],
                 ]),
             ])
         );

@@ -19,13 +19,14 @@ use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBody;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
+use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\AbstractSecurityScheme;
 
 class CebeOpenapiPathFactory
 {
     /**
      * @var CebeOpenapiSchemaFactory
      */
-    private $typeFactory;
+    private $schemaFactory;
 
     /**
      * CebeOpenapiSecurityFactory constructor.
@@ -34,9 +35,17 @@ class CebeOpenapiPathFactory
      */
     public function __construct(CebeOpenapiSchemaFactory $typeFactory)
     {
-        $this->typeFactory = $typeFactory;
+        $this->schemaFactory = $typeFactory;
     }
 
+    /**
+     * @param Operation $contractOperation
+     * @param $method
+     * @param $path
+     * @param AbstractSecurityScheme[] $securities
+     *
+     * @return Path
+     */
     public function generate(
         Operation $contractOperation,
         $method,
@@ -52,7 +61,7 @@ class CebeOpenapiPathFactory
                 $parameter->description,
                 $parameter->required,
                 $parameter->deprecated,
-                $parameter->schema ? $this->typeFactory->build($parameter->schema, 'parameter') : null
+                $parameter->schema ? $this->schemaFactory->build($parameter->schema, 'parameter') : null
             );
         }
 
@@ -80,7 +89,7 @@ class CebeOpenapiPathFactory
 
                 $requestBodyFormat = new RequestBodyFormat(
                     $format,
-                    $this->typeFactory->build($content->schema, 'request')
+                    $this->schemaFactory->build($content->schema, 'request')
                 );
                 $requestBody->addFormat($requestBodyFormat);
             }
