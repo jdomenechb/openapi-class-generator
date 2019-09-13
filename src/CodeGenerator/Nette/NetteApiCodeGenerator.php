@@ -27,6 +27,7 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
 {
     /** @var ClassFileWriter */
     private $fileWriter;
+
     /**
      * @var NettePathCodeGenerator
      */

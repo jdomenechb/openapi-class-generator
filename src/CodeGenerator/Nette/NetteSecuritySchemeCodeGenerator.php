@@ -24,12 +24,23 @@ class NetteSecuritySchemeCodeGenerator
         if ($securityScheme instanceof HttpSecurityScheme) {
             switch ($securityScheme->scheme()) {
                 case 'bearer':
+                    $comment = '@param string $bearer';
+
+                    if ($securityScheme->description()) {
+                        $comment .= ' ' . $securityScheme->description();
+                    }
+
                     $method
-                        ->addComment('@param string $bearer')
+                        ->addComment($comment)
                         ->addParameter('bearer')
                         ->setTypeHint('string');
                     break;
+
+                default:
+                    throw new \RuntimeException('Unrecognized security scheme scheme: ' . $securityScheme->scheme());
             }
+        } else {
+            throw new \RuntimeException('Invalid security scheme type');
         }
     }
 }
