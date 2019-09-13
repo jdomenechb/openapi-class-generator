@@ -25,13 +25,24 @@ class NetteGuzzleBodyCodeGenerator
         $serialize = false;
         $serializeBody = '';
 
-        if ('json' === $format) {
-            $serialize = true;
-            $serializeBody = '\\json_encode($requestBody);';
+        switch ($format) {
+            case 'json':
+                $serialize = true;
+                $serializeBody = '\\json_encode($requestBody);';
 
-            $guzzleRequestParameters['headers']['Content-Type'] = 'application/json';
-        } elseif (null !== $format) {
-            throw new RuntimeException('Unrecognized format ' . $format);
+                $guzzleRequestParameters['headers']['Content-Type'] = 'application/json';
+                break;
+
+            case 'form':
+                throw new \RuntimeException('Form request not supported... yet');
+                break;
+
+            case null:
+                // Do nothing;
+                break;
+
+            default:
+                throw new RuntimeException('Unrecognized format: ' . $format);
         }
 
         // Parameters

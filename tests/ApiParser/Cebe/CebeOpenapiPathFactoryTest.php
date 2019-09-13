@@ -115,7 +115,7 @@ class CebeOpenapiPathFactoryTest extends TestCase
         $this->assertSame($mockedSchema, $parameters[1]->schema());
     }
 
-    public function testRequestBodyOk(): void
+    public function testRequestBodyJsonOk(): void
     {
         $operation = new Operation([
             'requestBody' => new RequestBody([
@@ -145,6 +145,39 @@ class CebeOpenapiPathFactoryTest extends TestCase
         $format = $requestBody->formats()[0];
 
         $this->assertSame('json', $format->format());
+        $this->assertSame($mockSchema, $format->schema());
+    }
+
+    public function testRequestBodyFormOk(): void
+    {
+        $operation = new Operation([
+            'requestBody' => new RequestBody([
+                'description' => 'aDescription',
+                'required' => true,
+                'content' => [
+                    'application/x-www-form-urlencoded' => new MediaType([
+                        'schema' => new Schema([
+                            'type' => 'integer',
+                        ]),
+                    ]),
+                ],
+            ]),
+        ]);
+
+        $mockSchema = $this->createMock(AbstractSchema::class);
+        $this->schemaFactory->method('build')->willReturn($mockSchema);
+
+        $result = $this->obj->generate($operation, '', '', []);
+
+        $requestBody = $result->requestBody();
+        $this->assertInstanceOf(\Jdomenechb\OpenApiClassGenerator\Model\RequestBody::class, $requestBody);
+        $this->assertSame('aDescription', $requestBody->description());
+        $this->assertTrue($requestBody->required());
+        $this->assertCount(1, $requestBody->formats());
+
+        $format = $requestBody->formats()[0];
+
+        $this->assertSame('form', $format->format());
         $this->assertSame($mockSchema, $format->schema());
     }
 

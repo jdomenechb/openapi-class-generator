@@ -83,6 +83,10 @@ class CebeOpenapiPathFactory
                         $format = 'json';
                         break;
 
+                    case 'application/x-www-form-urlencoded':
+                        $format = 'form';
+                        break;
+
                     default:
                         throw new \RuntimeException('Unrecognized requestBody format: ' . $mediaType);
                 }
