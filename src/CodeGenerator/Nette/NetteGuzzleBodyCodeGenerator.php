@@ -16,6 +16,12 @@ use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\HttpSecurityScheme;
 use Nette\PhpGenerator\Method;
 use RuntimeException;
+use function addslashes;
+use function implode;
+use function is_array;
+use function is_string;
+use function preg_replace;
+use function str_replace;
 
 class NetteGuzzleBodyCodeGenerator
 {
@@ -34,7 +40,10 @@ class NetteGuzzleBodyCodeGenerator
                 break;
 
             case 'form':
-                throw new \RuntimeException('Form request not supported... yet');
+                $serialize = true;
+                $serializeBody = '\\http_build_query($requestBody->serialize());';
+
+                $guzzleRequestParameters['headers']['Content-Type'] = 'application/x-www-form-urlencoded';
                 break;
 
             case null:
@@ -46,11 +55,11 @@ class NetteGuzzleBodyCodeGenerator
         }
 
         // Parameters
-        $uri = \addslashes($path->path());
+        $uri = addslashes($path->path());
 
         foreach ($path->parameters() as $parameter) {
             if ('path' === $parameter->in()) {
-                $uri = \str_replace('{' . $parameter->name() . '}', '\' . $' . $parameter->name() . ' . \'', $uri);
+                $uri = str_replace('{' . $parameter->name() . '}', '\' . $' . $parameter->name() . ' . \'', $uri);
             } elseif ('query' === $parameter->in()) {
                 $guzzleRequestParameters['query'][$parameter->name()] = new RawExpression('$' . $parameter->name());
             }
@@ -58,8 +67,8 @@ class NetteGuzzleBodyCodeGenerator
 
         $uri = "'${uri}'";
 
-        $uri = \preg_replace("#''\\s*\\.\\s*#", '', $uri);
-        $uri = \preg_replace("#\\s*\\.\\s*''#", '', $uri);
+        $uri = preg_replace("#''\\s*\\.\\s*#", '', $uri);
+        $uri = preg_replace("#\\s*\\.\\s*''#", '', $uri);
 
         // Security
         foreach ($path->securitySchemes() as $securityScheme) {
@@ -111,18 +120,18 @@ class NetteGuzzleBodyCodeGenerator
      */
     private function serialize($item): string
     {
-        if (\is_array($item)) {
+        if (is_array($item)) {
             $output = [];
 
             foreach ($item as $key => $value) {
                 $output[] = $this->serialize($key) . ' => ' . $this->serialize($value);
             }
 
-            return '[' . \implode(', ', $output) . ']';
+            return '[' . implode(', ', $output) . ']';
         }
 
-        if (\is_string($item)) {
-            return "'" . \addslashes($item) . "'";
+        if (is_string($item)) {
+            return "'" . addslashes($item) . "'";
         }
 
         if ($item instanceof RawExpression) {

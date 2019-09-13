@@ -11,6 +11,7 @@
 
 namespace Jdomenechb\OpenApiClassGenerator\Tests\ApiParser\Cebe;
 
+use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\spec\MediaType;
 use cebe\openapi\spec\Operation;
 use cebe\openapi\spec\Parameter;
@@ -20,13 +21,14 @@ use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiPathFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSchemaFactory;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\AbstractSecurityScheme;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 class CebeOpenapiPathFactoryTest extends TestCase
 {
     /**
-     * @var CebeOpenapiSchemaFactory|\PHPUnit\Framework\MockObject\MockObject
+     * @var CebeOpenapiSchemaFactory|MockObject
      */
     private $schemaFactory;
 
@@ -115,14 +117,22 @@ class CebeOpenapiPathFactoryTest extends TestCase
         $this->assertSame($mockedSchema, $parameters[1]->schema());
     }
 
-    public function testRequestBodyJsonOk(): void
+    /**
+     * @dataProvider requestBodyTypeProvider
+     *
+     * @param string $contentType
+     * @param string $formatType
+     *
+     * @throws TypeErrorException
+     */
+    public function testRequestBodyOk(string $contentType, string $formatType): void
     {
         $operation = new Operation([
             'requestBody' => new RequestBody([
                 'description' => 'aDescription',
                 'required' => true,
                 'content' => [
-                    'application/json' => new MediaType([
+                    $contentType => new MediaType([
                         'schema' => new Schema([
                             'type' => 'integer',
                         ]),
@@ -144,40 +154,7 @@ class CebeOpenapiPathFactoryTest extends TestCase
 
         $format = $requestBody->formats()[0];
 
-        $this->assertSame('json', $format->format());
-        $this->assertSame($mockSchema, $format->schema());
-    }
-
-    public function testRequestBodyFormOk(): void
-    {
-        $operation = new Operation([
-            'requestBody' => new RequestBody([
-                'description' => 'aDescription',
-                'required' => true,
-                'content' => [
-                    'application/x-www-form-urlencoded' => new MediaType([
-                        'schema' => new Schema([
-                            'type' => 'integer',
-                        ]),
-                    ]),
-                ],
-            ]),
-        ]);
-
-        $mockSchema = $this->createMock(AbstractSchema::class);
-        $this->schemaFactory->method('build')->willReturn($mockSchema);
-
-        $result = $this->obj->generate($operation, '', '', []);
-
-        $requestBody = $result->requestBody();
-        $this->assertInstanceOf(\Jdomenechb\OpenApiClassGenerator\Model\RequestBody::class, $requestBody);
-        $this->assertSame('aDescription', $requestBody->description());
-        $this->assertTrue($requestBody->required());
-        $this->assertCount(1, $requestBody->formats());
-
-        $format = $requestBody->formats()[0];
-
-        $this->assertSame('form', $format->format());
+        $this->assertSame($formatType, $format->format());
         $this->assertSame($mockSchema, $format->schema());
     }
 
@@ -195,5 +172,13 @@ class CebeOpenapiPathFactoryTest extends TestCase
         ]);
 
         $this->obj->generate($operation, '', '', []);
+    }
+
+    public function requestBodyTypeProvider(): array
+    {
+        return [
+            ['application/x-www-form-urlencoded', 'form'],
+            ['application/json', 'json'],
+        ];
     }
 }

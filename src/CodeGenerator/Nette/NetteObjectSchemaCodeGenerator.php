@@ -21,6 +21,7 @@ use Jdomenechb\OpenApiClassGenerator\Model\Schema\VectorSchema;
 use JsonSerializable;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
+use Serializable;
 
 class NetteObjectSchemaCodeGenerator
 {
@@ -76,26 +77,38 @@ class NetteObjectSchemaCodeGenerator
 
             if ($propertySchema instanceof ObjectSchema) {
                 $this->generate($propertySchema, $namespaceName, $format, $name);
-            }
+            } elseif ($propertySchema instanceof VectorSchema) {
+                $wrappedSchema = $propertySchema->wrapped();
 
-            if ($propertySchema instanceof VectorSchema && $propertySchema->wrapped() instanceof ObjectSchema) {
-                $this->generate($propertySchema->wrapped(), $namespaceName, $format, $name);
+                if ($wrappedSchema instanceof ObjectSchema) {
+                    $this->generate($wrappedSchema, $namespaceName, $format, $name);
+                }
             }
         }
+
+        $classRef->addImplement(Serializable::class);
+
+        $serializeMethod = $classRef->addMethod('serialize')
+            ->setReturnType('array')
+            ->addBody('return [');
+
+        foreach ($schema->properties() as $property) {
+            $serializedValue = $property->schema()->getPhpSerializationValue("\$this->{$property->name()}");
+            $serializeMethod->addBody("    '{$property->name()}' => ${serializedValue},");
+        }
+
+        $serializeMethod->addBody('];');
+
+        $classRef->addMethod('unserialize')
+            ->addBody('throw new \\RuntimeException(\'No unserializable class\');')
+            ->addParameter('serialized');
 
         if ('json' === $format) {
             $classRef->addImplement(JsonSerializable::class);
 
-            $serializeMethod = $classRef->addMethod('jsonSerialize')
+            $classRef->addMethod('jsonSerialize')
                 ->setReturnType('array')
-                ->addBody('return [');
-
-            foreach ($schema->properties() as $property) {
-                $serializedValue = $property->schema()->getPhpSerializationValue("\$this->{$property->name()}");
-                $serializeMethod->addBody("    '{$property->name()}' => ${serializedValue},");
-            }
-
-            $serializeMethod->addBody('];');
+                ->addBody('return $this->serialize();');
         }
 
         $file = new PhpFile();
