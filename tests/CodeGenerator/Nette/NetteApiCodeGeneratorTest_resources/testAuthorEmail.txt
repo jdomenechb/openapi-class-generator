@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Ocg\AName;
+
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
+use Psr\Http\Message\ResponseInterface;
+
+/**
+ * @version 1.2.3
+ * @author anAuthor@email.com
+ * @api
+ */
+final class ANameService
+{
+	/** @var ClientInterface */
+	private $client;
+
+
+	public function __construct(ClientInterface $client)
+	{
+		$this->client = $client;
+	}
+}
