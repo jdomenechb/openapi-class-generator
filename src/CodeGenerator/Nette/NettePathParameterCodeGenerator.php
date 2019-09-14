@@ -18,22 +18,22 @@ use Nette\PhpGenerator\PhpNamespace;
 class NettePathParameterCodeGenerator
 {
     /** @var NetteAbstractSchemaCodeGenerator */
-    private $abstractSchemaCodeGenerator;
+    private $schemaCodeGenerator;
 
     /**
      * NetteRequestBodyFormatCodeGenerator constructor.
      *
-     * @param NetteAbstractSchemaCodeGenerator $abstractSchemaCodeGenerator
+     * @param NetteAbstractSchemaCodeGenerator $schemaCodeGenerator
      */
-    public function __construct(NetteAbstractSchemaCodeGenerator $abstractSchemaCodeGenerator)
+    public function __construct(NetteAbstractSchemaCodeGenerator $schemaCodeGenerator)
     {
-        $this->abstractSchemaCodeGenerator = $abstractSchemaCodeGenerator;
+        $this->schemaCodeGenerator = $schemaCodeGenerator;
     }
 
     public function generate(PathParameter $pathParameter, Method $referenceMethod, PhpNamespace $namespace): void
     {
         if (null !== $pathParameter->schema()) {
-            $className = $this->abstractSchemaCodeGenerator->generate(
+            $className = $this->schemaCodeGenerator->generate(
                 $pathParameter->schema(),
                 $namespace->getName(),
                 null,
@@ -48,10 +48,11 @@ class NettePathParameterCodeGenerator
             ->setNullable(!$pathParameter->required());
 
         $comment = '@param ' . $className . (!$pathParameter->required() ? '|null' : '') . ' ';
-        $comment .= $pathParameter->name() . ' ';
+        $comment .= $pathParameter->name();
 
         if ($pathParameter->deprecated()) {
-            $comment .= 'DEPRECATED. ';
+            // TODO: Improve triggering PHP warning
+            $comment .= ' DEPRECATED.';
         }
 
         $comment .= $pathParameter->description() ? ' ' . $pathParameter->description() : '';
