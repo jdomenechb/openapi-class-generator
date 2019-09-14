@@ -4,6 +4,9 @@
  * This file is part of the openapi-class-generator package.
  *
  * (c) Jordi Domènech Bonilla
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Jdomenechb\OpenApiClassGenerator\Tests\CodeGenerator\Nette;
@@ -34,7 +37,7 @@ class NettePathParameterCodeGeneratorTest extends TestCase
         $this->obj = new NettePathParameterCodeGenerator($this->schemaCodeGenerator);
     }
 
-    public function testPathParameterWithoutSchema() :void
+    public function testPathParameterWithoutSchema(): void
     {
         $pathParameter = new PathParameter('aName', 'query', null, false, false, null);
         $method = new Method('aMethod');
@@ -54,7 +57,7 @@ class NettePathParameterCodeGeneratorTest extends TestCase
         $this->assertSame('@param string|null aName', $method->getComment());
     }
 
-    public function testPathParameterWithSchema() :void
+    public function testPathParameterWithSchema(): void
     {
         $mockedSchema = $this->createMock(AbstractSchema::class);
 
@@ -87,6 +90,6 @@ class NettePathParameterCodeGeneratorTest extends TestCase
 
         $this->assertSame('A\\Class\\Name', $parameter->getTypeHint());
         $this->assertFalse($parameter->isNullable());
-        $this->assertSame('@param A\\Class\\Name aName DEPRECATED. aDescription' , $method->getComment());
+        $this->assertSame('@param A\\Class\\Name aName DEPRECATED. aDescription', $method->getComment());
     }
 }

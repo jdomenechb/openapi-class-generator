@@ -128,6 +128,7 @@ class CebeOpenapiSchemaFactoryTest extends TestCase
         $result = $this->obj->build($schema, 'any');
 
         $this->assertInstanceOf(NumberSchema::class, $result);
+        $this->assertSame('float', $result->getPhpType());
     }
 
     public function testNumberWithFloatFormat(): void
