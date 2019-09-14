@@ -75,7 +75,7 @@ JSON;
     public function testInvalidFileType(): void
     {
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Invalid contract extension: wrongext');
+        $this->expectExceptionMessage('The given file is not an OpenApi v.3.x.x contract');
 
         $this->obj->read($this->root->url() . '/example.wrongext');
     }

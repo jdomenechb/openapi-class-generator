@@ -36,7 +36,9 @@
     "phpstan/phpstan": "^0.11.15",
     "phpunit/phpunit": "^7.5",
     "infection/infection": "^0.13.6",
-    "mikey179/vfsstream" : "^1.6"
+    "mikey179/vfsstream" : "^1.6",
+    "phpstan/extension-installer": "^1.0",
+    "phpstan/phpstan-phpunit": "^0.11.2"
   },
   "scripts": {
     "test": "vendor/bin/phpunit --bootstrap vendor/autoload.php tests",

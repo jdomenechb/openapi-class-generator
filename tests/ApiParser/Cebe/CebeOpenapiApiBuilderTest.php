@@ -19,6 +19,7 @@ use cebe\openapi\spec\OpenApi;
 use cebe\openapi\spec\Operation;
 use cebe\openapi\spec\PathItem;
 use cebe\openapi\spec\Paths;
+use cebe\openapi\spec\Reference;
 use cebe\openapi\spec\Responses;
 use cebe\openapi\spec\SecurityRequirement;
 use cebe\openapi\spec\SecurityScheme;
@@ -117,6 +118,28 @@ class CebeOpenapiApiBuilderTest extends TestCase
         $this->assertSame('Ocg', $result->namespace());
         $this->assertSame('A name', $result->author());
         $this->assertSame('email@email.com', $result->authorEmail());
+    }
+
+    public function testInvalidSecuritySchemes(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Invalid contract security scheme in components');
+
+        $contract = $this->getMinimalValidContract();
+
+        $securitySchemes = [];
+        $securitySchemes['aSecuritySchemeName1'] = new Reference(['$ref' => '']);
+
+        $mockedComponents = $this->createMock(Components::class);
+        $mockedComponents->method('__isset')->with('securitySchemes')->willReturn(true);
+        $mockedComponents->method('__get')->willReturn($securitySchemes);
+        $mockedComponents->method('validate')->willReturn(true);
+
+        $contract->components = $mockedComponents;
+
+        $this->fileReader->method('read')->willReturn($contract);
+
+        $this->obj->fromFile('a/file/name.yml');
     }
 
     public function testOkWithSecuritySchemes(): void

@@ -17,7 +17,6 @@ use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
 use cebe\openapi\Reader;
 use cebe\openapi\spec\OpenApi;
-use RuntimeException;
 
 class CebeOpenapiFileReader
 {
@@ -38,7 +37,11 @@ class CebeOpenapiFileReader
         } elseif ('json' === $ext) {
             $contract = Reader::readFromJsonFile($filename);
         } else {
-            throw new RuntimeException('Invalid contract extension: ' . $ext);
+            $contract = null;
+        }
+
+        if (!$contract instanceof OpenApi) {
+            throw new \RuntimeException('The given file is not an OpenApi v.3.x.x contract');
         }
 
         return $contract;

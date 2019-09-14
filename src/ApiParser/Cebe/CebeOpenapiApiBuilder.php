@@ -13,6 +13,7 @@ namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
+use cebe\openapi\spec\SecurityScheme;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\ApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
 use RuntimeException;
@@ -87,6 +88,10 @@ class CebeOpenapiApiBuilder implements ApiBuilder
 
         if (!empty($contract->components->securitySchemes)) {
             foreach ($contract->components->securitySchemes as $contractSecuritySchemeName => $contractSecurityScheme) {
+                if (!$contractSecurityScheme instanceof SecurityScheme) {
+                    throw new \RuntimeException('Invalid contract security scheme in components');
+                }
+
                 $securitySchemes[$contractSecuritySchemeName] = $this->securitySchemeFactory->generate(
                     $contractSecurityScheme
                 );
