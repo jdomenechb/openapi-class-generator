@@ -15,6 +15,7 @@ use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\spec\MediaType;
 use cebe\openapi\spec\Operation;
 use cebe\openapi\spec\Parameter;
+use cebe\openapi\spec\Reference;
 use cebe\openapi\spec\RequestBody;
 use cebe\openapi\spec\Schema;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiPathFactory;
@@ -117,6 +118,27 @@ class CebeOpenapiPathFactoryTest extends TestCase
         $this->assertSame($mockedSchema, $parameters[1]->schema());
     }
 
+    public function testParametersWithReferenceInsteadOfSchema(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Parameter schema must not be a reference');
+
+        $mockedSchema = $this->createMock(AbstractSchema::class);
+        $this->schemaFactory->method('build')->willReturn($mockedSchema);
+
+        $mockedReference = $this->createMock(Reference::class);
+
+        $mockedParameter = $this->createMock(Parameter::class);
+        $mockedParameter->method('__get')->with('schema')->willReturn($mockedReference);
+
+        $mockedOperation = $this->createMock(Operation::class);
+        $mockedOperation->method('__get')
+            ->with('parameters')
+            ->willReturn([$mockedParameter]);
+
+        $this->obj->generate($mockedOperation, '', '', []);
+    }
+
     /**
      * @dataProvider requestBodyTypeProvider
      *
@@ -166,7 +188,27 @@ class CebeOpenapiPathFactoryTest extends TestCase
         $operation = new Operation([
             'requestBody' => new RequestBody([
                 'content' => [
-                    'aninvalid/format' => new MediaType([]),
+                    'aninvalid/format' => new MediaType([
+                        'schema' => new Schema([
+                            'type' => 'integer',
+                        ]),
+                    ]),
+                ],
+            ]),
+        ]);
+
+        $this->obj->generate($operation, '', '', []);
+    }
+
+    public function testRequestBodyWithoutSchema(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Ocg only accepts requestBody with schema for now');
+
+        $operation = new Operation([
+            'requestBody' => new RequestBody([
+                'content' => [
+                    'application/json' => new MediaType([]),
                 ],
             ]),
         ]);

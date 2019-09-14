@@ -80,13 +80,13 @@ class NettePathCodeGenerator
             ->setVisibility('public')
             ->setReturnType(ResponseInterface::class);
 
-        if ($path->description()) {
-            $referenceMethod->addComment($path->description());
+        if ($description = $path->description()) {
+            $referenceMethod->addComment($description);
             $referenceMethod->addComment('');
         }
 
-        if ($path->summary()) {
-            $referenceMethod->addComment($path->summary());
+        if ($summary = $path->summary()) {
+            $referenceMethod->addComment($summary);
             $referenceMethod->addComment('');
         }
 
@@ -133,7 +133,7 @@ class NettePathCodeGenerator
     private function generateWithNoFormats(ClassType $classRep, Method $referenceMethod, Path $path): void
     {
         $methodName = $path->method() . $path->path();
-        $methodName = Inflector::camelize(\preg_replace('#\\W#', ' ', $methodName));
+        $methodName = Inflector::camelize(\preg_replace('#\\W#', ' ', $methodName) ?: '');
 
         $method = $referenceMethod->cloneWithName($methodName);
         $classRep->setMethods($classRep->getMethods() + [$method]);
@@ -162,7 +162,7 @@ class NettePathCodeGenerator
             $methodName .= ' ' . $format->format();
         }
 
-        $methodName = Inflector::camelize(\preg_replace('#\\W#', ' ', $methodName));
+        $methodName = Inflector::camelize(\preg_replace('#\\W#', ' ', $methodName) ?: '');
 
         $method = $referenceMethod->cloneWithName($methodName);
         $classRep->setMethods($classRep->getMethods() + [$method]);

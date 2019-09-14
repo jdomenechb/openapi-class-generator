@@ -61,8 +61,7 @@ class NetteGuzzleBodyCodeGenerator
 
         $uri = "'${uri}'";
 
-        $uri = \preg_replace("#''\\s*\\.\\s*#", '', $uri);
-        $uri = \preg_replace("#\\s*\\.\\s*''#", '', $uri);
+        $uri = \preg_replace(["#''\\s*\\.\\s*#", "#\\s*\\.\\s*''#"], '', $uri);
 
         // Security
         foreach ($path->securitySchemes() as $securityScheme) {

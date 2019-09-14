@@ -15,6 +15,7 @@ namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 
 use cebe\openapi\spec\Operation;
 use cebe\openapi\spec\RequestBody as CebeRequestBody;
+use cebe\openapi\spec\Schema;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBody;
@@ -55,13 +56,24 @@ class CebeOpenapiPathFactory
         $parameters = [];
 
         foreach ($contractOperation->parameters as $parameter) {
+            $schema = $parameter->schema;
+            $builtSchema = null;
+
+            if ($schema) {
+                if (!$schema instanceof Schema) {
+                    throw new \RuntimeException('Parameter schema must not be a reference');
+                }
+
+                $builtSchema = $this->schemaFactory->build($schema, 'parameter');
+            }
+
             $parameters[] = new PathParameter(
                 $parameter->name,
                 $parameter->in,
                 $parameter->description,
                 $parameter->required,
                 $parameter->deprecated,
-                $parameter->schema ? $this->schemaFactory->build($parameter->schema, 'parameter') : null
+                $builtSchema
             );
         }
 
@@ -78,6 +90,12 @@ class CebeOpenapiPathFactory
             );
 
             foreach ($contractOpRequestBody->content as $mediaType => $content) {
+                $reqBodySchema = $content->schema;
+
+                if (!$reqBodySchema instanceof Schema) {
+                    throw new \RuntimeException('Ocg only accepts requestBody with schema for now');
+                }
+
                 switch ($mediaType) {
                     case 'application/json':
                         $format = 'json';
@@ -93,8 +111,9 @@ class CebeOpenapiPathFactory
 
                 $requestBodyFormat = new RequestBodyFormat(
                     $format,
-                    $this->schemaFactory->build($content->schema, 'request')
+                    $this->schemaFactory->build($reqBodySchema, 'request')
                 );
+
                 $requestBody->addFormat($requestBodyFormat);
             }
         }

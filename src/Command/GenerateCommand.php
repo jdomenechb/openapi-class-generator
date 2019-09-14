@@ -31,6 +31,7 @@ use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NettePathCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NettePathParameterCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteRequestBodyFormatCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteSecuritySchemeCodeGenerator;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -68,9 +69,21 @@ class GenerateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $inputPath = (string) $input->getArgument('inputPath');
-        $outputPath = (string) $input->getArgument('outputPath');
-        $namespace = (string) $input->getOption('namespace');
+        $inputPath = $input->getArgument('inputPath');
+        $outputPath = $input->getArgument('outputPath');
+        $namespace = $input->getOption('namespace');
+
+        if (!\is_string($inputPath)) {
+            throw new RuntimeException('inputPath must be an string');
+        }
+
+        if (!\is_string($outputPath)) {
+            throw new RuntimeException('outputPath must be an string');
+        }
+
+        if (!\is_string($namespace)) {
+            throw new RuntimeException('namespace must be an string');
+        }
 
         $output->writeln('Using namespace: ' . $namespace);
 

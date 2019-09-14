@@ -115,8 +115,8 @@ class NetteObjectSchemaCodeGenerator
         $namespace = $file->addNamespace($namespaceName . '\\Dto');
         $namespace->add($classRef);
 
-        $this->fileWriter->write((string) $file, $classRef->getName(), $namespace->getName());
+        $this->fileWriter->write((string) $file, $name, $namespace->getName());
 
-        return '\\' . $namespace->getName() . '\\' . $classRef->getName();
+        return '\\' . $namespace->getName() . '\\' . $name;
     }
 }

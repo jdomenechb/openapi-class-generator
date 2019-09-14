@@ -60,11 +60,15 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
         $namespace->addUse(ResponseInterface::class);
         $namespace->addUse(GuzzleException::class);
 
-        $classRep = new ClassType($apiService->name() . 'Service');
+        $classRepName = $apiService->name() . 'Service';
+
+        $classRep = new ClassType($classRepName);
         $namespace->add($classRep);
 
-        if ($apiService->description()) {
-            $classRep->addComment($apiService->description());
+        $description = $apiService->description();
+
+        if ($description) {
+            $classRep->addComment($description);
         }
 
         $classRep->addComment('@version ' . $apiService->version());
@@ -94,6 +98,6 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
             $this->pathCodeGenerator->generate($classRep, $namespace, $path);
         }
 
-        $this->fileWriter->write((string) $file, $classRep->getName(), $namespace->getName());
+        $this->fileWriter->write((string) $file, $classRepName, $namespace->getName());
     }
 }
