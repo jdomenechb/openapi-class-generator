@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Jdomenechb\OpenApiClassGenerator\ApiParser;
 
+use Jdomenechb\OpenApiClassGenerator\Model\Api;
+
 interface ApiBuilder
 {
-    public function fromFile(string $filename);
+    public function fromFile(string $filename): Api;
 }

@@ -26,8 +26,8 @@ class NetteSecuritySchemeCodeGenerator
                 case 'bearer':
                     $comment = '@param string $bearer';
 
-                    if ($securityScheme->description()) {
-                        $comment .= ' ' . $securityScheme->description();
+                    if ($description = $securityScheme->description()) {
+                        $comment .= ' ' . $description;
                     }
 
                     $method

@@ -32,9 +32,11 @@ class NettePathParameterCodeGenerator
 
     public function generate(PathParameter $pathParameter, Method $referenceMethod, PhpNamespace $namespace): void
     {
-        if (null !== $pathParameter->schema()) {
+        $schema = $pathParameter->schema();
+
+        if (null !== $schema) {
             $className = $this->schemaCodeGenerator->generate(
-                $pathParameter->schema(),
+                $schema,
                 $namespace->getName(),
                 null,
                 $referenceMethod->getName() . \ucfirst($pathParameter->name())
@@ -55,7 +57,7 @@ class NettePathParameterCodeGenerator
             $comment .= ' DEPRECATED.';
         }
 
-        $comment .= $pathParameter->description() ? ' ' . $pathParameter->description() : '';
+        $comment .= ($description = $pathParameter->description()) ? ' ' . $description : '';
 
         $referenceMethod->addComment($comment);
     }
