@@ -15,12 +15,13 @@ use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteAbstractSchemaCode
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteObjectSchemaCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class NetteAbstractSchemaCodeGeneratorTest extends TestCase
 {
     /**
-     * @var NetteObjectSchemaCodeGenerator
+     * @var NetteObjectSchemaCodeGenerator|MockObject
      */
     private $objectSchemaCodeGenerator;
 

@@ -39,17 +39,17 @@ class CebeOpenapiPathFactory
     }
 
     /**
-     * @param Operation $contractOperation
-     * @param $method
-     * @param $path
+     * @param Operation                $contractOperation
+     * @param string                   $method
+     * @param string                   $path
      * @param AbstractSecurityScheme[] $securities
      *
      * @return Path
      */
     public function generate(
         Operation $contractOperation,
-        $method,
-        $path,
+        string $method,
+        string $path,
         array $securities
     ): Path {
         $parameters = [];

@@ -26,11 +26,11 @@ use cebe\openapi\spec\SecurityScheme;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiFileReader;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiPathFactory;
-use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSchemaFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecurityFactory;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiSecuritySchemeFactory;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\AbstractSecurityScheme;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -40,22 +40,22 @@ class CebeOpenapiApiBuilderTest extends TestCase
     private $obj;
 
     /**
-     * @var CebeOpenapiFileReader
+     * @var CebeOpenapiFileReader|MockObject
      */
     private $fileReader;
 
     /**
-     * @var CebeOpenapiSchemaFactory
+     * @var CebeOpenapiPathFactory|MockObject
      */
     private $pathFactory;
 
     /**
-     * @var CebeOpenapiSecurityFactory
+     * @var CebeOpenapiSecurityFactory|MockObject
      */
     private $securityFactory;
 
     /**
-     * @var CebeOpenapiSecuritySchemeFactory
+     * @var CebeOpenapiSecuritySchemeFactory|MockObject
      */
     private $securitySchemeFactory;
 

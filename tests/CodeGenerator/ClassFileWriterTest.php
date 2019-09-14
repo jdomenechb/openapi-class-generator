@@ -14,6 +14,7 @@ namespace Jdomenechb\OpenApiClassGenerator\Tests\CodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use org\bovigo\vfs\vfsStreamFile;
 use PHPUnit\Framework\TestCase;
 
 class ClassFileWriterTest extends TestCase
@@ -42,7 +43,12 @@ class ClassFileWriterTest extends TestCase
         $this->assertSame(0755, $this->root->getChild('A/Namespace')->getPermissions());
 
         $this->assertTrue($this->root->hasChild('A/Namespace/aFileName.php'));
-        $this->assertSame('aContent', $this->root->getChild('A/Namespace/aFileName.php')->getContent());
+
+        /** @var vfsStreamFile $file */
+        $file = $this->root->getChild('A/Namespace/aFileName.php');
+
+        $this->assertInstanceOf(vfsStreamFile::class, $file);
+        $this->assertSame('aContent', $file->getContent());
     }
 
     public function testNotWritable(): void
@@ -55,6 +61,10 @@ class ClassFileWriterTest extends TestCase
         $this->obj->write('aContent', 'aFileName', 'A\\Namespace');
 
         $this->assertTrue($this->root->hasChild('A/Namespace/aFileName.php'));
-        $this->assertSame('aContent', $this->root->getChild('A/Namespace/aFileName.php')->getContent());
+
+        /** @var vfsStreamFile $file */
+        $file = $this->root->getChild('A/Namespace/aFileName.php');
+
+        $this->assertSame('aContent', $file->getContent());
     }
 }

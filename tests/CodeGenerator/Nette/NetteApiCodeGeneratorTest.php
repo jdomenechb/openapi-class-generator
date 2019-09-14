@@ -16,15 +16,16 @@ use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteApiCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NettePathCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class NetteApiCodeGeneratorTest extends TestCase
 {
-    /** @var ClassFileWriter */
+    /** @var ClassFileWriter|MockObject */
     private $fileWriter;
 
     /**
-     * @var NettePathCodeGenerator
+     * @var NettePathCodeGenerator|MockObject
      */
     private $pathCodeGenerator;
 

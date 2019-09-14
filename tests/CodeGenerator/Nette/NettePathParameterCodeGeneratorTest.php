@@ -17,12 +17,13 @@ use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpNamespace;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class NettePathParameterCodeGeneratorTest extends TestCase
 {
     /**
-     * @var NetteAbstractSchemaCodeGenerator
+     * @var NetteAbstractSchemaCodeGenerator|MockObject
      */
     private $schemaCodeGenerator;
 
