@@ -33,12 +33,4 @@ class RawExpression
     {
         return $this->expression;
     }
-
-    /**
-     * @return string
-     */
-    public function expression(): string
-    {
-        return $this->expression;
-    }
 }

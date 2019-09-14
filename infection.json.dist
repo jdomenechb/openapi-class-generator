@@ -1,20 +1,20 @@
 {
-    "timeout": 10,
-    "source": {
-        "directories": [
-            "src"
-        ]
-    },
-    "phpUnit": {
-        "configDir": "."
-    },
-    "logs": {
-        "text": "infection.log",
-        "badge": {
-            "branch": "master"
-        }
-    },
-    "mutators": {
-        "@default": true
+  "timeout": 10,
+  "source": {
+    "directories": [
+      "src"
+    ]
+  },
+  "phpUnit": {
+    "configDir": "."
+  },
+  "logs": {
+    "text": "infection.log",
+    "badge": {
+      "branch": "master"
     }
+  },
+  "mutators": {
+    "@default": true
+  }
 }
