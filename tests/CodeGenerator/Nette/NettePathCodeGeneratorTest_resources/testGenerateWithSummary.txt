@@ -1,0 +1,15 @@
+class AClass
+{
+	/**
+	 * aSummary
+	 *
+	 * Endpoint URL: /a/path
+	 * Method: POST
+	 *
+	 * @return ResponseInterface
+	 * @throws GuzzleException
+	 */
+	public function postAPath(): Psr\Http\Message\ResponseInterface
+	{
+	}
+}

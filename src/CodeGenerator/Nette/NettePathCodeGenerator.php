@@ -74,7 +74,7 @@ class NettePathCodeGenerator
         PhpNamespace $namespace,
         Path $path
     ): void {
-        $referenceMethodName = 'REFERENCEMETHOD' . \random_int(1000, 9999);
+        $referenceMethodName = 'OCGREFERENCEMETHOD';
 
         $referenceMethod = $classRep->addMethod($referenceMethodName)
             ->setVisibility('public')
