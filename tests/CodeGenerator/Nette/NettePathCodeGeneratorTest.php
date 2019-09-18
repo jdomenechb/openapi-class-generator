@@ -94,7 +94,7 @@ class NettePathCodeGeneratorTest extends TestCase
             ->method('generate')
             ->withConsecutive(
                 [$this->identicalTo($mockedSecScheme1), $this->anything()],
-                [$this->identicalTo($mockedSecScheme2), $this->anything()],
+                [$this->identicalTo($mockedSecScheme2), $this->anything()]
             );
 
         $this->pathParameterCodeGenerator
