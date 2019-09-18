@@ -102,7 +102,7 @@ class NettePathCodeGeneratorTest extends TestCase
             ->method('generate')
             ->withConsecutive(
                 [$this->identicalTo($mockedParameter1), $this->anything(), $this->identicalTo($namespace)],
-                [$this->identicalTo($mockedParameter2), $this->anything(), $this->identicalTo($namespace)],
+                [$this->identicalTo($mockedParameter2), $this->anything(), $this->identicalTo($namespace)]
             );
 
         $this->guzzleBodyCodeGenerator
