@@ -1,0 +1,11 @@
+function aMethod()
+{
+	if ($requestBody !== null) {
+	    $serializedRequestBody = \json_encode($requestBody);;
+	    $response = $this->client->request('put', '/a/path', ['headers' => ['Content-Type' => 'application/json'], 'body' => $serializedRequestBody]);
+	} else {
+	    $response = $this->client->request('put', '/a/path', ['headers' => ['Content-Type' => 'application/json']]);
+	}
+
+	return $response;
+}

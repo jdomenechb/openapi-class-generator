@@ -127,10 +127,6 @@ class NetteGuzzleBodyCodeGenerator
             return "'" . \addslashes($item) . "'";
         }
 
-        if ($item instanceof RawExpression) {
-            return (string) $item;
-        }
-
-        return '';
+        return $item;
     }
 }
