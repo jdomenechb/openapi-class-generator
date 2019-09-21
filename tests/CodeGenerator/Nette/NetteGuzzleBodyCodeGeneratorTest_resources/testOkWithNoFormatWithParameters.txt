@@ -1,0 +1,6 @@
+function aMethod()
+{
+	$response = $this->client->request('put', $aSecondParamName . '/a/path/example/' . $aThirdParamName, ['query' => ['aQueryParamName' => $aQueryParamName]]);
+
+	return $response;
+}

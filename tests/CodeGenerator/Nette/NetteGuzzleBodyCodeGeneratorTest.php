@@ -13,6 +13,9 @@ namespace Jdomenechb\OpenApiClassGenerator\Tests\CodeGenerator\Nette;
 
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteGuzzleBodyCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
+use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
+use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\HttpSecurityScheme;
 use Nette\PhpGenerator\Method;
 use PHPUnit\Framework\TestCase;
 
@@ -32,6 +35,36 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
     {
         $method = new Method('aMethod');
         $path = new Path('put', '/a/path', null, null, null, [], []);
+
+        $this->obj->generate($method, $path, null);
+
+        $this->compareExpectedResult(__FUNCTION__, $method);
+    }
+
+    public function testOkWithNoFormatWithParameters(): void
+    {
+        $parameters = [
+            new PathParameter('aQueryParamName', 'query', null, false, false, $this->createMock(AbstractSchema::class)),
+            new PathParameter('aSecondParamName', 'path', null, false, false, $this->createMock(AbstractSchema::class)),
+            new PathParameter('aThirdParamName', 'path', null, false, false, $this->createMock(AbstractSchema::class)),
+        ];
+
+        $method = new Method('aMethod');
+        $path = new Path('put', '{aSecondParamName}/a/path/example/{aThirdParamName}', null, null, null, $parameters, []);
+
+        $this->obj->generate($method, $path, null);
+
+        $this->compareExpectedResult(__FUNCTION__, $method);
+    }
+
+    public function testOkWithNoFormatWithSecurity(): void
+    {
+        $security = [
+            new HttpSecurityScheme('bearer', null, null),
+        ];
+
+        $method = new Method('aMethod');
+        $path = new Path('put', '/a/path/{aSecondParamName}/example', null, null, null, [], $security);
 
         $this->obj->generate($method, $path, null);
 

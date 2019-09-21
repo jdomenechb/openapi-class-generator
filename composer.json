@@ -42,8 +42,10 @@
     "vimeo/psalm": "^3.5"
   },
   "scripts": {
-    "test": "vendor/bin/phpunit --bootstrap vendor/autoload.php tests",
     "cs": "vendor/bin/php-cs-fixer fix",
-    "stan": "vendor/bin/phpstan analyze"
+    "test": "vendor/bin/phpunit --bootstrap vendor/autoload.php tests",
+    "test-mutation": "vendor/bin/infection --only-covered",
+    "stan": "vendor/bin/phpstan analyze",
+    "psalm": "vendor/bin/psalm"
   }
 }
