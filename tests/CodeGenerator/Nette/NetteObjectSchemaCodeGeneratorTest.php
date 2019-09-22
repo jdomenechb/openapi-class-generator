@@ -18,6 +18,7 @@ use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchemaProperty;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\UriSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\VectorSchema;
+use PharIo\Manifest\Email;
 use PHPUnit\Framework\TestCase;
 
 class NetteObjectSchemaCodeGeneratorTest extends TestCase
@@ -69,6 +70,7 @@ class NetteObjectSchemaCodeGeneratorTest extends TestCase
         $objectSchema->addProperty(
             new ObjectSchemaProperty('aSecondProperty', true, new VectorSchema(new EmailSchema()))
         );
+        $objectSchema->addProperty(new ObjectSchemaProperty('aThirdProperty', false, new EmailSchema()));
 
         $objNamespace = $this->obj->generate($objectSchema, 'aNamespaceName', null);
 

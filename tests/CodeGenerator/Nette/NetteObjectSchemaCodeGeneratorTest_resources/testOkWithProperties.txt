@@ -10,8 +10,11 @@ final class AnObject implements \Serializable
 	/** @var array */
 	private $aSecondProperty;
 
+	/** @var string|null */
+	private $aThirdProperty;
 
-	public function __construct(?string $aFirstProperty, array $aSecondProperty)
+
+	public function __construct(?string $aFirstProperty, array $aSecondProperty, ?string $aThirdProperty)
 	{
 		if (!filter_var($aFirstProperty, FILTER_VALIDATE_URL)) {
 		    throw new \InvalidArgumentException('Invalid url $aFirstProperty');
@@ -19,6 +22,11 @@ final class AnObject implements \Serializable
 
 		$this->aFirstProperty = $aFirstProperty;
 		$this->aSecondProperty = $aSecondProperty;
+		if (!filter_var($aThirdProperty, FILTER_VALIDATE_EMAIL)) {
+		    throw new \InvalidArgumentException('Invalid email $aThirdProperty');
+		}
+
+		$this->aThirdProperty = $aThirdProperty;
 	}
 
 
@@ -34,11 +42,18 @@ final class AnObject implements \Serializable
 	}
 
 
+	public function aThirdProperty(): ?string
+	{
+		return $this->aThirdProperty;
+	}
+
+
 	public function serialize(): array
 	{
 		return [
 		    'aFirstProperty' => $this->aFirstProperty,
 		    'aSecondProperty' => $this->aSecondProperty,
+		    'aThirdProperty' => $this->aThirdProperty,
 		];
 	}
 
