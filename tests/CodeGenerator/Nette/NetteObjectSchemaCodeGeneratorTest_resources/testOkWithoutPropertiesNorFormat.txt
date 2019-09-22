@@ -1,0 +1,23 @@
+<?php
+
+namespace aNamespaceName\Dto;
+
+final class PrefixAnObject implements \Serializable
+{
+	public function __construct()
+	{
+	}
+
+
+	public function serialize(): array
+	{
+		return [
+		];
+	}
+
+
+	public function unserialize($serialized)
+	{
+		throw new \RuntimeException('No unserializable class');
+	}
+}

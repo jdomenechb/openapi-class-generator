@@ -1,0 +1,50 @@
+<?php
+
+namespace aNamespaceName\Dto;
+
+final class AnObject implements \Serializable
+{
+	/** @var string|null */
+	private $aFirstProperty;
+
+	/** @var array */
+	private $aSecondProperty;
+
+
+	public function __construct(?string $aFirstProperty, array $aSecondProperty)
+	{
+		if (!filter_var($aFirstProperty, FILTER_VALIDATE_URL)) {
+		    throw new \InvalidArgumentException('Invalid url $aFirstProperty');
+		}
+
+		$this->aFirstProperty = $aFirstProperty;
+		$this->aSecondProperty = $aSecondProperty;
+	}
+
+
+	public function aFirstProperty(): ?string
+	{
+		return $this->aFirstProperty;
+	}
+
+
+	public function aSecondProperty(): array
+	{
+		return $this->aSecondProperty;
+	}
+
+
+	public function serialize(): array
+	{
+		return [
+		    'aFirstProperty' => $this->aFirstProperty,
+		    'aSecondProperty' => $this->aSecondProperty,
+		];
+	}
+
+
+	public function unserialize($serialized)
+	{
+		throw new \RuntimeException('No unserializable class');
+	}
+}

@@ -1,0 +1,29 @@
+<?php
+
+namespace aNamespaceName\Dto;
+
+final class AnObject implements \Serializable, \JsonSerializable
+{
+	public function __construct()
+	{
+	}
+
+
+	public function serialize(): array
+	{
+		return [
+		];
+	}
+
+
+	public function unserialize($serialized)
+	{
+		throw new \RuntimeException('No unserializable class');
+	}
+
+
+	public function jsonSerialize(): array
+	{
+		return $this->serialize();
+	}
+}

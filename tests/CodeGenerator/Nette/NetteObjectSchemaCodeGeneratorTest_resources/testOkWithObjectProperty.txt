@@ -1,0 +1,35 @@
+<?php
+
+namespace aNamespaceName\Dto;
+
+final class AnObject implements \Serializable
+{
+	/** @var object|null */
+	private $aFirstProperty;
+
+
+	public function __construct(?object $aFirstProperty)
+	{
+		$this->aFirstProperty = $aFirstProperty;
+	}
+
+
+	public function aFirstProperty(): ?object
+	{
+		return $this->aFirstProperty;
+	}
+
+
+	public function serialize(): array
+	{
+		return [
+		    'aFirstProperty' => $this->aFirstProperty,
+		];
+	}
+
+
+	public function unserialize($serialized)
+	{
+		throw new \RuntimeException('No unserializable class');
+	}
+}

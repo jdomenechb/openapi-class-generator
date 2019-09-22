@@ -73,16 +73,16 @@ class NetteObjectSchemaCodeGenerator
                 $construct->addBody($propertySchema->getPhpValidation('$' . $propertyName) . "\n");
             }
 
+            // TODO: Implement validation for elements of array
+
             $construct->addBody(\sprintf('$this->%s = $%s;', $propertyName, $propertyName));
+
+            if ($propertySchema instanceof VectorSchema) {
+                $propertySchema = $propertySchema->wrapped();
+            }
 
             if ($propertySchema instanceof ObjectSchema) {
                 $this->generate($propertySchema, $namespaceName, $format, $name);
-            } elseif ($propertySchema instanceof VectorSchema) {
-                $wrappedSchema = $propertySchema->wrapped();
-
-                if ($wrappedSchema instanceof ObjectSchema) {
-                    $this->generate($wrappedSchema, $namespaceName, $format, $name);
-                }
             }
         }
 
