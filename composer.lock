@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb116bf1812301100b9b444c98a09a7b",
+    "content-hash": "8e4b47d109dbdfe64e4c41a3930f78c1",
     "packages": [
         {
             "name": "cebe/php-openapi",
@@ -3846,6 +3846,48 @@
                 "psr-3"
             ],
             "time": "2018-11-20T15:27:04+00:00"
+        },
+        {
+            "name": "rregeer/phpunit-coverage-check",
+            "version": "0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/richardregeer/phpunit-coverage-check.git",
+                "reference": "8984ce2f5e5339e914fb522753717aa1fa6f388a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/richardregeer/phpunit-coverage-check/zipball/8984ce2f5e5339e914fb522753717aa1fa6f388a",
+                "reference": "8984ce2f5e5339e914fb522753717aa1fa6f388a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "bin": [
+                "bin/coverage-check"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Richard Regeer",
+                    "email": "rich2309@gmail.com"
+                }
+            ],
+            "description": "Check the code coverage using the clover report of phpunit",
+            "keywords": [
+                "ci",
+                "code coverage",
+                "php",
+                "phpunit",
+                "testing",
+                "unittest"
+            ],
+            "time": "2019-08-25T19:06:22+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

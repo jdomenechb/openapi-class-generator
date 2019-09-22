@@ -18,7 +18,6 @@ use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchemaProperty;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\UriSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\VectorSchema;
-use PharIo\Manifest\Email;
 use PHPUnit\Framework\TestCase;
 
 class NetteObjectSchemaCodeGeneratorTest extends TestCase

@@ -16,6 +16,7 @@ namespace Jdomenechb\OpenApiClassGenerator\Command;
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
 use Exception;
+use InvalidArgumentException;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiApiBuilder;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiFileReader;
 use Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe\CebeOpenapiPathFactory;
@@ -31,7 +32,6 @@ use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NettePathCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NettePathParameterCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteRequestBodyFormatCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteSecuritySchemeCodeGenerator;
-use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -74,15 +74,15 @@ class GenerateCommand extends Command
         $namespace = $input->getOption('namespace');
 
         if (!\is_string($inputPath)) {
-            throw new RuntimeException('inputPath must be an string');
+            throw new InvalidArgumentException('inputPath must be a string');
         }
 
         if (!\is_string($outputPath)) {
-            throw new RuntimeException('outputPath must be an string');
+            throw new InvalidArgumentException('outputPath must be a string');
         }
 
         if (!\is_string($namespace)) {
-            throw new RuntimeException('namespace must be an string');
+            throw new InvalidArgumentException('namespace must be a string');
         }
 
         $output->writeln('Using namespace: ' . $namespace);
@@ -118,23 +118,24 @@ class GenerateCommand extends Command
         $finder = new Finder();
         $finder->files()->in($inputPath)->name(['*.yaml', '*.yml', '*.json']);
 
-        $i = 0;
+        $anyProcessed = false;
 
         foreach ($finder as $file) {
             $realPath = $file->getRealPath();
 
             if (false === $realPath) {
-                continue;
+                $realPath = $file->getPathname();
             }
 
             $apiService = $apiBuilder->fromFile($realPath, $namespace);
             $apiCodeGenerator->generate($apiService);
 
             $output->writeln('Processed contract: ' . $file->getBasename());
-            ++$i;
+
+            $anyProcessed = true;
         }
 
-        if (0 === $i) {
+        if (!$anyProcessed) {
             $output->writeln('No files processed');
         }
     }
