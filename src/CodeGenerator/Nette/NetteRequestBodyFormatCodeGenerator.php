@@ -47,7 +47,7 @@ class NetteRequestBodyFormatCodeGenerator
         Path $path,
         RequestBodyFormat $format
     ): void {
-        $requestClassName = $this->abstractSchemaCodeGenerator->generate(
+        $requestTypeHint = $this->abstractSchemaCodeGenerator->generate(
             $format->schema(),
             $namespace->getName(),
             $format->format(),
@@ -65,11 +65,11 @@ class NetteRequestBodyFormatCodeGenerator
 
         $method
             ->addComment(
-                '@param ' . $requestClassName . (!$requestBodyRequired ? '|null' : '') . ' $requestBody'
+                '@param ' . $requestTypeHint . (!$requestBodyRequired ? '|null' : '') . ' $requestBody'
                 . ($requestBodyDescription ? ' ' . $requestBodyDescription : '')
             )
             ->addParameter('requestBody')
-            ->setTypeHint($requestClassName)
+            ->setTypeHint($requestTypeHint)
             ->setNullable(!$requestBodyRequired);
 
         $this->guzzleBodyCodeGenerator->generate($method, $path, $format->format());
