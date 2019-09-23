@@ -101,6 +101,7 @@ class NetteObjectSchemaCodeGenerator
 
         $classRef->addMethod('unserialize')
             ->addBody('throw new \\RuntimeException(\'No unserializable class\');')
+            ->setReturnType('void')
             ->addParameter('serialized');
 
         if ('json' === $format) {

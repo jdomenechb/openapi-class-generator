@@ -58,7 +58,7 @@ final class AnObject implements \Serializable
 	}
 
 
-	public function unserialize($serialized)
+	public function unserialize($serialized): void
 	{
 		throw new \RuntimeException('No unserializable class');
 	}
