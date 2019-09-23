@@ -56,7 +56,7 @@ class NetteRequestBodyFormatCodeGeneratorTest extends TestCase
         $method = new Method('aMethod');
         $namespace = new PhpNamespace('aNamespace');
         $path = new Path('post', '/a/path', null, null, null, [], []);
-        $format = new RequestBodyFormat('json', $this->createMock(AbstractSchema::class));
+        $format = new RequestBodyFormat('json', null, $this->createMock(AbstractSchema::class));
 
         $this->obj->generate($method, $namespace, $path, $format);
     }
@@ -67,7 +67,7 @@ class NetteRequestBodyFormatCodeGeneratorTest extends TestCase
 
         $requestBody = new RequestBody(null, false);
 
-        $format = new RequestBodyFormat('json', $this->createMock(AbstractSchema::class));
+        $format = new RequestBodyFormat('json', null, $this->createMock(AbstractSchema::class));
         $requestBody->addFormat($format);
 
         $method = new Method('aMethod');
@@ -99,7 +99,7 @@ class NetteRequestBodyFormatCodeGeneratorTest extends TestCase
 
         $requestBody = new RequestBody('aDescription', true);
 
-        $format = new RequestBodyFormat('json', $this->createMock(AbstractSchema::class));
+        $format = new RequestBodyFormat('json', null, $this->createMock(AbstractSchema::class));
         $requestBody->addFormat($format);
 
         $method = new Method('aMethod');

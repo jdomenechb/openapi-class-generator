@@ -7,7 +7,7 @@ class AClass
 	 * @return ResponseInterface
 	 * @throws GuzzleException
 	 */
-	public function postAPathJson(): Psr\Http\Message\ResponseInterface
+	public function aJsonIdJson(): Psr\Http\Message\ResponseInterface
 	{
 	}
 

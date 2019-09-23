@@ -111,6 +111,7 @@ class CebeOpenapiPathFactory
 
                 $requestBodyFormat = new RequestBodyFormat(
                     $format,
+                    $contractOperation->operationId,
                     $this->schemaFactory->build($reqBodySchema, 'request')
                 );
 

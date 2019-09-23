@@ -150,6 +150,7 @@ class CebeOpenapiPathFactoryTest extends TestCase
     public function testRequestBodyOk(string $contentType, string $formatType): void
     {
         $operation = new Operation([
+            'operationId' => 'anOperationId',
             'requestBody' => new RequestBody([
                 'description' => 'aDescription',
                 'required' => true,
@@ -178,6 +179,7 @@ class CebeOpenapiPathFactoryTest extends TestCase
 
         $this->assertSame($formatType, $format->format());
         $this->assertSame($mockSchema, $format->schema());
+        $this->assertSame('anOperationId', $format->operationId());
     }
 
     public function testRequestBodyWithWrongFormatOk(): void

@@ -80,7 +80,6 @@ JSON;
             'outputPath' => $outputUrl,
         ]);
 
-
         $this->assertTrue($this->root->hasChild('output'));
         $this->assertFalse($this->root->hasChild('output/toBeDeleted.txt'));
     }
