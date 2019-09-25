@@ -55,7 +55,7 @@ class NetteRequestBodyFormatCodeGeneratorTest extends TestCase
 
         $method = new Method('aMethod');
         $namespace = new PhpNamespace('aNamespace');
-        $path = new Path('post', '/a/path', null, null, null, [], []);
+        $path = new Path('post', '/a/path', null, null, null, null, [], []);
         $format = new RequestBodyFormat('json', $this->createMock(AbstractSchema::class));
 
         $this->obj->generate($method, $namespace, $path, $format);
@@ -72,7 +72,7 @@ class NetteRequestBodyFormatCodeGeneratorTest extends TestCase
 
         $method = new Method('aMethod');
         $namespace = new PhpNamespace('aNamespace');
-        $path = new Path('post', '/a/path', null, null, $requestBody, [], []);
+        $path = new Path('post', '/a/path', null, null, null, $requestBody, [], []);
 
         $this->guzzleBodyCodeGenerator
             ->expects($this->once())
@@ -104,7 +104,7 @@ class NetteRequestBodyFormatCodeGeneratorTest extends TestCase
 
         $method = new Method('aMethod');
         $namespace = new PhpNamespace('aNamespace');
-        $path = new Path('post', '/a/path', null, null, $requestBody, [], []);
+        $path = new Path('post', '/a/path', null, null, null, $requestBody, [], []);
 
         $this->guzzleBodyCodeGenerator
             ->expects($this->once())

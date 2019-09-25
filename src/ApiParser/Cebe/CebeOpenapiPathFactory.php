@@ -121,6 +121,7 @@ class CebeOpenapiPathFactory
         $pathObj = new Path(
             $method,
             $path,
+            $contractOperation->operationId,
             $contractOperation->summary,
             $contractOperation->description,
             $requestBody,

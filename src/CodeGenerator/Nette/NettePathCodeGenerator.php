@@ -132,7 +132,12 @@ class NettePathCodeGenerator
      */
     private function generateWithNoFormats(ClassType $classRep, Method $referenceMethod, Path $path): void
     {
-        $methodName = $path->method() . $path->path();
+        if ($path->operationId()) {
+            $methodName = $path->operationId();
+        } else {
+            $methodName = $path->method() . $path->path();
+        }
+
         $methodName = Inflector::camelize(\preg_replace('#\\W#', ' ', $methodName) ?: '');
 
         $method = $referenceMethod->cloneWithName($methodName);
@@ -155,7 +160,12 @@ class NettePathCodeGenerator
         Path $path,
         RequestBodyFormat $format
     ): void {
-        $methodName = $path->method() . $path->path();
+        if ($path->operationId()) {
+            $methodName = $path->operationId();
+        } else {
+            $methodName = $path->method() . $path->path();
+        }
+
         $requestBody = $path->requestBody();
 
         if ($requestBody && \count($requestBody->formats()) > 1) {

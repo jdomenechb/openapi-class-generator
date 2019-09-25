@@ -34,7 +34,7 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
     public function testOkWithNoFormat(): void
     {
         $method = new Method('aMethod');
-        $path = new Path('put', '/a/path', null, null, null, [], []);
+        $path = new Path('put', '/a/path', null, null, null, null, [], []);
 
         $this->obj->generate($method, $path, null);
 
@@ -50,7 +50,16 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
         ];
 
         $method = new Method('aMethod');
-        $path = new Path('put', '{aSecondParamName}/a/path/example/{aThirdParamName}', null, null, null, $parameters, []);
+        $path = new Path(
+            'put',
+            '{aSecondParamName}/a/path/example/{aThirdParamName}',
+            null,
+            null,
+            null,
+            null,
+            $parameters,
+            []
+        );
 
         $this->obj->generate($method, $path, null);
 
@@ -64,7 +73,7 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
         ];
 
         $method = new Method('aMethod');
-        $path = new Path('put', '/a/path/{aSecondParamName}/example', null, null, null, [], $security);
+        $path = new Path('put', '/a/path/{aSecondParamName}/example', null, null, null, null, [], $security);
 
         $this->obj->generate($method, $path, null);
 
@@ -74,7 +83,7 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
     public function testOkWithJson(): void
     {
         $method = new Method('aMethod');
-        $path = new Path('put', '/a/path', null, null, null, [], []);
+        $path = new Path('put', '/a/path', null, null, null, null, [], []);
 
         $this->obj->generate($method, $path, 'json');
 
@@ -84,7 +93,7 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
     public function testOkWithForm(): void
     {
         $method = new Method('aMethod');
-        $path = new Path('put', '/a/path', null, null, null, [], []);
+        $path = new Path('put', '/a/path', null, null, null, null, [], []);
 
         $this->obj->generate($method, $path, 'form');
 
@@ -97,7 +106,7 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
         $this->expectExceptionMessage('Unrecognized format: INVALID');
 
         $method = new Method('aMethod');
-        $path = new Path('put', '/a/path', null, null, null, [], []);
+        $path = new Path('put', '/a/path', null, null, null, null, [], []);
 
         $this->obj->generate($method, $path, 'INVALID');
     }

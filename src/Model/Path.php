@@ -26,6 +26,11 @@ class Path
     /**
      * @var string|null
      */
+    private $operationId;
+
+    /**
+     * @var string|null
+     */
     private $summary;
 
     /**
@@ -51,16 +56,26 @@ class Path
      *
      * @param string                   $method
      * @param string                   $path
+     * @param string|null              $operationId
      * @param string|null              $summary
      * @param string|null              $description
      * @param RequestBody|null         $requestBody
      * @param PathParameter[]          $parameters
      * @param AbstractSecurityScheme[] $securitySchemes
      */
-    public function __construct(string $method, string $path, ?string $summary, ?string $description, ?RequestBody $requestBody, array $parameters, array $securitySchemes)
-    {
+    public function __construct(
+        string $method,
+        string $path,
+        ?string $operationId,
+        ?string $summary,
+        ?string $description,
+        ?RequestBody $requestBody,
+        array $parameters,
+        array $securitySchemes
+    ) {
         $this->method = $method;
         $this->path = $path;
+        $this->operationId = $operationId;
         $this->summary = $summary;
         $this->description = $description;
         $this->requestBody = $requestBody;
@@ -82,6 +97,14 @@ class Path
     public function path(): string
     {
         return $this->path;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function operationId(): ?string
+    {
+        return $this->operationId;
     }
 
     /**
