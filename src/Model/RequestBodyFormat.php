@@ -19,10 +19,6 @@ class RequestBodyFormat
 {
     /** @var string */
     private $format;
-
-    /** @var string|null */
-    private $operationId;
-
     /**
      * @var AbstractSchema
      */
@@ -32,14 +28,12 @@ class RequestBodyFormat
      * ApiOperationFormat constructor.
      *
      * @param string         $format
-     * @param string|null    $operationId
      * @param AbstractSchema $schema
      */
-    public function __construct(string $format, ?string $operationId, AbstractSchema $schema)
+    public function __construct(string $format, AbstractSchema $schema)
     {
         $this->format = $format;
         $this->schema = $schema;
-        $this->operationId = $operationId;
     }
 
     /**
@@ -48,14 +42,6 @@ class RequestBodyFormat
     public function format(): string
     {
         return $this->format;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function operationId(): ?string
-    {
-        return $this->operationId;
     }
 
     /**

@@ -155,14 +155,8 @@ class NettePathCodeGenerator
         Path $path,
         RequestBodyFormat $format
     ): void {
+        $methodName = $path->method() . $path->path();
         $requestBody = $path->requestBody();
-        $operationId = $format->operationId();
-
-        if (null === $operationId) {
-            $methodName = $path->method() . $path->path();
-        } else {
-            $methodName = $operationId;
-        }
 
         if ($requestBody && \count($requestBody->formats()) > 1) {
             $methodName .= ' ' . $format->format();

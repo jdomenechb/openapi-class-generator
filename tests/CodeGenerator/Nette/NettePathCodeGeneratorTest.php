@@ -141,28 +141,7 @@ class NettePathCodeGeneratorTest extends TestCase
         $class = new ClassType('AClass');
         $requestBody = new RequestBody('aRBDescription', false);
 
-        $format1 = new RequestBodyFormat('json', null, $this->createMock(AbstractSchema::class));
-        $requestBody->addFormat($format1);
-
-        $path = new Path('post', '/a/path', null, null, $requestBody, [], []);
-        $namespace = new PhpNamespace('A\\Namespace');
-
-        $this->requestBodyFormatCodeGenerator
-            ->expects($this->once())
-            ->method('generate')
-            ->with($this->anything(), $this->identicalTo($namespace), $this->identicalTo($path), $this->identicalTo($format1));
-
-        $this->obj->generate($class, $namespace, $path);
-
-        $this->compareExpectedResult(__FUNCTION__, $class);
-    }
-
-    public function testOkGenerateWithRequestBodyWithOneFormatWithOpId(): void
-    {
-        $class = new ClassType('AClass');
-        $requestBody = new RequestBody('aRBDescription', false);
-
-        $format1 = new RequestBodyFormat('json', 'an operation id', $this->createMock(AbstractSchema::class));
+        $format1 = new RequestBodyFormat('json', $this->createMock(AbstractSchema::class));
         $requestBody->addFormat($format1);
 
         $path = new Path('post', '/a/path', null, null, $requestBody, [], []);
@@ -183,8 +162,8 @@ class NettePathCodeGeneratorTest extends TestCase
         $class = new ClassType('AClass');
         $requestBody = new RequestBody('aRBDescription', false);
 
-        $format1 = new RequestBodyFormat('json', 'a json id', $this->createMock(AbstractSchema::class));
-        $format2 = new RequestBodyFormat('form', null, $this->createMock(AbstractSchema::class));
+        $format1 = new RequestBodyFormat('json', $this->createMock(AbstractSchema::class));
+        $format2 = new RequestBodyFormat('form', $this->createMock(AbstractSchema::class));
         $requestBody->addFormat($format1);
         $requestBody->addFormat($format2);
 
