@@ -113,7 +113,7 @@ class NetteObjectSchemaCodeGenerator
         }
 
         $file = new PhpFile();
-        $namespace = $file->addNamespace($namespaceName . '\\Dto');
+        $namespace = $file->addNamespace($namespaceName . '\\Request');
         $namespace->add($classRef);
 
         $this->fileWriter->write((string) $file, $name, $namespace->getName());
