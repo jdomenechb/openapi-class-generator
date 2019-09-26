@@ -22,6 +22,6 @@ class DateTimeSchemaTest extends TestCase
         $obj = new DateTimeSchema();
         $this->assertInstanceOf(StringSchema::class, $obj);
         $this->assertSame('\\DateTimeImmutable', $obj->getPhpType());
-        $this->assertSame("\$foo->format('c')", $obj->getPhpSerializationValue('$foo'));
+        $this->assertSame("\$foo->format('c')", $obj->getPhpToArrayValue('$foo'));
     }
 }

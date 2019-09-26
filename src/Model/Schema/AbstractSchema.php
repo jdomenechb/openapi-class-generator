@@ -17,7 +17,7 @@ abstract class AbstractSchema
 {
     abstract public function getPhpType(): string;
 
-    public function getPhpSerializationValue(string $origin): string
+    public function getPhpToArrayValue(string $origin): string
     {
         return $origin;
     }

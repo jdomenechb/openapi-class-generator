@@ -38,14 +38,14 @@ class NetteObjectSchemaCodeGenerator
         ObjectSchema $schema,
         string $namespaceName,
         ?string $format = null,
-        string $namePrefix = ''
+        string $classNamePrefix = ''
     ): string {
-        $name = Inflector::classify($namePrefix . '-' . $schema->name());
+        $className = Inflector::classify($classNamePrefix . '-' . $schema->name());
 
-        $classRef = new ClassType($name);
+        $classRef = new ClassType($className);
         $classRef->setFinal();
 
-        $construct = $classRef->addMethod('__construct');
+        $constructMethod = $classRef->addMethod('__construct');
 
         foreach ($schema->properties() as $property) {
             $propertyName = $property->name();
@@ -64,37 +64,45 @@ class NetteObjectSchemaCodeGenerator
                 ->setReturnNullable(!$property->required());
 
             // Constructor
-            $construct->addParameter($propertyName)
+            $constructMethod->addParameter($propertyName)
                 ->setTypeHint($propertySchema->getPhpType())
                 ->setNullable(!$property->required());
 
             if ($propertySchema instanceof SchemaValueValidation) {
-                $construct->addBody($propertySchema->getPhpValidation('$' . $propertyName) . "\n");
+                $constructMethod->addBody($propertySchema->getPhpValidation('$' . $propertyName) . "\n");
             }
 
             // TODO: Implement validation for elements of array
 
-            $construct->addBody(\sprintf('$this->%s = $%s;', $propertyName, $propertyName));
+            $constructMethod->addBody(\sprintf('$this->%s = $%s;', $propertyName, $propertyName));
 
             if ($propertySchema instanceof VectorSchema) {
                 $propertySchema = $propertySchema->wrapped();
             }
 
             if ($propertySchema instanceof ObjectSchema) {
-                $this->generate($propertySchema, $namespaceName, $format, $name);
+                $this->generate($propertySchema, $namespaceName, $format, $className);
             }
         }
 
-        $serializeMethod = $classRef->addMethod('toArray')
+        $toArrayMethod = $classRef->addMethod('toArray')
             ->setReturnType('array')
             ->addBody('return [');
 
         foreach ($schema->properties() as $property) {
-            $serializedValue = $property->schema()->getPhpSerializationValue("\$this->{$property->name()}");
-            $serializeMethod->addBody("    '{$property->name()}' => ${serializedValue},");
+            $propertyName = $property->name();
+            $classPropertyVar = "\$this->{$propertyName}";
+
+            $phpToArrayValue = $property->schema()->getPhpToArrayValue($classPropertyVar);
+
+            if (!$property->required()) {
+                $phpToArrayValue = $classPropertyVar . ' !== null? ' . $phpToArrayValue . ': null';
+            }
+
+            $toArrayMethod->addBody("    '{$propertyName}' => {$phpToArrayValue},");
         }
 
-        $serializeMethod->addBody('];');
+        $toArrayMethod->addBody('];');
 
         if ('json' === $format) {
             $classRef->addImplement(JsonSerializable::class);
@@ -108,8 +116,8 @@ class NetteObjectSchemaCodeGenerator
         $namespace = $file->addNamespace($namespaceName . '\\Request');
         $namespace->add($classRef);
 
-        $this->fileWriter->write((string) $file, $name, $namespace->getName());
+        $this->fileWriter->write((string) $file, $className, $namespace->getName());
 
-        return '\\' . $namespace->getName() . '\\' . $name;
+        return '\\' . $namespace->getName() . '\\' . $className;
     }
 }

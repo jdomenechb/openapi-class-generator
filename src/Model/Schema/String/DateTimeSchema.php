@@ -22,8 +22,8 @@ class DateTimeSchema extends StringSchema
         return '\\' . DateTimeImmutable::class;
     }
 
-    public function getPhpSerializationValue(string $origin): string
+    public function getPhpToArrayValue(string $origin): string
     {
-        return parent::getPhpSerializationValue($origin) . "->format('c')";
+        return parent::getPhpToArrayValue($origin) . "->format('c')";
     }
 }

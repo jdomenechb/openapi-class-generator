@@ -51,9 +51,9 @@ final class AnObject
 	public function toArray(): array
 	{
 		return [
-		    'aFirstProperty' => $this->aFirstProperty,
+		    'aFirstProperty' => $this->aFirstProperty !== null? $this->aFirstProperty: null,
 		    'aSecondProperty' => $this->aSecondProperty,
-		    'aThirdProperty' => $this->aThirdProperty,
+		    'aThirdProperty' => $this->aThirdProperty !== null? $this->aThirdProperty: null,
 		];
 	}
 }
