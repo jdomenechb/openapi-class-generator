@@ -21,7 +21,6 @@ use Jdomenechb\OpenApiClassGenerator\Model\Schema\VectorSchema;
 use JsonSerializable;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
-use Serializable;
 
 class NetteObjectSchemaCodeGenerator
 {
@@ -86,9 +85,7 @@ class NetteObjectSchemaCodeGenerator
             }
         }
 
-        $classRef->addImplement(Serializable::class);
-
-        $serializeMethod = $classRef->addMethod('serialize')
+        $serializeMethod = $classRef->addMethod('toArray')
             ->setReturnType('array')
             ->addBody('return [');
 
@@ -99,17 +96,12 @@ class NetteObjectSchemaCodeGenerator
 
         $serializeMethod->addBody('];');
 
-        $classRef->addMethod('unserialize')
-            ->addBody('throw new \\RuntimeException(\'No unserializable class\');')
-            ->setReturnType('void')
-            ->addParameter('serialized');
-
         if ('json' === $format) {
             $classRef->addImplement(JsonSerializable::class);
 
             $classRef->addMethod('jsonSerialize')
                 ->setReturnType('array')
-                ->addBody('return $this->serialize();');
+                ->addBody('return $this->toArray();');
         }
 
         $file = new PhpFile();

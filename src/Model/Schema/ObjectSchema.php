@@ -57,4 +57,9 @@ class ObjectSchema extends AbstractSchema
     {
         return 'object';
     }
+
+    public function getPhpSerializationValue(string $origin): string
+    {
+        return parent::getPhpSerializationValue($origin) . '->toArray()';
+    }
 }

@@ -50,6 +50,7 @@ class CebeOpenapiPathFactoryTest extends TestCase
         $operation = new Operation([
             'summary' => 'aSummary',
             'description' => 'aDescription',
+            'responses' => [],
         ]);
 
         $method = 'aMethod';
@@ -96,6 +97,7 @@ class CebeOpenapiPathFactoryTest extends TestCase
                     ]),
                 ]),
             ],
+            'responses' => [],
         ]);
 
         $result = $this->obj->generate($operation, '', '', []);
@@ -161,6 +163,7 @@ class CebeOpenapiPathFactoryTest extends TestCase
                     ]),
                 ],
             ]),
+            'responses' => [],
         ]);
 
         $mockSchema = $this->createMock(AbstractSchema::class);

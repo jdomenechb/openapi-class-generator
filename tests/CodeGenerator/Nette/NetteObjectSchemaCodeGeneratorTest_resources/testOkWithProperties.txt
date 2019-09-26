@@ -2,7 +2,7 @@
 
 namespace aNamespaceName\Request;
 
-final class AnObject implements \Serializable
+final class AnObject
 {
 	/** @var string|null */
 	private $aFirstProperty;
@@ -48,18 +48,12 @@ final class AnObject implements \Serializable
 	}
 
 
-	public function serialize(): array
+	public function toArray(): array
 	{
 		return [
 		    'aFirstProperty' => $this->aFirstProperty,
 		    'aSecondProperty' => $this->aSecondProperty,
 		    'aThirdProperty' => $this->aThirdProperty,
 		];
-	}
-
-
-	public function unserialize($serialized): void
-	{
-		throw new \RuntimeException('No unserializable class');
 	}
 }

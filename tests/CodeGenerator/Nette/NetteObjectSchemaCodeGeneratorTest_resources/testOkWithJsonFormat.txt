@@ -2,28 +2,22 @@
 
 namespace aNamespaceName\Request;
 
-final class AnObject implements \Serializable, \JsonSerializable
+final class AnObject implements \JsonSerializable
 {
 	public function __construct()
 	{
 	}
 
 
-	public function serialize(): array
+	public function toArray(): array
 	{
 		return [
 		];
 	}
 
 
-	public function unserialize($serialized): void
-	{
-		throw new \RuntimeException('No unserializable class');
-	}
-
-
 	public function jsonSerialize(): array
 	{
-		return $this->serialize();
+		return $this->toArray();
 	}
 }
