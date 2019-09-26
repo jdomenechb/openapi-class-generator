@@ -4,7 +4,7 @@ namespace aNamespaceName\Request;
 
 final class AnObject
 {
-	/** @var object|null */
+	/** @var \aNamespaceName\Request\AnObjectASubObject|null */
 	private $aFirstProperty;
 
 

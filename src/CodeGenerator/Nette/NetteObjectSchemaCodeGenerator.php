@@ -51,11 +51,6 @@ class NetteObjectSchemaCodeGenerator
             $propertyName = $property->name();
             $propertySchema = $property->schema();
 
-            // Property
-            $classRef->addProperty($propertyName)
-                ->setVisibility('private')
-                ->setComment('@var ' . $propertySchema->getPhpType() . (!$property->required() ? '|null' : ''));
-
             // Getter
             $classRef->addMethod($propertyName)
                 ->setVisibility('public')
@@ -76,13 +71,27 @@ class NetteObjectSchemaCodeGenerator
 
             $constructMethod->addBody(\sprintf('$this->%s = $%s;', $propertyName, $propertyName));
 
+            $wasVector = false;
+
             if ($propertySchema instanceof VectorSchema) {
                 $propertySchema = $propertySchema->wrapped();
+                $wasVector = true;
             }
 
             if ($propertySchema instanceof ObjectSchema) {
-                $this->generate($propertySchema, $namespaceName, $format, $className);
+                $schemaTypeName = $this->generate($propertySchema, $namespaceName, $format, $className);
+            } else {
+                $schemaTypeName = $propertySchema->getPhpType();
             }
+
+            if ($wasVector) {
+                $schemaTypeName .= '[]';
+            }
+
+            // Property
+            $classRef->addProperty($propertyName)
+                ->setVisibility('private')
+                ->setComment('@var ' . ($schemaTypeName ?: $propertySchema->getPhpType()) . (!$property->required() ? '|null' : ''));
         }
 
         $toArrayMethod = $classRef->addMethod('toArray')
@@ -95,7 +104,7 @@ class NetteObjectSchemaCodeGenerator
 
             $phpToArrayValue = $property->schema()->getPhpToArrayValue($classPropertyVar);
 
-            if (!$property->required()) {
+            if (!$property->required() && $property->schema() instanceof ObjectSchema) {
                 $phpToArrayValue = $classPropertyVar . ' !== null? ' . $phpToArrayValue . ': null';
             }
 

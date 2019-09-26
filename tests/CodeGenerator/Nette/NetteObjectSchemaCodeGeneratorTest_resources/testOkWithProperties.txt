@@ -7,7 +7,7 @@ final class AnObject
 	/** @var string|null */
 	private $aFirstProperty;
 
-	/** @var array */
+	/** @var string[] */
 	private $aSecondProperty;
 
 	/** @var string|null */
@@ -51,9 +51,9 @@ final class AnObject
 	public function toArray(): array
 	{
 		return [
-		    'aFirstProperty' => $this->aFirstProperty !== null? $this->aFirstProperty: null,
+		    'aFirstProperty' => $this->aFirstProperty,
 		    'aSecondProperty' => $this->aSecondProperty,
-		    'aThirdProperty' => $this->aThirdProperty !== null? $this->aThirdProperty: null,
+		    'aThirdProperty' => $this->aThirdProperty,
 		];
 	}
 }
