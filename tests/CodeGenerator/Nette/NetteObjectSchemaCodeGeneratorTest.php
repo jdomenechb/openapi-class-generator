@@ -15,6 +15,7 @@ use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteObjectSchemaCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchemaProperty;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\DateTimeSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\UriSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\VectorSchema;
@@ -70,13 +71,16 @@ class NetteObjectSchemaCodeGeneratorTest extends TestCase
             new ObjectSchemaProperty('aSecondProperty', true, new VectorSchema(new EmailSchema()))
         );
         $objectSchema->addProperty(new ObjectSchemaProperty('aThirdProperty', false, new EmailSchema()));
+        $objectSchema->addProperty(
+            new ObjectSchemaProperty('aFourthProperty', false, new VectorSchema(new DateTimeSchema()))
+        );
 
         $objNamespace = $this->obj->generate($objectSchema, 'aNamespaceName', null);
 
         $this->assertSame('\\aNamespaceName\\Request\\AnObject', $objNamespace);
     }
 
-    public function testOkWithObjectProperty(): void
+    public function testOkWithObjectProperties(): void
     {
         $testName = __FUNCTION__;
 

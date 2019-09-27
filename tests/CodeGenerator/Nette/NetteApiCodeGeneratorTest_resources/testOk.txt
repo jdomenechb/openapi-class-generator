@@ -14,12 +14,11 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class ANameService
 {
-	/** @var ClientInterface */
-	private $client;
+    /** @var ClientInterface */
+    private $client;
 
-
-	public function __construct(ClientInterface $client)
-	{
-		$this->client = $client;
-	}
+    public function __construct(ClientInterface $client)
+    {
+        $this->client = $client;
+    }
 }

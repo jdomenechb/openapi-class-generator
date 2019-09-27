@@ -1,13 +1,13 @@
 class AClass
 {
-	/**
-	 * Endpoint URL: /a/path
-	 * Method: POST
-	 *
-	 * @return ResponseInterface
-	 * @throws GuzzleException
-	 */
-	public function anOperationId(): Psr\Http\Message\ResponseInterface
-	{
-	}
+    /**
+     * Endpoint URL: /a/path
+     * Method: POST
+     *
+     * @return ResponseInterface
+     * @throws GuzzleException
+     */
+    public function anOperationId(): Psr\Http\Message\ResponseInterface
+    {
+    }
 }

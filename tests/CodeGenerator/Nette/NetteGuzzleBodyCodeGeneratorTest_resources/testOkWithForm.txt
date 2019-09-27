@@ -1,11 +1,11 @@
 function aMethod()
 {
-	if ($requestBody !== null) {
-	    $serializedRequestBody = \http_build_query($requestBody->serialize());;
-	    $response = $this->client->request('put', '/a/path', ['headers' => ['Content-Type' => 'application/x-www-form-urlencoded'], 'body' => $serializedRequestBody]);
-	} else {
-	    $response = $this->client->request('put', '/a/path', ['headers' => ['Content-Type' => 'application/x-www-form-urlencoded']]);
-	}
+    if ($requestBody !== null) {
+        $serializedRequestBody = \http_build_query($requestBody->serialize());;
+        $response = $this->client->request('put', '/a/path', ['headers' => ['Content-Type' => 'application/x-www-form-urlencoded'], 'body' => $serializedRequestBody]);
+    } else {
+        $response = $this->client->request('put', '/a/path', ['headers' => ['Content-Type' => 'application/x-www-form-urlencoded']]);
+    }
 
-	return $response;
+    return $response;
 }

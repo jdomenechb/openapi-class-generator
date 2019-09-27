@@ -4,56 +4,61 @@ namespace aNamespaceName\Request;
 
 final class AnObject
 {
-	/** @var string|null */
-	private $aFirstProperty;
+    /** @var string|null */
+    private $aFirstProperty;
 
-	/** @var string[] */
-	private $aSecondProperty;
+    /** @var string[] */
+    private $aSecondProperty;
 
-	/** @var string|null */
-	private $aThirdProperty;
+    /** @var string|null */
+    private $aThirdProperty;
 
+    /** @var \DateTimeImmutable[]|null */
+    private $aFourthProperty;
 
-	public function __construct(?string $aFirstProperty, array $aSecondProperty, ?string $aThirdProperty)
-	{
-		if (!filter_var($aFirstProperty, FILTER_VALIDATE_URL)) {
-		    throw new \InvalidArgumentException('Invalid url $aFirstProperty');
-		}
+    public function __construct(?string $aFirstProperty, array $aSecondProperty, ?string $aThirdProperty, ?array $aFourthProperty)
+    {
+        if (!filter_var($aFirstProperty, FILTER_VALIDATE_URL)) {
+            throw new \InvalidArgumentException('Invalid url $aFirstProperty');
+        }
 
-		$this->aFirstProperty = $aFirstProperty;
-		$this->aSecondProperty = $aSecondProperty;
-		if (!filter_var($aThirdProperty, FILTER_VALIDATE_EMAIL)) {
-		    throw new \InvalidArgumentException('Invalid email $aThirdProperty');
-		}
+        $this->aFirstProperty = $aFirstProperty;
+        $this->aSecondProperty = $aSecondProperty;
+        if (!filter_var($aThirdProperty, FILTER_VALIDATE_EMAIL)) {
+            throw new \InvalidArgumentException('Invalid email $aThirdProperty');
+        }
 
-		$this->aThirdProperty = $aThirdProperty;
-	}
+        $this->aThirdProperty = $aThirdProperty;
+        $this->aFourthProperty = $aFourthProperty;
+    }
 
+    public function aFirstProperty(): ?string
+    {
+        return $this->aFirstProperty;
+    }
 
-	public function aFirstProperty(): ?string
-	{
-		return $this->aFirstProperty;
-	}
+    public function aSecondProperty(): array
+    {
+        return $this->aSecondProperty;
+    }
 
+    public function aThirdProperty(): ?string
+    {
+        return $this->aThirdProperty;
+    }
 
-	public function aSecondProperty(): array
-	{
-		return $this->aSecondProperty;
-	}
+    public function aFourthProperty(): ?array
+    {
+        return $this->aFourthProperty;
+    }
 
-
-	public function aThirdProperty(): ?string
-	{
-		return $this->aThirdProperty;
-	}
-
-
-	public function toArray(): array
-	{
-		return [
-		    'aFirstProperty' => $this->aFirstProperty,
-		    'aSecondProperty' => $this->aSecondProperty,
-		    'aThirdProperty' => $this->aThirdProperty,
-		];
-	}
+    public function toArray(): array
+    {
+        return [
+            'aFirstProperty' => $this->aFirstProperty,
+            'aSecondProperty' => $this->aSecondProperty,
+            'aThirdProperty' => $this->aThirdProperty,
+            'aFourthProperty' => $this->aFourthProperty !== null? array_map(static function ($value) { return $value->format('c'); }, $this->aFourthProperty): null,
+        ];
+    }
 }

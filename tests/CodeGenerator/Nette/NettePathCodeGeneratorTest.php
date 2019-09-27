@@ -24,6 +24,7 @@ use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\AbstractSecurityScheme;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
+use Nette\PhpGenerator\PsrPrinter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -217,6 +218,8 @@ class NettePathCodeGeneratorTest extends TestCase
     {
         $expectedResult = \file_get_contents(__DIR__ . '/NettePathCodeGeneratorTest_resources/' . $name . '.txt');
 
-        $this->assertSame($expectedResult, (string) $class);
+        $printer = new PsrPrinter();
+
+        $this->assertSame($expectedResult, $printer->printClass($class));
     }
 }

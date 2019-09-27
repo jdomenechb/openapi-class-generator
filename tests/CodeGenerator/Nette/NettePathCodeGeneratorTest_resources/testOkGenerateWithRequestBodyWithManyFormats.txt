@@ -1,25 +1,24 @@
 class AClass
 {
-	/**
-	 * Endpoint URL: /a/path
-	 * Method: POST
-	 *
-	 * @return ResponseInterface
-	 * @throws GuzzleException
-	 */
-	public function postAPathJson(): Psr\Http\Message\ResponseInterface
-	{
-	}
+    /**
+     * Endpoint URL: /a/path
+     * Method: POST
+     *
+     * @return ResponseInterface
+     * @throws GuzzleException
+     */
+    public function postAPathJson(): Psr\Http\Message\ResponseInterface
+    {
+    }
 
-
-	/**
-	 * Endpoint URL: /a/path
-	 * Method: POST
-	 *
-	 * @return ResponseInterface
-	 * @throws GuzzleException
-	 */
-	public function postAPathForm(): Psr\Http\Message\ResponseInterface
-	{
-	}
+    /**
+     * Endpoint URL: /a/path
+     * Method: POST
+     *
+     * @return ResponseInterface
+     * @throws GuzzleException
+     */
+    public function postAPathForm(): Psr\Http\Message\ResponseInterface
+    {
+    }
 }

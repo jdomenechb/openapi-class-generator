@@ -17,6 +17,7 @@ use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\HttpSecurityScheme;
 use Nette\PhpGenerator\Method;
+use Nette\PhpGenerator\PsrPrinter;
 use PHPUnit\Framework\TestCase;
 
 class NetteGuzzleBodyCodeGeneratorTest extends TestCase
@@ -115,6 +116,8 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
     {
         $expectedResult = \file_get_contents(__DIR__ . '/NetteGuzzleBodyCodeGeneratorTest_resources/' . $name . '.txt');
 
-        $this->assertSame($expectedResult, (string) $method);
+        $printer = new PsrPrinter();
+
+        $this->assertSame($expectedResult, $printer->printMethod($method));
     }
 }

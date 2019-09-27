@@ -21,6 +21,7 @@ use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
+use Nette\PhpGenerator\PsrPrinter;
 use Psr\Http\Message\ResponseInterface;
 
 class NetteApiCodeGenerator implements ApiCodeGenerator
@@ -101,6 +102,8 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
             $this->pathCodeGenerator->generate($classRep, $namespace, $path);
         }
 
-        $this->fileWriter->write((string) $file, $classRepName, $namespace->getName());
+        $printer = new PsrPrinter();
+
+        $this->fileWriter->write($printer->printFile($file), $classRepName, $namespace->getName());
     }
 }

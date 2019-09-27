@@ -4,14 +4,13 @@ namespace aNamespaceName\Request;
 
 final class PrefixAnObject
 {
-	public function __construct()
-	{
-	}
+    public function __construct()
+    {
+    }
 
-
-	public function toArray(): array
-	{
-		return [
-		];
-	}
+    public function toArray(): array
+    {
+        return [
+        ];
+    }
 }

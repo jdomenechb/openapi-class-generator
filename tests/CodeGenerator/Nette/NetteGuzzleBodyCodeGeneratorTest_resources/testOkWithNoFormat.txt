@@ -1,6 +1,6 @@
 function aMethod()
 {
-	$response = $this->client->request('put', '/a/path', []);
+    $response = $this->client->request('put', '/a/path', []);
 
-	return $response;
+    return $response;
 }

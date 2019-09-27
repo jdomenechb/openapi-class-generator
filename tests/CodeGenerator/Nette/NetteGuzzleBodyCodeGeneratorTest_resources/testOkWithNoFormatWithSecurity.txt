@@ -1,6 +1,6 @@
 function aMethod()
 {
-	$response = $this->client->request('put', '/a/path/{aSecondParamName}/example', ['headers' => ['Authorization' => 'Bearer ' . $bearer]]);
+    $response = $this->client->request('put', '/a/path/{aSecondParamName}/example', ['headers' => ['Authorization' => 'Bearer ' . $bearer]]);
 
-	return $response;
+    return $response;
 }

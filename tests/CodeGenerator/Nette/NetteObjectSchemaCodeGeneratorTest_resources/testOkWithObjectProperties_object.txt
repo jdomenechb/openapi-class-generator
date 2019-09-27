@@ -2,7 +2,7 @@
 
 namespace aNamespaceName\Request;
 
-final class AnObject implements \JsonSerializable
+final class AnObjectASubObject
 {
     public function __construct()
     {
@@ -12,10 +12,5 @@ final class AnObject implements \JsonSerializable
     {
         return [
         ];
-    }
-
-    public function jsonSerialize(): array
-    {
-        return $this->toArray();
     }
 }

@@ -21,6 +21,7 @@ use Jdomenechb\OpenApiClassGenerator\Model\Schema\VectorSchema;
 use JsonSerializable;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
+use Nette\PhpGenerator\PsrPrinter;
 
 class NetteObjectSchemaCodeGenerator
 {
@@ -104,7 +105,10 @@ class NetteObjectSchemaCodeGenerator
 
             $phpToArrayValue = $property->schema()->getPhpToArrayValue($classPropertyVar);
 
-            if (!$property->required() && $property->schema() instanceof ObjectSchema) {
+            if (
+                !$property->required()
+                && ($property->schema() instanceof ObjectSchema || $property->schema() instanceof VectorSchema)
+            ) {
                 $phpToArrayValue = $classPropertyVar . ' !== null? ' . $phpToArrayValue . ': null';
             }
 
@@ -125,7 +129,9 @@ class NetteObjectSchemaCodeGenerator
         $namespace = $file->addNamespace($namespaceName . '\\Request');
         $namespace->add($classRef);
 
-        $this->fileWriter->write((string) $file, $className, $namespace->getName());
+        $printer = new PsrPrinter();
+
+        $this->fileWriter->write($printer->printFile($file), $className, $namespace->getName());
 
         return '\\' . $namespace->getName() . '\\' . $className;
     }
