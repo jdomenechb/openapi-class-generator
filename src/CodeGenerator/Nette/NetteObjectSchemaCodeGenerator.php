@@ -70,7 +70,7 @@ class NetteObjectSchemaCodeGenerator
             $propertyName = $property->name();
             $propertySchema = $property->schema();
             $classPropertyVar = "\$this->{$propertyName}";
-            $fromArrayInputVar = "\$input['$propertyName']";
+            $fromArrayInputVar = "\$input['${propertyName}']";
 
             // Getter
             $classRef->addMethod($propertyName)
@@ -141,7 +141,7 @@ class NetteObjectSchemaCodeGenerator
                 $toAdd = 'isset(' . $fromArrayInputVar . ') ? ' . $phpFromArrayValue . ' : ' . $phpFromArrayDefault;
             }
 
-            $fromArrayMethod->addBody('    ' . $toAdd . ($currentProperty < $nProperties? ',' : ''));
+            $fromArrayMethod->addBody('    ' . $toAdd . ($currentProperty < $nProperties ? ',' : ''));
         }
 
         $toArrayMethod->addBody('];');

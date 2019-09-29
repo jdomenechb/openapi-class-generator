@@ -29,6 +29,6 @@ class DateTimeSchema extends StringSchema
 
     public function getPhpFromArrayValue(string $origin): string
     {
-        return 'new \DateTimeImmutable(' . $origin . ')';
+        return 'new \\DateTimeImmutable(' . $origin . ')';
     }
 }

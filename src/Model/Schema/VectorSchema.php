@@ -57,7 +57,7 @@ class VectorSchema extends AbstractSchema
             return parent::getPhpFromArrayValue($origin);
         }
 
-        return 'array_map(static function ($value) { return ' .  $this->wrapped->getPhpFromArrayValue('$value') . '; }, ' . $origin . ')';
+        return 'array_map(static function ($value) { return ' . $this->wrapped->getPhpFromArrayValue('$value') . '; }, ' . $origin . ')';
     }
 
     public function getPhpFromArrayDefault(): string
