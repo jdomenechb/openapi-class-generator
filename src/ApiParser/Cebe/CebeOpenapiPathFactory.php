@@ -119,6 +119,34 @@ class CebeOpenapiPathFactory
             }
         }
 
+        $responses = [];
+
+        foreach ($contractOperation->responses as $statusCode => $contractResponse) {
+            /** @var \cebe\openapi\spec\Response $contractResponse */
+            $response = new Response($statusCode !== 'default'? $statusCode: null, $contractResponse->description);
+
+            foreach ($contractResponse->content as $mediaType => $mediaTypeObject) {
+                $responseSchema = $mediaTypeObject->schema;
+
+                switch ($mediaType) {
+                    case 'application/json':
+                        $format = 'json';
+                        break;
+
+                    case 'application/x-www-form-urlencoded':
+                        $format = 'form';
+                        break;
+
+                    default:
+                        throw new \RuntimeException('Unrecognized response format: ' . $mediaType);
+                }
+
+                $response->addMediaType($format, $responseSchema ? $this->schemaFactory->build($responseSchema, 'response'): null);
+            }
+
+            $responses[] = $response;
+        }
+
         $pathObj = new Path(
             $method,
             $path,
@@ -127,7 +155,8 @@ class CebeOpenapiPathFactory
             $contractOperation->description,
             $requestBody,
             $parameters,
-            $securities
+            $securities,
+            $responses
         );
 
         return $pathObj;

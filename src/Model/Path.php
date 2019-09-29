@@ -51,17 +51,21 @@ class Path
      */
     private $securitySchemes;
 
+    /** @var Response[] */
+    private $responses;
+
     /**
      * ApiOperation constructor.
      *
-     * @param string                   $method
-     * @param string                   $path
-     * @param string|null              $operationId
-     * @param string|null              $summary
-     * @param string|null              $description
-     * @param RequestBody|null         $requestBody
-     * @param PathParameter[]          $parameters
+     * @param string $method
+     * @param string $path
+     * @param string|null $operationId
+     * @param string|null $summary
+     * @param string|null $description
+     * @param RequestBody|null $requestBody
+     * @param PathParameter[] $parameters
      * @param AbstractSecurityScheme[] $securitySchemes
+     * @param array $responses
      */
     public function __construct(
         string $method,
@@ -71,7 +75,8 @@ class Path
         ?string $description,
         ?RequestBody $requestBody,
         array $parameters,
-        array $securitySchemes
+        array $securitySchemes,
+        array $responses
     ) {
         $this->method = $method;
         $this->path = $path;
@@ -81,6 +86,7 @@ class Path
         $this->requestBody = $requestBody;
         $this->parameters = $parameters;
         $this->securitySchemes = $securitySchemes;
+        $this->responses = $responses;
     }
 
     /**
@@ -145,5 +151,13 @@ class Path
     public function securitySchemes(): array
     {
         return $this->securitySchemes;
+    }
+
+    /**
+     * @return Response[]
+     */
+    public function responses(): array
+    {
+        return $this->responses;
     }
 }
