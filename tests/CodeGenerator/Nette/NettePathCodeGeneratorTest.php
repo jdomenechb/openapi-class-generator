@@ -19,7 +19,7 @@ use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteSecuritySchemeCode
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBody;
-use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
+use Jdomenechb\OpenApiClassGenerator\Model\MediaType;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\AbstractSecurityScheme;
 use Nette\PhpGenerator\ClassType;
@@ -142,7 +142,7 @@ class NettePathCodeGeneratorTest extends TestCase
         $class = new ClassType('AClass');
         $requestBody = new RequestBody('aRBDescription', false);
 
-        $format1 = new RequestBodyFormat('json', $this->createMock(AbstractSchema::class));
+        $format1 = new MediaType('json', $this->createMock(AbstractSchema::class));
         $requestBody->addFormat($format1);
 
         $path = new Path('post', '/a/path', 'an operation id', null, null, $requestBody, [], []);
@@ -163,8 +163,8 @@ class NettePathCodeGeneratorTest extends TestCase
         $class = new ClassType('AClass');
         $requestBody = new RequestBody('aRBDescription', false);
 
-        $format1 = new RequestBodyFormat('json', $this->createMock(AbstractSchema::class));
-        $format2 = new RequestBodyFormat('form', $this->createMock(AbstractSchema::class));
+        $format1 = new MediaType('json', $this->createMock(AbstractSchema::class));
+        $format2 = new MediaType('form', $this->createMock(AbstractSchema::class));
         $requestBody->addFormat($format1);
         $requestBody->addFormat($format2);
 

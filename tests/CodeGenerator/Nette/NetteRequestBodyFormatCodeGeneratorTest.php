@@ -16,7 +16,7 @@ use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteGuzzleBodyCodeGene
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteRequestBodyFormatCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBody;
-use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
+use Jdomenechb\OpenApiClassGenerator\Model\MediaType;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpNamespace;
@@ -56,7 +56,7 @@ class NetteRequestBodyFormatCodeGeneratorTest extends TestCase
         $method = new Method('aMethod');
         $namespace = new PhpNamespace('aNamespace');
         $path = new Path('post', '/a/path', null, null, null, null, [], []);
-        $format = new RequestBodyFormat('json', $this->createMock(AbstractSchema::class));
+        $format = new MediaType('json', $this->createMock(AbstractSchema::class));
 
         $this->obj->generate($method, $namespace, $path, $format);
     }
@@ -67,7 +67,7 @@ class NetteRequestBodyFormatCodeGeneratorTest extends TestCase
 
         $requestBody = new RequestBody(null, false);
 
-        $format = new RequestBodyFormat('json', $this->createMock(AbstractSchema::class));
+        $format = new MediaType('json', $this->createMock(AbstractSchema::class));
         $requestBody->addFormat($format);
 
         $method = new Method('aMethod');
@@ -99,7 +99,7 @@ class NetteRequestBodyFormatCodeGeneratorTest extends TestCase
 
         $requestBody = new RequestBody('aDescription', true);
 
-        $format = new RequestBodyFormat('json', $this->createMock(AbstractSchema::class));
+        $format = new MediaType('json', $this->createMock(AbstractSchema::class));
         $requestBody->addFormat($format);
 
         $method = new Method('aMethod');
