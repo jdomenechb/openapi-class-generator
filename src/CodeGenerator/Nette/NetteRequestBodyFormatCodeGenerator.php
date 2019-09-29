@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
-use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
+use Jdomenechb\OpenApiClassGenerator\Model\MediaType;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpNamespace;
 use RuntimeException;
@@ -45,7 +45,7 @@ class NetteRequestBodyFormatCodeGenerator
         Method $method,
         PhpNamespace $namespace,
         Path $path,
-        RequestBodyFormat $format
+        MediaType $format
     ): void {
         $requestTypeHint = $this->abstractSchemaCodeGenerator->generate(
             $format->schema(),

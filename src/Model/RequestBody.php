@@ -15,7 +15,7 @@ namespace Jdomenechb\OpenApiClassGenerator\Model;
 
 class RequestBody
 {
-    /** @var RequestBodyFormat[] */
+    /** @var MediaType[] */
     private $formats;
 
     /** @var bool */
@@ -33,13 +33,13 @@ class RequestBody
         $this->required = $required;
     }
 
-    public function addFormat(RequestBodyFormat $format): void
+    public function addFormat(MediaType $format): void
     {
         $this->formats[] = $format;
     }
 
     /**
-     * @return RequestBodyFormat[]
+     * @return MediaType[]
      */
     public function formats(): array
     {

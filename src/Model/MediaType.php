@@ -15,12 +15,13 @@ namespace Jdomenechb\OpenApiClassGenerator\Model;
 
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 
-class RequestBodyFormat
+class MediaType
 {
     /** @var string */
     private $format;
+
     /**
-     * @var AbstractSchema
+     * @var AbstractSchema|null
      */
     private $schema;
 
@@ -28,9 +29,9 @@ class RequestBodyFormat
      * ApiOperationFormat constructor.
      *
      * @param string         $format
-     * @param AbstractSchema $schema
+     * @param AbstractSchem|null $schema
      */
-    public function __construct(string $format, AbstractSchema $schema)
+    public function __construct(string $format, ?AbstractSchema $schema)
     {
         $this->format = $format;
         $this->schema = $schema;
@@ -45,9 +46,9 @@ class RequestBodyFormat
     }
 
     /**
-     * @return AbstractSchema
+     * @return AbstractSchema|null
      */
-    public function schema(): AbstractSchema
+    public function schema(): ?AbstractSchema
     {
         return $this->schema;
     }

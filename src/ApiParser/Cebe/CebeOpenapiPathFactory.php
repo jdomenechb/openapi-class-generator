@@ -19,7 +19,8 @@ use cebe\openapi\spec\Schema;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
 use Jdomenechb\OpenApiClassGenerator\Model\RequestBody;
-use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
+use Jdomenechb\OpenApiClassGenerator\Model\MediaType;
+use Jdomenechb\OpenApiClassGenerator\Model\Response;
 use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\AbstractSecurityScheme;
 
 class CebeOpenapiPathFactory
@@ -109,7 +110,7 @@ class CebeOpenapiPathFactory
                         throw new \RuntimeException('Unrecognized requestBody format: ' . $mediaType);
                 }
 
-                $requestBodyFormat = new RequestBodyFormat(
+                $requestBodyFormat = new MediaType(
                     $format,
                     $this->schemaFactory->build($reqBodySchema, 'request')
                 );

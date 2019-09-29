@@ -16,7 +16,7 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 use Doctrine\Common\Inflector\Inflector;
 use Exception;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
-use Jdomenechb\OpenApiClassGenerator\Model\RequestBodyFormat;
+use Jdomenechb\OpenApiClassGenerator\Model\MediaType;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 use Nette\PhpGenerator\PhpNamespace;
@@ -151,14 +151,14 @@ class NettePathCodeGenerator
      * @param Method            $referenceMethod
      * @param PhpNamespace      $namespace
      * @param Path              $path
-     * @param RequestBodyFormat $format
+     * @param MediaType $format
      */
     private function generateWithFormat(
         ClassType $classRep,
         Method $referenceMethod,
         PhpNamespace $namespace,
         Path $path,
-        RequestBodyFormat $format
+        MediaType $format
     ): void {
         if ($path->operationId()) {
             $methodName = $path->operationId();
