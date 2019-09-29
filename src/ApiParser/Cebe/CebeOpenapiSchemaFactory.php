@@ -25,6 +25,7 @@ use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\DateTimeSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\EmailSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\PasswordSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\StringSchema;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\UriRefSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\String\UriSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\VectorSchema;
 use RuntimeException;
@@ -33,10 +34,16 @@ class CebeOpenapiSchemaFactory
 {
     public function build(Schema $schema, string $name): AbstractSchema
     {
+        if ($schema->allOf) {
+            $serializedSchema = json_decode(json_encode($schema->getSerializableData()), true);
+            $merge = $this->array_merge_recursive_distinct(...$serializedSchema['allOf']);
+            $schema = new Schema($merge);
+        }
+
         switch ($schema->type) {
             case 'object':
+            case null:
                 return $this->createObject($schema, $name);
-
             case 'string':
                 return $this->createString($schema);
 
@@ -105,6 +112,10 @@ class CebeOpenapiSchemaFactory
                     $obj = new UriSchema();
                     break;
 
+                case 'uriref':
+                    $obj = new UriRefSchema();
+                    break;
+
                 default:
                     throw new RuntimeException(\sprintf('String schema format "%s" not recognized', $schema->format));
             }
@@ -152,5 +163,25 @@ class CebeOpenapiSchemaFactory
         }
 
         return new VectorSchema($this->build($schema->items, $name . 'Item'));
+    }
+
+    private function array_merge_recursive_distinct(array &$array1, array &$array2)
+    {
+        $merged = $array1;
+
+        foreach ($array2 as $key => &$value) {
+            if (is_array($value) && isset ($merged [$key]) && is_array($merged [$key])) {
+                $merged [$key] = $this->array_merge_recursive_distinct($merged [$key], $value);
+            } else {
+                if (is_int($key)) {
+                    $merged[] = $value;
+                } else {
+                    $merged[$key] = $value;
+                }
+
+            }
+        }
+
+        return $merged;
     }
 }
