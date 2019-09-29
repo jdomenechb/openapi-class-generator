@@ -48,9 +48,29 @@ class NetteObjectSchemaCodeGenerator
 
         $constructMethod = $classRef->addMethod('__construct');
 
+        $toArrayMethod = $classRef->addMethod('toArray')
+            ->setReturnType('array')
+            ->addBody('return [');
+
+        $fromArrayMethod = $classRef->addMethod('fromArray')
+            ->setReturnType('self')
+            ->addBody('return new self(')
+            ->setStatic();
+
+        $fromArrayMethod
+            ->addParameter('input')
+            ->setTypeHint('array');
+
+        $nProperties = \count($schema->properties());
+        $currentProperty = 0;
+
         foreach ($schema->properties() as $property) {
+            ++$currentProperty;
+
             $propertyName = $property->name();
             $propertySchema = $property->schema();
+            $classPropertyVar = "\$this->{$propertyName}";
+            $fromArrayInputVar = "\$input['$propertyName']";
 
             // Getter
             $classRef->addMethod($propertyName)
@@ -72,6 +92,7 @@ class NetteObjectSchemaCodeGenerator
 
             $constructMethod->addBody(\sprintf('$this->%s = $%s;', $propertyName, $propertyName));
 
+            // Property
             $wasVector = false;
 
             if ($propertySchema instanceof VectorSchema) {
@@ -89,48 +110,30 @@ class NetteObjectSchemaCodeGenerator
                 $schemaTypeName .= '[]';
             }
 
-            // Property
             $classRef->addProperty($propertyName)
                 ->setVisibility('private')
                 ->setComment('@var ' . ($schemaTypeName ?: $propertySchema->getPhpType()) . (!$property->required() ? '|null' : ''));
-        }
-
-        $toArrayMethod = $classRef->addMethod('toArray')
-            ->setReturnType('array')
-            ->addBody('return [');
-
-        $fromArrayMethod = $classRef->addMethod('fromArray')
-            ->setReturnType('self')
-            ->addBody('return new self(')
-            ->setStatic();
-
-        $fromArrayMethod
-            ->addParameter('input')
-            ->setTypeHint('array');
-
-        $nProperties = \count($schema->properties());
-        $currentProperty = 0;
-
-        foreach ($schema->properties() as $property) {
-            ++$currentProperty;
-
-            $propertyName = $property->name();
-            $classPropertyVar = "\$this->{$propertyName}";
-            $fromArrayInputVar = "\$input['$propertyName']";
 
             $phpToArrayValue = $property->schema()->getPhpToArrayValue($classPropertyVar);
 
+            // To array & From array
+            $propertySchema = $property->schema();
+
             if (
                 !$property->required()
-                && ($property->schema() instanceof ObjectSchema || $property->schema() instanceof VectorSchema)
+                && ($propertySchema instanceof ObjectSchema || $propertySchema instanceof VectorSchema)
             ) {
                 $phpToArrayValue = $classPropertyVar . ' !== null? ' . $phpToArrayValue . ': null';
             }
 
             $toArrayMethod->addBody("    '{$propertyName}' => {$phpToArrayValue},");
 
-            $phpFromArrayValue = $property->schema()->getPhpFromArrayValue($fromArrayInputVar);
-            $phpFromArrayDefault = $property->schema()->getPhpFromArrayDefault();
+            $phpFromArrayValue = $propertySchema->getPhpFromArrayValue($fromArrayInputVar);
+            $phpFromArrayDefault = $propertySchema->getPhpFromArrayDefault();
+
+            if ($propertySchema instanceof ObjectSchema) {
+                $phpFromArrayValue = $schemaTypeName . $phpFromArrayValue;
+            }
 
             if ($phpFromArrayValue === $fromArrayInputVar) {
                 $toAdd = $fromArrayInputVar . ' ?? ' . $phpFromArrayDefault;
