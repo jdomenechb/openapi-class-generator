@@ -35,15 +35,29 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
     private $pathCodeGenerator;
 
     /**
+     * @var NetteRequestExceptionCodeGenerator
+     */
+    private $requestExceptionCodeGenerator;
+
+    /**
+     * @var NetteResponseInterfaceCodeGenerator
+     */
+    private $responseInterfaceCodeGenerator;
+
+    /**
      * NetteApiCodeGenerator constructor.
      *
-     * @param ClassFileWriter        $fileWriter
+     * @param ClassFileWriter $fileWriter
      * @param NettePathCodeGenerator $pathCodeGenerator
+     * @param NetteRequestExceptionCodeGenerator $requestExceptionCodeGenerator
+     * @param NetteResponseInterfaceCodeGenerator $responseInterfaceCodeGenerator
      */
-    public function __construct(ClassFileWriter $fileWriter, NettePathCodeGenerator $pathCodeGenerator)
+    public function __construct(ClassFileWriter $fileWriter, NettePathCodeGenerator $pathCodeGenerator, NetteRequestExceptionCodeGenerator $requestExceptionCodeGenerator, NetteResponseInterfaceCodeGenerator $responseInterfaceCodeGenerator)
     {
         $this->fileWriter = $fileWriter;
         $this->pathCodeGenerator = $pathCodeGenerator;
+        $this->requestExceptionCodeGenerator = $requestExceptionCodeGenerator;
+        $this->responseInterfaceCodeGenerator = $responseInterfaceCodeGenerator;
     }
 
     /**
@@ -105,5 +119,8 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
         $printer = new PsrPrinter();
 
         $this->fileWriter->write($printer->printFile($file), $classRepName, $namespace->getName());
+
+        $this->requestExceptionCodeGenerator->generate($namespace->getName() . '\\Exception');
+        $this->responseInterfaceCodeGenerator->generate($namespace->getName() . '\\Response');
     }
 }

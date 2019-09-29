@@ -14,6 +14,7 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\RawExpression;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\HttpSecurityScheme;
+use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
 use RuntimeException;
 
@@ -21,7 +22,7 @@ class NetteGuzzleBodyCodeGenerator
 {
     public function generate(Method $method, Path $path, ?string $format): void
     {
-        $guzzleRequestParameters = [];
+        $guzzleRequestParameters = ['http_errors' => false];
         $serialize = false;
         $serializeBody = '';
 
@@ -87,14 +88,14 @@ class NetteGuzzleBodyCodeGenerator
                 ->addBody('if ($requestBody !== null) {')
                 ->addBody('    $serializedRequestBody = ' . $serializeBody . ';')
                 ->addBody(
-                    '    $response = $this->client->request(?, ' . $uri . ($guzzleReqParamsStringSerialized ? ', ' : '') . $guzzleReqParamsStringSerialized . ');',
+                    '    $cResponse = $this->client->request(?, ' . $uri . ($guzzleReqParamsStringSerialized ? ', ' : '') . $guzzleReqParamsStringSerialized . ');',
                     [$path->method()]
                 )
                 ->addBody('} else {');
         }
 
         $method->addBody(
-            ($serialize ? '    ' : '') . '$response = $this->client->request(?, ' . $uri . ($guzzleReqParamsString ? ', ' : '') . $guzzleReqParamsString . ');',
+            ($serialize ? '    ' : '') . '$cResponse = $this->client->request(?, ' . $uri . ($guzzleReqParamsString ? ', ' : '') . $guzzleReqParamsString . ');',
             [$path->method()]
         );
 
@@ -103,7 +104,36 @@ class NetteGuzzleBodyCodeGenerator
         }
 
         $method->addBody('');
-        $method->addBody('return $response;');
+
+        // Responses
+        $defaultResponse = null;
+
+        $method->addBody('switch ($cResponse->getStatusCode()) {');
+
+        foreach ($path->responses() as $response) {
+            $statusCode = $response->statusCode();
+
+            if ($statusCode === null) {
+                $defaultResponse = $response;
+
+                continue;
+            }
+
+            $method->addBody("    case ${statusCode}:");
+            $method->addBody('        break;');
+            $method->addBody('');
+        }
+
+        $method->addBody('    default:');
+
+        if ($defaultResponse === null) {
+            // TODO
+        }
+
+        $method->addBody('}');
+        $method->addBody('');
+
+        $method->addBody('return $cResponse;');
     }
 
     /**
@@ -125,6 +155,10 @@ class NetteGuzzleBodyCodeGenerator
 
         if (\is_string($item)) {
             return "'" . \addslashes($item) . "'";
+        }
+
+        if (\is_bool($item)) {
+            return $item ? 'true' : 'false';
         }
 
         return $item;
