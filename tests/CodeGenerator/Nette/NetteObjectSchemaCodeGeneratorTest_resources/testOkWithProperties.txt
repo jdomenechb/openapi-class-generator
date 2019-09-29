@@ -46,7 +46,7 @@ final class AnObject
     {
         return new self(
             $input['aFirstProperty'] ?? null,
-            $input['aSecondProperty'] ?? [],
+            $input['aSecondProperty'],
             $input['aThirdProperty'] ?? null,
             isset($input['aFourthProperty']) ? array_map(static function ($value) { return new \DateTimeImmutable($value); }, $input['aFourthProperty']) : []
         );

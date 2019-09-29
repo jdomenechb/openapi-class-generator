@@ -135,10 +135,14 @@ class NetteObjectSchemaCodeGenerator
                 $phpFromArrayValue = $schemaTypeName . $phpFromArrayValue;
             }
 
-            if ($phpFromArrayValue === $fromArrayInputVar) {
-                $toAdd = $fromArrayInputVar . ' ?? ' . $phpFromArrayDefault;
+            if (!$property->required()) {
+                if ($phpFromArrayValue === $fromArrayInputVar) {
+                    $toAdd = $fromArrayInputVar . ' ?? ' . $phpFromArrayDefault;
+                } else {
+                    $toAdd = 'isset(' . $fromArrayInputVar . ') ? ' . $phpFromArrayValue . ' : ' . $phpFromArrayDefault;
+                }
             } else {
-                $toAdd = 'isset(' . $fromArrayInputVar . ') ? ' . $phpFromArrayValue . ' : ' . $phpFromArrayDefault;
+                $toAdd = $phpFromArrayValue;
             }
 
             $fromArrayMethod->addBody('    ' . $toAdd . ($currentProperty < $nProperties ? ',' : ''));
