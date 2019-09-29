@@ -61,4 +61,14 @@ final class AnObject
             'aFourthProperty' => $this->aFourthProperty !== null? array_map(static function ($value) { return $value->format('c'); }, $this->aFourthProperty): null,
         ];
     }
+
+    public static function fromArray(array $input): self
+    {
+        return new self(
+            $input['aFirstProperty'] ?? null,
+            $input['aSecondProperty'] ?? [],
+            $input['aThirdProperty'] ?? null,
+            isset($input['aFourthProperty']) ? array_map(static function ($value) { return new \DateTimeImmutable($value); }, $input['aFourthProperty']) : []
+        );
+    }
 }

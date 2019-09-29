@@ -21,4 +21,14 @@ abstract class AbstractSchema
     {
         return $origin;
     }
+
+    public function getPhpFromArrayValue(string $origin): string
+    {
+        return $origin;
+    }
+
+    public function getPhpFromArrayDefault(): string
+    {
+        return 'null';
+    }
 }

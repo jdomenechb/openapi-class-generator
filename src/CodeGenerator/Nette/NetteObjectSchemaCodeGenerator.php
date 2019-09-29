@@ -99,9 +99,24 @@ class NetteObjectSchemaCodeGenerator
             ->setReturnType('array')
             ->addBody('return [');
 
+        $fromArrayMethod = $classRef->addMethod('fromArray')
+            ->setReturnType('self')
+            ->addBody('return new self(')
+            ->setStatic();
+
+        $fromArrayMethod
+            ->addParameter('input')
+            ->setTypeHint('array');
+
+        $nProperties = \count($schema->properties());
+        $currentProperty = 0;
+
         foreach ($schema->properties() as $property) {
+            ++$currentProperty;
+
             $propertyName = $property->name();
             $classPropertyVar = "\$this->{$propertyName}";
+            $fromArrayInputVar = "\$input['$propertyName']";
 
             $phpToArrayValue = $property->schema()->getPhpToArrayValue($classPropertyVar);
 
@@ -113,9 +128,21 @@ class NetteObjectSchemaCodeGenerator
             }
 
             $toArrayMethod->addBody("    '{$propertyName}' => {$phpToArrayValue},");
+
+            $phpFromArrayValue = $property->schema()->getPhpFromArrayValue($fromArrayInputVar);
+            $phpFromArrayDefault = $property->schema()->getPhpFromArrayDefault();
+
+            if ($phpFromArrayValue === $fromArrayInputVar) {
+                $toAdd = $fromArrayInputVar . ' ?? ' . $phpFromArrayDefault;
+            } else {
+                $toAdd = 'isset(' . $fromArrayInputVar . ') ? ' . $phpFromArrayValue . ' : ' . $phpFromArrayDefault;
+            }
+
+            $fromArrayMethod->addBody('    ' . $toAdd . ($currentProperty < $nProperties? ',' : ''));
         }
 
         $toArrayMethod->addBody('];');
+        $fromArrayMethod->addBody(');');
 
         if ('json' === $format) {
             $classRef->addImplement(JsonSerializable::class);

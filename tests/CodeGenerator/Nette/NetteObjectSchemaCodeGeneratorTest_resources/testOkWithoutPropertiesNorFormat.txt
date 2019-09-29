@@ -13,4 +13,10 @@ final class PrefixAnObject
         return [
         ];
     }
+
+    public static function fromArray(array $input): self
+    {
+        return new self(
+        );
+    }
 }

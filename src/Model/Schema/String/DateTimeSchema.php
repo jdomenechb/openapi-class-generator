@@ -26,4 +26,9 @@ class DateTimeSchema extends StringSchema
     {
         return parent::getPhpToArrayValue($origin) . "->format('c')";
     }
+
+    public function getPhpFromArrayValue(string $origin): string
+    {
+        return 'new \DateTimeImmutable(' . $origin . ')';
+    }
 }
