@@ -49,7 +49,7 @@ class NetteRequestBodyFormatCodeGenerator
     ): void {
         $requestTypeHint = $this->abstractSchemaCodeGenerator->generate(
             $format->schema(),
-            $namespace->getName(),
+            $namespace->getName() . '\\Request\\Dto',
             $format->format(),
             $method->getName()
         );
@@ -72,6 +72,6 @@ class NetteRequestBodyFormatCodeGenerator
             ->setTypeHint($requestTypeHint)
             ->setNullable(!$requestBodyRequired);
 
-        $this->guzzleBodyCodeGenerator->generate($method, $path, $format->format());
+        $this->guzzleBodyCodeGenerator->generate($namespace->getName(), $method, $path, $format->format());
     }
 }

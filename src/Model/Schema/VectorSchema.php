@@ -50,14 +50,16 @@ class VectorSchema extends AbstractSchema
         return 'array_map(static function ($value) { return ' . $this->wrapped->getPhpToArrayValue('$value') . '; }, ' . $origin . ')';
     }
 
-    public function getPhpFromArrayValue(string $origin): string
+    public function getPhpFromArrayValue(string $origin, string $className): string
     {
+        $className = rtrim($className, '[]');
+
         // Optimization for avoiding doing an unnecessary array map
-        if ('$value' === $this->wrapped->getPhpFromArrayValue('$value')) {
-            return parent::getPhpFromArrayValue($origin);
+        if ('$value' === $this->wrapped->getPhpFromArrayValue('$value', $className)) {
+            return parent::getPhpFromArrayValue($origin, $className);
         }
 
-        return 'array_map(static function ($value) { return ' . $this->wrapped->getPhpFromArrayValue('$value') . '; }, ' . $origin . ')';
+        return 'array_map(static function ($value) { return ' . $this->wrapped->getPhpFromArrayValue('$value', $className) . '; }, ' . $origin . ')';
     }
 
     public function getPhpFromArrayDefault(): string

@@ -19,6 +19,7 @@ class Response
      * @var int|null
      */
     private $statusCode;
+
     /**
      * @var string
      */
@@ -63,5 +64,13 @@ class Response
     public function addMediaType(string $format, ?AbstractSchema $schema): void
     {
         $this->mediaTypes[] = new MediaType($format, $schema);
+    }
+
+    /**
+     * @return MediaType[]
+     */
+    public function mediaTypes(): array
+    {
+        return $this->mediaTypes;
     }
 }

@@ -141,7 +141,7 @@ class CebeOpenapiPathFactory
                         throw new \RuntimeException('Unrecognized response format: ' . $mediaType);
                 }
 
-                $response->addMediaType($format, $responseSchema ? $this->schemaFactory->build($responseSchema, 'response'): null);
+                $response->addMediaType($format, $responseSchema ? $this->schemaFactory->build($responseSchema, 'responseContent'): null);
             }
 
             $responses[] = $response;

@@ -63,8 +63,8 @@ class ObjectSchema extends AbstractSchema
         return parent::getPhpToArrayValue($origin) . '->toArray()';
     }
 
-    public function getPhpFromArrayValue(string $origin): string
+    public function getPhpFromArrayValue(string $origin, string $className): string
     {
-        return '::fromArray(' . $origin . ')';
+        return $className . '::fromArray(' . $origin . ')';
     }
 }

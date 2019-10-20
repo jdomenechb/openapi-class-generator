@@ -37,9 +37,9 @@ class NettePathParameterCodeGenerator
         if (null !== $schema) {
             $className = $this->schemaCodeGenerator->generate(
                 $schema,
-                $namespace->getName(),
+                $namespace->getName() . '\\Request\\Dto',
                 null,
-                $referenceMethod->getName() . \ucfirst($pathParameter->name())
+                $referenceMethod->getName() . \ucfirst($pathParameter->name() . 'Parameter')
             );
         } else {
             $className = 'string';

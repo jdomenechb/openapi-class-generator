@@ -32,6 +32,7 @@ use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NettePathCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NettePathParameterCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteRequestBodyFormatCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteRequestExceptionCodeGenerator;
+use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteResponseCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteResponseInterfaceCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteSecuritySchemeCodeGenerator;
 use Symfony\Component\Console\Command\Command;
@@ -99,15 +100,18 @@ class GenerateCommand extends Command
             new CebeOpenapiPathFactory(new CebeOpenapiSchemaFactory())
         );
 
+        $responseCodeGenerator = new NetteResponseCodeGenerator($fileWriter, $abstractSchemaCodeGenerator);
+        $guzzleBodyCodeGenerator = new NetteGuzzleBodyCodeGenerator($responseCodeGenerator);
+
         $apiCodeGenerator = new NetteApiCodeGenerator(
             $fileWriter,
             new NettePathCodeGenerator(
                 new NetteRequestBodyFormatCodeGenerator(
                     $abstractSchemaCodeGenerator,
-                    new NetteGuzzleBodyCodeGenerator()
+                    $guzzleBodyCodeGenerator
                 ),
                 new NettePathParameterCodeGenerator($abstractSchemaCodeGenerator),
-                new NetteGuzzleBodyCodeGenerator(),
+                $guzzleBodyCodeGenerator,
                 new NetteSecuritySchemeCodeGenerator()
             ),
             new NetteRequestExceptionCodeGenerator($fileWriter),

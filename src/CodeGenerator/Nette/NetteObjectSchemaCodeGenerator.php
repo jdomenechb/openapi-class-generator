@@ -101,14 +101,12 @@ class NetteObjectSchemaCodeGenerator
             }
 
             if ($propertySchema instanceof ObjectSchema) {
-                $schemaTypeName = $this->generate($propertySchema, $namespaceName, $format, $className);
+                $singleSchemaTypeName = $this->generate($propertySchema, $namespaceName, $format, $className);
             } else {
-                $schemaTypeName = $propertySchema->getPhpType();
+                $singleSchemaTypeName = $propertySchema->getPhpType();
             }
 
-            if ($wasVector) {
-                $schemaTypeName .= '[]';
-            }
+            $schemaTypeName =  $singleSchemaTypeName . ($wasVector? '[]': '');
 
             $classRef->addProperty($propertyName)
                 ->setVisibility('private')
@@ -128,12 +126,8 @@ class NetteObjectSchemaCodeGenerator
 
             $toArrayMethod->addBody("    '{$propertyName}' => {$phpToArrayValue},");
 
-            $phpFromArrayValue = $propertySchema->getPhpFromArrayValue($fromArrayInputVar);
+            $phpFromArrayValue = $propertySchema->getPhpFromArrayValue($fromArrayInputVar, $singleSchemaTypeName);
             $phpFromArrayDefault = $propertySchema->getPhpFromArrayDefault();
-
-            if ($propertySchema instanceof ObjectSchema) {
-                $phpFromArrayValue = $schemaTypeName . $phpFromArrayValue;
-            }
 
             if (!$property->required()) {
                 if ($phpFromArrayValue === $fromArrayInputVar) {
@@ -160,7 +154,7 @@ class NetteObjectSchemaCodeGenerator
         }
 
         $file = new PhpFile();
-        $namespace = $file->addNamespace($namespaceName . '\\Request');
+        $namespace = $file->addNamespace($namespaceName);
         $namespace->add($classRef);
 
         $printer = new PsrPrinter();

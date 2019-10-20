@@ -22,7 +22,7 @@ abstract class AbstractSchema
         return $origin;
     }
 
-    public function getPhpFromArrayValue(string $origin): string
+    public function getPhpFromArrayValue(string $origin, string $className): string
     {
         return $origin;
     }

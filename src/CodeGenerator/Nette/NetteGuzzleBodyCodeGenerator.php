@@ -16,27 +16,41 @@ use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\SecurityScheme\HttpSecurityScheme;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\Method;
+use Nette\PhpGenerator\PhpNamespace;
 use RuntimeException;
 
 class NetteGuzzleBodyCodeGenerator
 {
-    public function generate(Method $method, Path $path, ?string $format): void
+    /** @var NetteResponseCodeGenerator */
+    private $responseCodeGenerator;
+
+    /**
+     * NetteGuzzleBodyCodeGenerator constructor.
+     *
+     * @param NetteResponseCodeGenerator $responseCodeGenerator
+     */
+    public function __construct(NetteResponseCodeGenerator $responseCodeGenerator)
+    {
+        $this->responseCodeGenerator = $responseCodeGenerator;
+    }
+
+    public function generate(string $namespaceName, Method $method, Path $path, ?string $requestFormat): void
     {
         $guzzleRequestParameters = ['http_errors' => false];
         $serialize = false;
         $serializeBody = '';
 
-        switch ($format) {
+        switch ($requestFormat) {
             case 'json':
                 $serialize = true;
-                $serializeBody = '\\json_encode($requestBody);';
+                $serializeBody = '\\json_encode($requestBody)';
 
                 $guzzleRequestParameters['headers']['Content-Type'] = 'application/json';
                 break;
 
             case 'form':
                 $serialize = true;
-                $serializeBody = '\\http_build_query($requestBody->serialize());';
+                $serializeBody = '\\http_build_query($requestBody->serialize())';
 
                 $guzzleRequestParameters['headers']['Content-Type'] = 'application/x-www-form-urlencoded';
                 break;
@@ -46,7 +60,7 @@ class NetteGuzzleBodyCodeGenerator
                 break;
 
             default:
-                throw new RuntimeException('Unrecognized format: ' . $format);
+                throw new RuntimeException('Unrecognized format: ' . $requestFormat);
         }
 
         // Parameters
@@ -108,7 +122,10 @@ class NetteGuzzleBodyCodeGenerator
         // Responses
         $defaultResponse = null;
 
-        $method->addBody('switch ($cResponse->getStatusCode()) {');
+        $method->addBody('$statusCode = $cResponse->getStatusCode();');
+        $method->addBody('$contentType = $cResponse->getHeader(\'Content-Type\');');
+        $method->addBody('');
+        $method->addBody('switch (true) {');
 
         foreach ($path->responses() as $response) {
             $statusCode = $response->statusCode();
@@ -119,21 +136,67 @@ class NetteGuzzleBodyCodeGenerator
                 continue;
             }
 
-            $method->addBody("    case ${statusCode}:");
-            $method->addBody('        break;');
-            $method->addBody('');
+            $responseInfo = $this->responseCodeGenerator->generate($response, $namespaceName . '\\Response', $method->getName() . $statusCode);
+
+            if ($responseInfo) {
+                if (\count($response->mediaTypes())) {
+                    foreach ($response->mediaTypes() as $mediaType) {
+                        $unserializeBody = '$cResponse->getBody()->getContents()';
+
+                        switch ($mediaType->format()) {
+                            case 'json':
+                                $contentType = 'application/json';
+                                $unserializeBody = '\\json_decode(' . $unserializeBody . ', true)';
+                                break;
+
+                            case 'form':
+                                $contentType = 'application/x-www-form-urlencoded';
+                                $unserializeBody = '\\parse_str(' . $unserializeBody . ')';
+                                break;
+
+                            default:
+                                throw new RuntimeException('Unrecognized format: ' . $requestFormat);
+                        }
+
+                        $method->addBody(
+                            "    case \$statusCode === ${statusCode} && \$contentType === '$contentType':"
+                        );
+
+                        $responseClass = $responseInfo[$mediaType->format()]['class'];
+                        $responseDtoClass = $responseInfo[$mediaType->format()]['dtoClass'];
+
+                        if ($mediaType->schema()) {
+                            $method->addBody(
+                                '        return new \\' . $responseClass . '(' . $mediaType->schema(
+                                )->getPhpFromArrayValue($unserializeBody, $responseDtoClass) . ');'
+                            );
+                        } else {
+                            $method->addBody('        return new \\' . $responseClass . '();');
+                        }
+
+                        $method->addBody('');
+                    }
+                }
+            } else {
+                $responseClass = $responseInfo[null]['class'];
+
+                $method->addBody(
+                    '        return new \\' . $responseClass . '();'
+                );
+            }
         }
 
         $method->addBody('    default:');
 
         if ($defaultResponse === null) {
+            $exceptionClass = '\\' . $namespaceName . '\\Exception\\RequestException';
+            $method->addBody('        throw new ' . $exceptionClass . '($cResponse);');
+            $method->addComment('@throws ' . $exceptionClass);
+        } else {
             // TODO
         }
 
         $method->addBody('}');
-        $method->addBody('');
-
-        $method->addBody('return $cResponse;');
     }
 
     /**

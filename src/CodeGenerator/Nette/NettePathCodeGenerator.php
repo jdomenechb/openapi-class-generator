@@ -78,7 +78,7 @@ class NettePathCodeGenerator
 
         $referenceMethod = $classRep->addMethod($referenceMethodName)
             ->setVisibility('public')
-            ->setReturnType(ResponseInterface::class);
+            ->setReturnType($namespace->getName() . '\\Response\\ResponseInterface');
 
         if ($description = $path->description()) {
             $referenceMethod->addComment($description);
@@ -94,7 +94,7 @@ class NettePathCodeGenerator
             ->addComment('Endpoint URL: ' . $path->path())
             ->addComment('Method: ' . \strtoupper($path->method()))
             ->addComment('')
-            ->addComment('@return ResponseInterface')
+            ->addComment('@return Response\ResponseInterface')
             ->addComment('@throws GuzzleException')
         ;
 
@@ -109,12 +109,12 @@ class NettePathCodeGenerator
         $requestBody = $path->requestBody();
 
         if (!$requestBody) {
-            $this->generateWithNoFormats($classRep, $referenceMethod, $path);
+            $this->generateWithNoFormats($namespace, $classRep, $referenceMethod, $path);
         } else {
             $nFormats = \count($requestBody->formats());
 
             if (0 === $nFormats) {
-                $this->generateWithNoFormats($classRep, $referenceMethod, $path);
+                $this->generateWithNoFormats($namespace, $classRep, $referenceMethod, $path);
             } else {
                 foreach ($requestBody->formats() as $format) {
                     $this->generateWithFormat($classRep, $referenceMethod, $namespace, $path, $format);
@@ -126,11 +126,12 @@ class NettePathCodeGenerator
     }
 
     /**
+     * @param PhpNamespace $namespace
      * @param ClassType $classRep
-     * @param Method    $referenceMethod
-     * @param Path      $path
+     * @param Method $referenceMethod
+     * @param Path $path
      */
-    private function generateWithNoFormats(ClassType $classRep, Method $referenceMethod, Path $path): void
+    private function generateWithNoFormats(PhpNamespace $namespace, ClassType $classRep, Method $referenceMethod, Path $path): void
     {
         if ($path->operationId()) {
             $methodName = $path->operationId();
@@ -143,7 +144,7 @@ class NettePathCodeGenerator
         $method = $referenceMethod->cloneWithName($methodName);
         $classRep->setMethods($classRep->getMethods() + [$method]);
 
-        $this->guzzleBodyCodeGenerator->generate($method, $path, null);
+        $this->guzzleBodyCodeGenerator->generate($namespace->getName(), $method, $path, null);
     }
 
     /**

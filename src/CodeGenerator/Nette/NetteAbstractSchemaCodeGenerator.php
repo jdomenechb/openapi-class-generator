@@ -15,6 +15,7 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\ObjectSchema;
+use Jdomenechb\OpenApiClassGenerator\Model\Schema\VectorSchema;
 
 class NetteAbstractSchemaCodeGenerator
 {
@@ -33,7 +34,8 @@ class NetteAbstractSchemaCodeGenerator
         string $namespaceName,
         ?string $format = null,
         string $namePrefix = ''
-    ): string {
+    ): string
+    {
         if ($schema instanceof ObjectSchema) {
             $requestClassName = $this->objectSchemaCodeGenerator->generate(
                 $schema,
@@ -41,6 +43,15 @@ class NetteAbstractSchemaCodeGenerator
                 $format,
                 $namePrefix
             );
+        } elseif ($schema instanceof VectorSchema) {
+            $requestClassName = $this->generate(
+                $schema->wrapped(),
+                $namespaceName,
+                $format,
+                $namePrefix . 'Element'
+            );
+
+            $requestClassName .= '[]';
         } else {
             $requestClassName = $schema->getPhpType();
         }
