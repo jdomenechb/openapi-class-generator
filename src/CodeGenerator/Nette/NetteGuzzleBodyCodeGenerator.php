@@ -136,7 +136,11 @@ class NetteGuzzleBodyCodeGenerator
                 continue;
             }
 
-            $responseInfo = $this->responseCodeGenerator->generate($response, $namespaceName . '\\Response', $method->getName() . $statusCode);
+            $responseInfo = $this->responseCodeGenerator->generate(
+                $response,
+                $namespaceName . '\\Response',
+                $method->getName() . $statusCode
+            );
 
             if ($responseInfo) {
                 if (\count($response->mediaTypes())) {
@@ -176,13 +180,17 @@ class NetteGuzzleBodyCodeGenerator
 
                         $method->addBody('');
                     }
-                }
-            } else {
-                $responseClass = $responseInfo[null]['class'];
+                } else {
+                    $responseClass = $responseInfo[null]['class'];
 
-                $method->addBody(
-                    '        return new \\' . $responseClass . '();'
-                );
+                    $method->addBody(
+                        "    case \$statusCode === ${statusCode}:"
+                    );
+
+                    $method->addBody(
+                        '        return new \\' . $responseClass . '();'
+                    );
+                }
             }
         }
 
