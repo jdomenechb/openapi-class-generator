@@ -159,7 +159,7 @@ class NetteGuzzleBodyCodeGenerator
                                 break;
 
                             default:
-                                throw new RuntimeException('Unrecognized format: ' . $requestFormat);
+                                throw new RuntimeException('Unrecognized format: ' . ($requestFormat ?: 'null'));
                         }
 
                         $method->addBody(
@@ -169,19 +169,20 @@ class NetteGuzzleBodyCodeGenerator
                         $responseClass = $responseInfo[$mediaType->format()]['class'];
                         $responseDtoClass = $responseInfo[$mediaType->format()]['dtoClass'];
 
-                        if ($mediaType->schema()) {
+                        if (($schema = $mediaType->schema())) {
                             $method->addBody(
-                                '        return new \\' . $responseClass . '(' . $mediaType->schema(
-                                )->getPhpFromArrayValue($unserializeBody, $responseDtoClass) . ');'
+                                '        return new \\' . $responseClass . '('
+                                . $schema->getPhpFromArrayValue($unserializeBody, $responseDtoClass) . ');'
                             );
                         } else {
                             $method->addBody('        return new \\' . $responseClass . '();');
                         }
 
+                        /** @noinspection DisconnectedForeachInstructionInspection */
                         $method->addBody('');
                     }
                 } else {
-                    $responseClass = $responseInfo[null]['class'];
+                    $responseClass = $responseInfo['']['class'];
 
                     $method->addBody(
                         "    case \$statusCode === ${statusCode}:"

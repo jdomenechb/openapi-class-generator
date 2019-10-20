@@ -133,9 +133,9 @@ class NettePathCodeGenerator
      */
     private function generateWithNoFormats(PhpNamespace $namespace, ClassType $classRep, Method $referenceMethod, Path $path): void
     {
-        if ($path->operationId()) {
-            $methodName = $path->operationId();
-        } else {
+        $methodName = $path->operationId();
+
+        if ($methodName === null) {
             $methodName = $path->method() . $path->path();
         }
 
@@ -161,9 +161,9 @@ class NettePathCodeGenerator
         Path $path,
         MediaType $format
     ): void {
-        if ($path->operationId()) {
-            $methodName = $path->operationId();
-        } else {
+        $methodName = $path->operationId();
+
+        if ($methodName === null) {
             $methodName = $path->method() . $path->path();
         }
 

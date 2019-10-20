@@ -42,6 +42,13 @@ class NetteResponseCodeGenerator
         $this->abstractSchemaCodeGenerator = $abstractSchemaCodeGenerator;
     }
 
+    /**
+     * @param Response $response
+     * @param string $namespaceName
+     * @param string $methodName
+     *
+     * @return array
+     */
     public function generate(Response $response, string $namespaceName, string $methodName) :array
     {
         $toReturn = [];
@@ -53,7 +60,7 @@ class NetteResponseCodeGenerator
         }
 
         if (!count($mediaTypes)) {
-            $toReturn[null] = $this->generateFile($namespaceName, $methodName);
+            $toReturn[''] = $this->generateFile($namespaceName, $methodName);
         }
 
         return $toReturn;
@@ -82,18 +89,18 @@ class NetteResponseCodeGenerator
         $classRep->addImplement($namespaceName . '\\ResponseInterface');
         $namespace->add($classRep);
 
-        if ($mediaType && $mediaType->schema()) {
+        if ($mediaType && ($schema = $mediaType->schema())) {
             $constructor = $classRep->addMethod('__construct')
                 ->setVisibility('public');
 
             $schemaClass = $this->abstractSchemaCodeGenerator->generate(
-                $mediaType->schema(),
+                $schema,
                 $namespaceName . '\\Dto',
                 $mediaType->format(),
                 $methodName . ucfirst($mediaType->format())
             );
 
-            $schemaType = $mediaType->schema()->getPhpType();
+            $schemaType = $schema->getPhpType();
 
             if ($schemaType === 'object') {
                 $schemaType = $schemaClass;
@@ -125,7 +132,7 @@ class NetteResponseCodeGenerator
         $this->fileWriter->write($printer->printFile($file), $classRepName, $namespaceName);
 
         return [
-            'class' => $namespaceName . '\\' . $classRep->getName(),
+            'class' => $namespaceName . '\\' . $classRepName,
             'dtoClass' => $schemaClass,
         ];
 }

@@ -32,7 +32,7 @@ class NetteResponseInterfaceCodeGenerator
         $this->fileWriter = $fileWriter;
     }
 
-    public function generate(string $namespaceName)
+    public function generate(string $namespaceName) :void
     {
         $file = new PhpFile();
         $file->setStrictTypes();

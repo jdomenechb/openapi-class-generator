@@ -165,7 +165,13 @@ class CebeOpenapiSchemaFactory
         return new VectorSchema($this->build($schema->items, $name . 'Item'));
     }
 
-    private function array_merge_recursive_distinct(array &$array1, array &$array2)
+    /**
+     * @param array $array1
+     * @param array $array2
+     *
+     * @return array
+     */
+    private function array_merge_recursive_distinct(array &$array1, array &$array2): array
     {
         $merged = $array1;
 

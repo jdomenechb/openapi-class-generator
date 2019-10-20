@@ -29,7 +29,7 @@ class MediaType
      * ApiOperationFormat constructor.
      *
      * @param string         $format
-     * @param AbstractSchem|null $schema
+     * @param AbstractSchema|null $schema
      */
     public function __construct(string $format, ?AbstractSchema $schema)
     {

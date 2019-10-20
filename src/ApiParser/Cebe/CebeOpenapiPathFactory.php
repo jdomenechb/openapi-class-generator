@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Jdomenechb\OpenApiClassGenerator\ApiParser\Cebe;
 
 use cebe\openapi\spec\Operation;
+use cebe\openapi\spec\Parameter;
+use cebe\openapi\spec\Reference;
 use cebe\openapi\spec\RequestBody as CebeRequestBody;
 use cebe\openapi\spec\Schema;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
@@ -57,6 +59,7 @@ class CebeOpenapiPathFactory
         $parameters = [];
 
         foreach ($contractOperation->parameters as $parameter) {
+            /** @var Parameter $parameter */
             $schema = $parameter->schema;
             $builtSchema = null;
 
@@ -126,7 +129,12 @@ class CebeOpenapiPathFactory
             $response = new Response($statusCode !== 'default'? $statusCode: null, $contractResponse->description);
 
             foreach ($contractResponse->content as $mediaType => $mediaTypeObject) {
+                /** @var \cebe\openapi\spec\MediaType $mediaTypeObject */
                 $responseSchema = $mediaTypeObject->schema;
+
+                if ($responseSchema instanceof Reference) {
+                    throw new \RuntimeException('Expected schema, got reference');
+                }
 
                 switch ($mediaType) {
                     case 'application/json':

@@ -47,8 +47,14 @@ class NetteRequestBodyFormatCodeGenerator
         Path $path,
         MediaType $format
     ): void {
+        $schema = $format->schema();
+
+        if ($schema === null) {
+            throw new \RuntimeException('Expected schema');
+        }
+
         $requestTypeHint = $this->abstractSchemaCodeGenerator->generate(
-            $format->schema(),
+            $schema,
             $namespace->getName() . '\\Request\\Dto',
             $format->format(),
             $method->getName()
