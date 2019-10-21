@@ -59,7 +59,10 @@ class CebeOpenapiPathFactory
         $parameters = [];
 
         foreach ($contractOperation->parameters as $parameter) {
-            /** @var Parameter $parameter */
+            if ($parameter instanceof Reference) {
+                throw new \RuntimeException('Expected parameter, got reference');
+            }
+
             $schema = $parameter->schema;
             $builtSchema = null;
 

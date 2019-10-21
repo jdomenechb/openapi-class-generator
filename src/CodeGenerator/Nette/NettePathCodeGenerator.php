@@ -95,7 +95,6 @@ class NettePathCodeGenerator
             ->addComment('Method: ' . \strtoupper($path->method()))
             ->addComment('')
             ->addComment('@return Response\ResponseInterface')
-            ->addComment('@throws GuzzleException')
         ;
 
         foreach ($path->securitySchemes() as $securityScheme) {

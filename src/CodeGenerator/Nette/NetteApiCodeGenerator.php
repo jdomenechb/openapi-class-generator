@@ -15,7 +15,6 @@ namespace Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette;
 
 use Exception;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ApiCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
@@ -73,7 +72,6 @@ class NetteApiCodeGenerator implements ApiCodeGenerator
         $namespace = $file->addNamespace($apiService->namespace() . '\\' . $apiService->name());
         $namespace->addUse(ClientInterface::class);
         $namespace->addUse(ResponseInterface::class);
-        $namespace->addUse(GuzzleException::class);
 
         $classRepName = $apiService->name() . 'Service';
 

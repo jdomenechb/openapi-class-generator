@@ -35,7 +35,13 @@ class CebeOpenapiSchemaFactory
     public function build(Schema $schema, string $name): AbstractSchema
     {
         if ($schema->allOf) {
-            $serializedSchema = json_decode(json_encode($schema->getSerializableData()), true);
+            $jsonEncoded = json_encode($schema->getSerializableData());
+
+            if ($jsonEncoded === false) {
+                throw new \RuntimeException('Invalid serializable data');
+            }
+
+            $serializedSchema = json_decode($jsonEncoded, true);
             $merge = $this->array_merge_recursive_distinct(...$serializedSchema['allOf']);
             $schema = new Schema($merge);
         }
