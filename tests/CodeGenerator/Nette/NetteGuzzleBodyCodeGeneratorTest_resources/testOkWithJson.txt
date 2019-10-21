@@ -1,11 +1,20 @@
+/**
+ * @throws \A\Namespace\Exception\RequestException
+ */
 function aMethod()
 {
     if ($requestBody !== null) {
-        $serializedRequestBody = \json_encode($requestBody);;
-        $response = $this->client->request('put', '/a/path', ['headers' => ['Content-Type' => 'application/json'], 'body' => $serializedRequestBody]);
+        $serializedRequestBody = \json_encode($requestBody);
+        $cResponse = $this->client->request('put', '/a/path', ['http_errors' => false, 'headers' => ['Content-Type' => 'application/json'], 'body' => $serializedRequestBody]);
     } else {
-        $response = $this->client->request('put', '/a/path', ['headers' => ['Content-Type' => 'application/json']]);
+        $cResponse = $this->client->request('put', '/a/path', ['http_errors' => false, 'headers' => ['Content-Type' => 'application/json']]);
     }
 
-    return $response;
+    $statusCode = $cResponse->getStatusCode();
+    $contentType = $cResponse->getHeader('Content-Type');
+
+    switch (true) {
+        default:
+            throw new \A\Namespace\Exception\RequestException($cResponse);
+    }
 }

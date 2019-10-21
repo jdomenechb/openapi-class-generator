@@ -47,7 +47,7 @@ class NetteObjectSchemaCodeGeneratorTest extends TestCase
 
         $objNamespace = $this->obj->generate($objectSchema, 'aNamespaceName', null, 'prefix');
 
-        $this->assertSame('\\aNamespaceName\\Request\\PrefixAnObject', $objNamespace);
+        $this->assertSame('\\aNamespaceName\\PrefixAnObject', $objNamespace);
     }
 
     public function testOkWithJsonFormat(): void
@@ -58,7 +58,7 @@ class NetteObjectSchemaCodeGeneratorTest extends TestCase
 
         $objNamespace = $this->obj->generate($objectSchema, 'aNamespaceName', 'json');
 
-        $this->assertSame('\\aNamespaceName\\Request\\AnObject', $objNamespace);
+        $this->assertSame('\\aNamespaceName\\AnObject', $objNamespace);
     }
 
     public function testOkWithProperties(): void
@@ -77,7 +77,7 @@ class NetteObjectSchemaCodeGeneratorTest extends TestCase
 
         $objNamespace = $this->obj->generate($objectSchema, 'aNamespaceName', null);
 
-        $this->assertSame('\\aNamespaceName\\Request\\AnObject', $objNamespace);
+        $this->assertSame('\\aNamespaceName\\AnObject', $objNamespace);
     }
 
     public function testOkWithObjectProperties(): void
@@ -123,7 +123,7 @@ class NetteObjectSchemaCodeGeneratorTest extends TestCase
 
         $objNamespace = $this->obj->generate($objectSchema, 'aNamespaceName', null);
 
-        $this->assertSame('\\aNamespaceName\\Request\\AnObject', $objNamespace);
+        $this->assertSame('\\aNamespaceName\\AnObject', $objNamespace);
     }
 
     private function setupClassResultExpectation(string $testName): void

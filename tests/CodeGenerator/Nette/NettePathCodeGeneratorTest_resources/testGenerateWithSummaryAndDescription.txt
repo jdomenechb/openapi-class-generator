@@ -8,10 +8,9 @@ class AClass
      * Endpoint URL: /a/path
      * Method: POST
      *
-     * @return ResponseInterface
-     * @throws GuzzleException
+     * @return Response\ResponseInterface
      */
-    public function postAPath(): Psr\Http\Message\ResponseInterface
+    public function postAPath(): A\Namespace\Response\ResponseInterface
     {
     }
 }

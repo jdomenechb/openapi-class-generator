@@ -65,7 +65,7 @@ class NettePathParameterCodeGeneratorTest extends TestCase
         $this->schemaCodeGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($this->identicalTo($mockedSchema), $this->anything(), $this->isNull(), 'aMethodAName')
+            ->with($this->identicalTo($mockedSchema), $this->anything(), $this->isNull(), 'aMethodANameParameter')
             ->willReturn('A\\Class\\Name');
 
         $pathParameter = new PathParameter(

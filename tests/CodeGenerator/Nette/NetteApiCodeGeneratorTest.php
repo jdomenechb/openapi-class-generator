@@ -14,6 +14,8 @@ namespace Jdomenechb\OpenApiClassGenerator\Tests\CodeGenerator\Nette;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\ClassFileWriter;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteApiCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NettePathCodeGenerator;
+use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteRequestExceptionCodeGenerator;
+use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteResponseInterfaceCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\Model\Api;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -34,12 +36,24 @@ class NetteApiCodeGeneratorTest extends TestCase
      */
     private $obj;
 
+    /**
+     * @var MockObject|NetteRequestExceptionCodeGenerator
+     */
+    private $requestExceptionCodeGenerator;
+
+    /**
+     * @var MockObject|NetteResponseInterfaceCodeGenerator
+     */
+    private $responseInterfaceCodeGenerator;
+
     protected function setUp()
     {
         $this->fileWriter = $this->createMock(ClassFileWriter::class);
         $this->pathCodeGenerator = $this->createMock(NettePathCodeGenerator::class);
+        $this->requestExceptionCodeGenerator = $this->createMock(NetteRequestExceptionCodeGenerator::class);
+        $this->responseInterfaceCodeGenerator = $this->createMock(NetteResponseInterfaceCodeGenerator::class);
 
-        $this->obj = new NetteApiCodeGenerator($this->fileWriter, $this->pathCodeGenerator);
+        $this->obj = new NetteApiCodeGenerator($this->fileWriter, $this->pathCodeGenerator, $this->requestExceptionCodeGenerator, $this->responseInterfaceCodeGenerator);
     }
 
     public function testOk(): void

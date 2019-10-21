@@ -1,6 +1,6 @@
 <?php
 
-namespace aNamespaceName\Request;
+namespace aNamespaceName;
 
 final class AnObject implements \JsonSerializable
 {

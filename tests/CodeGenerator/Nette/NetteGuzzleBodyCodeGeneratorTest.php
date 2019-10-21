@@ -12,6 +12,7 @@
 namespace Jdomenechb\OpenApiClassGenerator\Tests\CodeGenerator\Nette;
 
 use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteGuzzleBodyCodeGenerator;
+use Jdomenechb\OpenApiClassGenerator\CodeGenerator\Nette\NetteResponseCodeGenerator;
 use Jdomenechb\OpenApiClassGenerator\Model\Path;
 use Jdomenechb\OpenApiClassGenerator\Model\PathParameter;
 use Jdomenechb\OpenApiClassGenerator\Model\Schema\AbstractSchema;
@@ -27,17 +28,23 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
      */
     private $obj;
 
+    /**
+     * @var NetteResponseCodeGenerator|\PHPUnit\Framework\MockObject\MockObject
+     */
+    private $responseCodeGenerator;
+
     protected function setUp()
     {
-        $this->obj = new NetteGuzzleBodyCodeGenerator();
+        $this->responseCodeGenerator = $this->createMock(NetteResponseCodeGenerator::class);
+        $this->obj = new NetteGuzzleBodyCodeGenerator($this->responseCodeGenerator);
     }
 
     public function testOkWithNoFormat(): void
     {
         $method = new Method('aMethod');
-        $path = new Path('put', '/a/path', null, null, null, null, [], []);
+        $path = new Path('put', '/a/path', null, null, null, null, [], [], []);
 
-        $this->obj->generate($method, $path, null);
+        $this->obj->generate('A\Namespace', $method, $path, null);
 
         $this->compareExpectedResult(__FUNCTION__, $method);
     }
@@ -59,10 +66,11 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
             null,
             null,
             $parameters,
+            [],
             []
         );
 
-        $this->obj->generate($method, $path, null);
+        $this->obj->generate('A\Namespace', $method, $path, null);
 
         $this->compareExpectedResult(__FUNCTION__, $method);
     }
@@ -74,9 +82,9 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
         ];
 
         $method = new Method('aMethod');
-        $path = new Path('put', '/a/path/{aSecondParamName}/example', null, null, null, null, [], $security);
+        $path = new Path('put', '/a/path/{aSecondParamName}/example', null, null, null, null, [], $security, []);
 
-        $this->obj->generate($method, $path, null);
+        $this->obj->generate('A\Namespace', $method, $path, null);
 
         $this->compareExpectedResult(__FUNCTION__, $method);
     }
@@ -84,9 +92,9 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
     public function testOkWithJson(): void
     {
         $method = new Method('aMethod');
-        $path = new Path('put', '/a/path', null, null, null, null, [], []);
+        $path = new Path('put', '/a/path', null, null, null, null, [], [], []);
 
-        $this->obj->generate($method, $path, 'json');
+        $this->obj->generate('A\Namespace', $method, $path, 'json');
 
         $this->compareExpectedResult(__FUNCTION__, $method);
     }
@@ -94,9 +102,9 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
     public function testOkWithForm(): void
     {
         $method = new Method('aMethod');
-        $path = new Path('put', '/a/path', null, null, null, null, [], []);
+        $path = new Path('put', '/a/path', null, null, null, null, [], [], []);
 
-        $this->obj->generate($method, $path, 'form');
+        $this->obj->generate('A\Namespace', $method, $path, 'form');
 
         $this->compareExpectedResult(__FUNCTION__, $method);
     }
@@ -107,9 +115,9 @@ class NetteGuzzleBodyCodeGeneratorTest extends TestCase
         $this->expectExceptionMessage('Unrecognized format: INVALID');
 
         $method = new Method('aMethod');
-        $path = new Path('put', '/a/path', null, null, null, null, [], []);
+        $path = new Path('put', '/a/path', null, null, null, null, [], [], []);
 
-        $this->obj->generate($method, $path, 'INVALID');
+        $this->obj->generate('A\Namespace', $method, $path, 'INVALID');
     }
 
     private function compareExpectedResult(string $name, Method $method): void

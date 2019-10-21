@@ -1,6 +1,15 @@
+/**
+ * @throws \A\Namespace\Exception\RequestException
+ */
 function aMethod()
 {
-    $response = $this->client->request('put', '/a/path/{aSecondParamName}/example', ['headers' => ['Authorization' => 'Bearer ' . $bearer]]);
+    $cResponse = $this->client->request('put', '/a/path/{aSecondParamName}/example', ['http_errors' => false, 'headers' => ['Authorization' => 'Bearer ' . $bearer]]);
 
-    return $response;
+    $statusCode = $cResponse->getStatusCode();
+    $contentType = $cResponse->getHeader('Content-Type');
+
+    switch (true) {
+        default:
+            throw new \A\Namespace\Exception\RequestException($cResponse);
+    }
 }

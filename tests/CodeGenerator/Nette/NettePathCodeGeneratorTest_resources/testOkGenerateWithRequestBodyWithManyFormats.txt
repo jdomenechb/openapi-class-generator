@@ -4,10 +4,9 @@ class AClass
      * Endpoint URL: /a/path
      * Method: POST
      *
-     * @return ResponseInterface
-     * @throws GuzzleException
+     * @return Response\ResponseInterface
      */
-    public function postAPathJson(): Psr\Http\Message\ResponseInterface
+    public function postAPathJson(): A\Namespace\Response\ResponseInterface
     {
     }
 
@@ -15,10 +14,9 @@ class AClass
      * Endpoint URL: /a/path
      * Method: POST
      *
-     * @return ResponseInterface
-     * @throws GuzzleException
+     * @return Response\ResponseInterface
      */
-    public function postAPathForm(): Psr\Http\Message\ResponseInterface
+    public function postAPathForm(): A\Namespace\Response\ResponseInterface
     {
     }
 }

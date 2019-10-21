@@ -4,10 +4,9 @@ class AClass
      * Endpoint URL: /a/path
      * Method: POST
      *
-     * @return ResponseInterface
-     * @throws GuzzleException
+     * @return Response\ResponseInterface
      */
-    public function anOperationId(): Psr\Http\Message\ResponseInterface
+    public function anOperationId(): A\Namespace\Response\ResponseInterface
     {
     }
 }

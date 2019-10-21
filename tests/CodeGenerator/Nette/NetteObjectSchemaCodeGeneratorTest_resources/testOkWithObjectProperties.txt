@@ -1,10 +1,10 @@
 <?php
 
-namespace aNamespaceName\Request;
+namespace aNamespaceName;
 
 final class AnObject
 {
-    /** @var \aNamespaceName\Request\AnObjectASubObject|null */
+    /** @var \aNamespaceName\AnObjectASubObject|null */
     private $aFirstProperty;
 
     public function __construct(?object $aFirstProperty)
@@ -22,7 +22,7 @@ final class AnObject
     public static function fromArray(array $input): self
     {
         return new self(
-            isset($input['aFirstProperty']) ? \aNamespaceName\Request\AnObjectASubObject::fromArray($input['aFirstProperty']) : null
+            isset($input['aFirstProperty']) ? \aNamespaceName\AnObjectASubObject::fromArray($input['aFirstProperty']) : null
         );
     }
 

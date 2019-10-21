@@ -90,7 +90,7 @@ class NettePathCodeGeneratorTest extends TestCase
             $mockedParameter2,
         ];
 
-        $path = new Path('post', '/a/path', null, null, null, null, $parameters, $securitySchemes);
+        $path = new Path('post', '/a/path', null, null, null, null, $parameters, $securitySchemes, []);
         $namespace = new PhpNamespace('A\\Namespace');
 
         $this->securitySchemeCodeGenerator
@@ -112,7 +112,7 @@ class NettePathCodeGeneratorTest extends TestCase
         $this->guzzleBodyCodeGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($this->anything(), $this->identicalTo($path), $this->identicalTo(null));
+            ->with($this->anything(), $this->anything(), $this->identicalTo($path), $this->identicalTo(null));
 
         $this->obj->generate($class, $namespace, $path);
 
@@ -124,13 +124,13 @@ class NettePathCodeGeneratorTest extends TestCase
         $class = new ClassType('AClass');
         $requestBody = new RequestBody('aRBDescription', false);
 
-        $path = new Path('post', '/a/path', 'an operation id', null, null, $requestBody, [], []);
+        $path = new Path('post', '/a/path', 'an operation id', null, null, $requestBody, [], [], []);
         $namespace = new PhpNamespace('A\\Namespace');
 
         $this->guzzleBodyCodeGenerator
             ->expects($this->once())
             ->method('generate')
-            ->with($this->anything(), $this->identicalTo($path), $this->identicalTo(null));
+            ->with($this->anything(), $this->anything(), $this->identicalTo($path), $this->identicalTo(null));
 
         $this->obj->generate($class, $namespace, $path);
 
@@ -145,7 +145,7 @@ class NettePathCodeGeneratorTest extends TestCase
         $format1 = new MediaType('json', $this->createMock(AbstractSchema::class));
         $requestBody->addFormat($format1);
 
-        $path = new Path('post', '/a/path', 'an operation id', null, null, $requestBody, [], []);
+        $path = new Path('post', '/a/path', 'an operation id', null, null, $requestBody, [], [], []);
         $namespace = new PhpNamespace('A\\Namespace');
 
         $this->requestBodyFormatCodeGenerator
@@ -168,7 +168,7 @@ class NettePathCodeGeneratorTest extends TestCase
         $requestBody->addFormat($format1);
         $requestBody->addFormat($format2);
 
-        $path = new Path('post', '/a/path', null, null, null, $requestBody, [], []);
+        $path = new Path('post', '/a/path', null, null, null, $requestBody, [], [], []);
         $namespace = new PhpNamespace('A\\Namespace');
 
         $this->requestBodyFormatCodeGenerator
@@ -187,7 +187,7 @@ class NettePathCodeGeneratorTest extends TestCase
     public function testGenerateWithDescription(): void
     {
         $class = new ClassType('AClass');
-        $path = new Path('post', '/a/path', null, null, 'aDescription', null, [], []);
+        $path = new Path('post', '/a/path', null, null, 'aDescription', null, [], [], []);
 
         $this->obj->generate($class, new PhpNamespace('A\\Namespace'), $path);
 
@@ -197,7 +197,7 @@ class NettePathCodeGeneratorTest extends TestCase
     public function testGenerateWithSummary(): void
     {
         $class = new ClassType('AClass');
-        $path = new Path('post', '/a/path', null, 'aSummary', null, null, [], []);
+        $path = new Path('post', '/a/path', null, 'aSummary', null, null, [], [], []);
 
         $this->obj->generate($class, new PhpNamespace('A\\Namespace'), $path);
 
@@ -207,7 +207,7 @@ class NettePathCodeGeneratorTest extends TestCase
     public function testGenerateWithSummaryAndDescription(): void
     {
         $class = new ClassType('AClass');
-        $path = new Path('post', '/a/path', null, 'aSummary', 'aDescription', null, [], []);
+        $path = new Path('post', '/a/path', null, 'aSummary', 'aDescription', null, [], [], []);
 
         $this->obj->generate($class, new PhpNamespace('A\\Namespace'), $path);
 

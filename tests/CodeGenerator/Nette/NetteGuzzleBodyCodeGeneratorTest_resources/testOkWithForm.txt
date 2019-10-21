@@ -1,11 +1,20 @@
+/**
+ * @throws \A\Namespace\Exception\RequestException
+ */
 function aMethod()
 {
     if ($requestBody !== null) {
-        $serializedRequestBody = \http_build_query($requestBody->serialize());;
-        $response = $this->client->request('put', '/a/path', ['headers' => ['Content-Type' => 'application/x-www-form-urlencoded'], 'body' => $serializedRequestBody]);
+        $serializedRequestBody = \http_build_query($requestBody->serialize());
+        $cResponse = $this->client->request('put', '/a/path', ['http_errors' => false, 'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'], 'body' => $serializedRequestBody]);
     } else {
-        $response = $this->client->request('put', '/a/path', ['headers' => ['Content-Type' => 'application/x-www-form-urlencoded']]);
+        $cResponse = $this->client->request('put', '/a/path', ['http_errors' => false, 'headers' => ['Content-Type' => 'application/x-www-form-urlencoded']]);
     }
 
-    return $response;
+    $statusCode = $cResponse->getStatusCode();
+    $contentType = $cResponse->getHeader('Content-Type');
+
+    switch (true) {
+        default:
+            throw new \A\Namespace\Exception\RequestException($cResponse);
+    }
 }
